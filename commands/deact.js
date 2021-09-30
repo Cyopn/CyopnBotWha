@@ -2,7 +2,7 @@ const fs = require('fs')
 const db = require('megadb')
 let dBase = new db.crearDB({
     nombre: 'dataDesc',
-    carpeta: './database'
+    carpeta: './configdata'
 })
 
 module.exports.run = async(client, message, args, config) => {
