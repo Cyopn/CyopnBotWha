@@ -6,5 +6,4 @@ package.json
 package-lock.json
 session.data.json
 test.js
-database/dataDesc.json
-database/dataLevel.json
+configdata
