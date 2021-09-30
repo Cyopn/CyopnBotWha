@@ -7,3 +7,7 @@ package-lock.json
 session.data.json
 test.js
 configdata
+media/images/imgSt.jpg
+media/images/imgSt.png
+media/gifs/stickergif.mp4
+media/audio/tts.mp3
