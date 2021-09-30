@@ -14,12 +14,11 @@ module.exports.run = async(client, message, args, config) => {
                 const mediaData = await decryptMedia(message, uaOverride)
                 const filename = `./media/gifs/stickergif.${mimetype.split('/')[1]}`
                 await fs.writeFileSync(filename, mediaData)
-                await exec(`gify ${filename} ./media/gifs/stickergif.gif --fps=30 --scale=240:240`, async function(error, stdout, stderr) {
-                    const gif = await fs.readFileSync('./media/gifs/stickergif.gif', { encoding: "base64" })
-                    await client.sendImageAsSticker(from, `data:image/gif;base64,${gif.toString('base64')}`, {
-                        author: 'ig: @Cyopn_',
-                        pack: 'CyopnBot'
-                    })
+                client.sendMp4AsSticker(from, `./media/gifs/stickergif.mp4`, {
+                    crop: false
+                }, {
+                    author: 'ig: @Cyopn_',
+                    pack: 'CyopnBot'
                 })
             } else(
                 client.reply(from, 'El video debe durar menos de 6 segundos', id)
@@ -28,14 +27,13 @@ module.exports.run = async(client, message, args, config) => {
             if (quotedMsg.mimetype === 'video/mp4' && quotedMsg.duration < 6 || quotedMsg.mimetype === 'image/gif' && quotedMsg.duration < 6) {
                 client.reply(from, `Espera un poco`, id)
                 const mediaData = await decryptMedia(quotedMsg, uaOverride)
-                const filename = `./media/stickergif.${quotedMsg.mimetype.split('/')[1]}`
+                const filename = `./media/gifs/stickergif.${quotedMsg.mimetype.split('/')[1]}`
                 await fs.writeFileSync(filename, mediaData)
-                await exec(`gify ${filename} ./media/gifs/stickergif.gif --fps=30 --scale=240:240`, async function(error, stdout, stderr) {
-                    const gif = await fs.readFileSync('./media/gifs/stickergif.gif', { encoding: "base64" })
-                    await client.sendImageAsSticker(from, `data:image/gif;base64,${gif.toString('base64')}`, {
-                        author: 'ig: @Cyopn_',
-                        pack: 'CyopnBot'
-                    }, id)
+                client.sendMp4AsSticker(from, `./media/gifs/stickergif.mp4`, {
+                    crop: false
+                }, {
+                    author: 'ig: @Cyopn_',
+                    pack: 'CyopnBot'
                 })
             } else {
                 client.reply(from, 'El video debe durar menos de 6 segundos', id)
