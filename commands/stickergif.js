@@ -8,8 +8,8 @@ module.exports.run = async(client, message, args, config) => {
     const { prefix } = config
 
     try {
-        if (isMedia) {
-            if (mimetype === 'video/mp4' && message.duration < 6 || mimetype === 'image/gif' && message.duration < 6) {
+        if (isMedia && mimetype === 'video/mp4') {
+            if (message.duration < 10 || mimetype === 'image/gif' && message.duration < 10) {
                 client.reply(from, `Espera un poco`, id)
                 const mediaData = await decryptMedia(message, uaOverride)
                 const filename = `./media/gifs/stickergif.${mimetype.split('/')[1]}`
@@ -21,10 +21,10 @@ module.exports.run = async(client, message, args, config) => {
                     pack: 'CyopnBot'
                 })
             } else(
-                client.reply(from, 'El video debe durar menos de 6 segundos', id)
+                client.reply(from, 'El video debe durar menos de 10 segundos', id)
             )
-        } else if (quotedMsg) {
-            if (quotedMsg.mimetype === 'video/mp4' && quotedMsg.duration < 6 || quotedMsg.mimetype === 'image/gif' && quotedMsg.duration < 6) {
+        } else if (quotedMsg && quotedMsg.mimetype === 'video/mp4') {
+            if (quotedMsg.duration < 10 || quotedMsg.mimetype === 'image/gif' && quotedMsg.duration < 10) {
                 client.reply(from, `Espera un poco`, id)
                 const mediaData = await decryptMedia(quotedMsg, uaOverride)
                 const filename = `./media/gifs/stickergif.${quotedMsg.mimetype.split('/')[1]}`
@@ -48,6 +48,6 @@ module.exports.run = async(client, message, args, config) => {
 }
 module.exports.config = {
     name: "stickergif",
-    aliases: 'sgif',
+    aliases: 'sg',
     desc: 'Crea un sticker en movimiento'
 }
