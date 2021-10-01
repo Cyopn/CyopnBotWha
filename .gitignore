@@ -6,7 +6,8 @@ package.json
 package-lock.json
 session.data.json
 test.js
-configdata
+configdata/dataDesc.json
+configdata/dataLevel.json
 media/images/imgSt.jpg
 media/images/imgSt.png
 media/gifs/stickergif.mp4
