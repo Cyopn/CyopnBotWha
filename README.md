@@ -32,8 +32,19 @@ Al arrancar, se cargara lo necesario para su funcionamiento, en el proceso se ne
 
 Por ahora hemos finalizado la instalacion y esta listo pra usarse, pueden ocurrir fallos del servidor o de codigo, en este caso lo correcto es reiniciar usando `Ctrl+c` y seguir el paso para finalizar la tarea, finalmente volver a iniciar con `npm start`.
   
-Si algun problema persisteo si existe alguna sugerencia, contactame
+Si algun problema persiste o si existe alguna sugerencia, contactame, agradezco cada comentario.
 - [WhatsApp](https://wa.me/+52562712778)
 - [Instagram](https://instagram.com/Cyopn_)
 
+## Construido con
+Escrito en JavaScript, usando JSON para bases de datos simples, ademas del API [open-wa](https://github.com/open-wa).
 
+## Autor
+- Juan Antonio Calvillo Benitez - _Trabajo inicial_ - [Cyopn](https://github.com/Cyopn/)
+
+## Expresiones de Gratitud
+El projecto no esta sujeto a derechos de autor para su uso libre, y es desarrollado sin fines de lucro, si es necesario ser asesorado o quisiera ser contribuidor pongase en contacto.
+
+Gracias por usarlo :)
+
+Cyopn.
