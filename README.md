@@ -30,6 +30,10 @@ Al arrancar, se cargara lo necesario para su funcionamiento, en el proceso se ne
 <img
     src="https://i.imgur.com/MDtfC1v.png" height="400px">
 
-Por ahora hemos finalizado la instalacion y esta listo pra usarse, pueden ocurrir fallos del servidor o de codigo, en este caso lo correcto es reiniciar usando `Ctrl+c` y seguir el paso para finalizar la tarea, finalmente volver a iniciar con `npm start`
+Por ahora hemos finalizado la instalacion y esta listo pra usarse, pueden ocurrir fallos del servidor o de codigo, en este caso lo correcto es reiniciar usando `Ctrl+c` y seguir el paso para finalizar la tarea, finalmente volver a iniciar con `npm start`.
+  
+Si algun problema persisteo si existe alguna sugerencia, contactame
+- [WhatsApp](https://wa.me/+52562712778)
+- [Instagram](https://instagram.com/Cyopn_)
 
 
