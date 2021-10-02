@@ -2,7 +2,6 @@ config.json
 path.txt
 node_modules
 logs
-package.json
 package-lock.json
 session.data.json
 test.js
