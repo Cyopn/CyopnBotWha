@@ -24,5 +24,12 @@ Luego de instalar dependencias, escriba `npm start` para el arraque del API, al 
 - configdata (Base de datos local)
 
 Ademas de crear un archivo (session.data.json), que guarda el usuario (cuenta de WhatsApp).
+  
+Al arrancar, se cargara lo necesario para su funcionamiento, en el proceso se necesita iniciar sesion en WhatApp Web, con el codigo Qr.
+
+<img
+    src="https://i.imgur.com/MDtfC1v.png" height="400px">
+
+Por ahora hemos finalizado la instalacion y esta listo pra usarse, pueden ocurrir fallos del servidor o de codigo, en este caso lo correcto es reiniciar usando `Ctrl+c` y seguir el paso para finalizar la tarea, finalmente volver a iniciar con `npm start`
 
 
