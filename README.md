@@ -2,7 +2,7 @@
 _Un bot de WhatsApp facil de usar_
 
 ## Comenzando
-Use el comando `git clone https://github.com/Cyopn/CyopnBotWha.git` en cmd, o bien descargue y descomprima y abra el projecto en su editor (personalmente recomiendo Visual Studio Code)
+Use el comando `git clone https://github.com/Cyopn/CyopnBotWha.git` en cmd, o bien descargue y descomprima; abra el projecto en su editor (personalmente recomiendo Visual Studio Code).
 
 ## Pre-requisitos
 Debe tener instalado en su equipo:
@@ -12,7 +12,7 @@ Debe tener instalado en su equipo:
 - [Node.js](https://nodejs.org/en/)
 
 ## Instalando
-Con el comando (De igual manera en cmd o en la terminal de VS Code usando <kdb> Ctrl+ñ </kbd>) `npm i` instalara todas las dependencias, si alguna es excluida es necesario instalar de forma manual con `npm i [dependencia]`, finalmente edite [configexample.json](https://github.com/Cyopn/CyopnBotWha/blob/master/configexample.json) con sus propias claves API y prefijo, ademas de cambiar el nombre a config.json.
+Con el comando (De igual manera en cmd o en la terminal de VS Code usando `Ctrl+ñ`) `npm i` instalara todas las dependencias, si alguna es excluida es necesario instalar de forma manual con `npm i [dependencia]`, finalmente edite [configexample.json](https://github.com/Cyopn/CyopnBotWha/blob/master/configexample.json) con sus propias claves API y prefijo, ademas de cambiar el nombre a config.json.
 
 <img
     src="https://i.imgur.com/VA1TGI0.png" height="400px">
@@ -30,7 +30,7 @@ Al arrancar, se cargara lo necesario para su funcionamiento, en el proceso se ne
 <img
     src="https://i.imgur.com/MDtfC1v.png" height="400px">
 
-Por ahora hemos finalizado la instalacion y esta listo pra usarse, pueden ocurrir fallos del servidor o de codigo, en este caso lo correcto es reiniciar usando `Ctrl+c` y seguir el paso para finalizar la tarea, finalmente volver a iniciar con `npm start`.
+Por ahora hemos finalizado la instalacion y esta listo para usarse, pueden ocurrir fallos del servidor o de codigo, en este caso lo correcto es reiniciar usando `Ctrl+c` y seguir el paso para finalizar la tarea, finalmente volver a iniciar con `npm start`.
   
 Si algun problema persiste o si existe alguna sugerencia, contactame, agradezco cada comentario.
 - [WhatsApp](https://wa.me/+52562712778)
@@ -43,7 +43,7 @@ Escrito en JavaScript, usando JSON para bases de datos simples, ademas del API [
 - Juan Antonio Calvillo Benitez - _Trabajo inicial_ - [Cyopn](https://github.com/Cyopn/)
 
 ## Expresiones de Gratitud
-El projecto no esta sujeto a derechos de autor para su uso libre, y es desarrollado sin fines de lucro, si es necesario ser asesorado o quisiera ser contribuidor pongase en contacto.
+El projecto no esta sujeto a derechos de autor para su uso libre, y es desarrollado sin fines de lucro (pero agradeceria los creditos), si es necesario ser asesorado o quisiera ser contribuidor pongase en contacto.
 
 Gracias por usarlo :)
 
