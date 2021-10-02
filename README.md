@@ -15,7 +15,7 @@ Debe tener instalado en su equipo:
 Con el comando (De igual manera en cmd o en la terminal de VS Code usando <kdb> Ctrl+ñ </kbd>) `npm i` instalara todas las dependencias, si alguna es excluida es necesario instalar de forma manual con `npm i [dependencia]`, finalmente edite [configexample.json](https://github.com/Cyopn/CyopnBotWha/blob/master/configexample.json) con sus propias claves API y prefijo, ademas de cambiar el nombre a config.json.
 
 <img
-    src="https://i.imgur.com/VA1TGI0.png" height="150px">
+    src="https://i.imgur.com/VA1TGI0.png" height="250px">
 
 ## Arrancando
 Luego de instalar dependencias, escriba `npm start` para el arraque del API, al finalizar este paso, se crearan 3 carpetas:
