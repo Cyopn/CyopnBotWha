@@ -38,8 +38,9 @@ Si algun problema persiste o si existe alguna sugerencia, contactame, agradezco 
 
 
 ## Funciones 
-|||
-|xz|ss|
+| Funcion | Disponible |
+| :- | :-: |
+|Stickers|✅|
 ## Construido con
 Escrito en JavaScript, usando JSON para bases de datos simples, ademas del API [open-wa](https://github.com/open-wa).
 
