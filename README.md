@@ -36,6 +36,10 @@ Si algun problema persiste o si existe alguna sugerencia, contactame, agradezco 
 - [WhatsApp](https://wa.me/+52562712778)
 - [Instagram](https://instagram.com/Cyopn_)
 
+
+## Funciones 
+|||
+|xz|ss|
 ## Construido con
 Escrito en JavaScript, usando JSON para bases de datos simples, ademas del API [open-wa](https://github.com/open-wa).
 
