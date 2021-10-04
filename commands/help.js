@@ -2,6 +2,7 @@ const fs = require('fs')
 var command = []
 var alias = []
 var desc = []
+var txt
 
 module.exports.run = async(client, message, args, config) => {
     var { from, id } = message
@@ -21,7 +22,7 @@ module.exports.run = async(client, message, args, config) => {
                 desc.push(pull.config.desc)
             });
 
-            var txt = `     〘 *CyopnBot* 〙
+            txt = `     〘 *CyopnBot* 〙
 *Informacion*
 prefijo: [ ${prefix} ]
 Creador: Cyopn
@@ -38,6 +39,7 @@ Comandos:
             })
             client.reply(from, txt, id)
         })
+        console.log(txt)
     } catch (e) {
         console.error(e)
     }
