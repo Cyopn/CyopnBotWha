@@ -39,7 +39,7 @@ module.exports.run = async(client, message, args, config) => {
                 client.reply(from, 'El video debe durar menos de 6 segundos', id)
             }
         } else {
-            client.reply(from, `Envia un video/gif con el comando *${prefix}sgif* o responde a uno ya enviado`, id)
+            client.reply(from, `Envia un video/gif con el comando *${prefix}sg* o responde a uno ya enviado`, id)
         }
     } catch (e) {
         console.error(e)

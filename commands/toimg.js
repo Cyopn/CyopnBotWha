@@ -1,13 +1,19 @@
+const { decryptMedia } = require('@open-wa/wa-decrypt')
 module.exports.run = async(client, message, args, config) => {
     const { id, from, quotedMsg } = message
     const { prefix } = config
+    const fs = require('fs')
 
     try {
         if (quotedMsg && quotedMsg.type == 'sticker') {
-            const mediaData = await decryptMedia(quotedMsg)
             client.reply(from, `Espera un poco`, id)
-            const imageBase64 = `data:${quotedMsg.mimetype};base64,${mediaData.toString('base64')}`
-            client.sendFile(from, imageBase64, 'imgsticker.jpg', '', id)
+            const mediaData = await decryptMedia(quotedMsg)
+            fs.writeFile('./media/images/imgRs.png', mediaData, function(err) {
+                if (err) {
+                    return console.error(err);
+                }
+            });
+            client.sendFile(from, './media/images/imgRs.png', id)
         } else {
             client.reply(from, `Usa *${prefix}toimg* respondiendo un sticker`)
         }
