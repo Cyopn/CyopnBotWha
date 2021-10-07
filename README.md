@@ -35,7 +35,6 @@ Por ahora hemos finalizado la instalacion y esta listo para usarse, pueden ocurr
 Si algun problema persiste o si existe alguna sugerencia, contactame, agradezco cada comentario.
 - [WhatsApp](https://wa.me/+52562712778)
 - [Instagram](https://instagram.com/Cyopn_)
-
 ## Construido con
 Escrito en JavaScript, usando JSON para bases de datos simples, ademas del API [open-wa](https://github.com/open-wa).
 
