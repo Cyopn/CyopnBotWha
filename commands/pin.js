@@ -1,26 +1,44 @@
-const { decryptMedia } = require('@open-wa/wa-decrypt')
+const axios = require('axios')
+const geo = require('geocoder')
+var NodeGeocoder = require('node-geocoder');
 
 module.exports.run = async(client, message, args, config) => {
-    const { id, from, quotedMsg } = message
-    const { prefix } = config
-    const fs = require('fs')
-
-
-
-
-
+    const { id, from, quotedMsg, sender } = message
+    const { prefix, mapKey } = config
 
     try {
-        if (quotedMsg && quotedMsg.type == 'sticker') {
-            client.reply(from, `Espera un poco`, id)
-            const mediaData = await decryptMedia(quotedMsg)
-            const imageBase64 = `data:${quotedMsg.mimetype};base64,${mediaData.toString('base64')}`
-        } else {
-            client.reply(from, `Usa *${prefix}toimg* respondiendo un sticker`)
-        }
+        let mess
+        client.reply(from, 'Envia tu ubicacion actual', id)
+
+        mess = (await client.awaitMessages(from,
+            (m) => m.sender.id === sender.id, {
+                time: 100 * 1000,
+                max: 1,
+                errors: ["time"],
+            })).first()
+
+
+        const { lat, lng } = mess
+
+        var geocoder = NodeGeocoder({
+            provider: 'opencage',
+            apiKey: '2036dca6340149e9a419aa15613873ee'
+        });
+
+        // Using callback
+        geocoder.geocode(`${lat}, ${lng}`, function(err, res) {
+            const { country, city, state, zipcode, streetName } = res[0]
+            client.reply(from, `Informacion de la ubicacion
+Pais: ${country}
+Ciudad/Estado: ${city}/${state}
+Calle: ${streetName}
+Codigo Postal: ${zipcode}`, id)
+        });
+
     } catch (e) {
         console.error(e)
-        client.reply(from, `Ocurrio un error`, id)
+        client.reply(from, `Fin del tiempo`, id)
+        return
     }
 }
 

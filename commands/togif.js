@@ -7,12 +7,14 @@ module.exports.run = async(client, message, args, config) => {
     const uaOverride = 'WhatsApp/2.2029.4 Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.116 Safari/537.36'
 
     try {
-        const mediaData = await decryptMedia(message, uaOverride)
+        const mediaData = await decryptMedia(quotedMsg, uaOverride)
         fs.writeFile('./media/gifs/togif.gif', mediaData, function(err) {
             if (err) {
                 return console.error(err);
             }
         });
+
+        client.sendVideoAsGif(from, './media/gifs/togif.gif', 'yo.gif', '')
 
 
     } catch (e) {
