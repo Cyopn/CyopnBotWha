@@ -26,7 +26,6 @@ module.exports = msgHandler = async(client, message) => {
     try {
         const { lvlFunc } = require('./lib/level')
         await lvlFunc(client, message)
-
         if (body.startsWith(config.prefix)) {
             const args = body.slice(config.prefix.length).trim().split(' ')
             var comm
