@@ -9,6 +9,8 @@ module.exports = options = (headless, start) => {
         useChrome: true,
         killProcessOnBrowserClose: true,
         trhowErrorOnTosBlock: true,
+        discord: '745733972742635581',
+        executablePath: 'C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe',
         chromiumArgs: [
             '--no-sandbox',
             '--disable-setuid-sandbox',
