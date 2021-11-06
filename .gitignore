@@ -15,8 +15,5 @@ media/gifs/stickergif.gif
 media/audio/tts.mp3
 media/gifs/togif.gif
 media/gifs/togif.mp4
-
-# managed
 **.data.json
 **.node-persist**
-# end managed
