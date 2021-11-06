@@ -22,7 +22,6 @@ module.exports = msgHandler = async(client, message) => {
     var { name, formattedTitle } = chat
     let { pushname, verifiedName, formattedName } = sender
     pushname = pushname || verifiedName || formattedName
-    body = (type === 'chat' && body.startsWith(config.prefix)) ? body : ((type === 'image' && caption || type === 'video' && caption) && caption.startsWith(config.prefix)) ? caption : ''
     try {
         const { lvlFunc } = require('./lib/level')
         await lvlFunc(client, message)
