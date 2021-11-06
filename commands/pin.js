@@ -11,14 +11,16 @@ module.exports.run = async(client, message, args, config) => {
         client.reply(from, 'Envia tu ubicacion actual', id)
 
         mess = (await client.awaitMessages(from,
-            (m) => m.sender.id === sender.id, {
+            (m) => m.sender.id === sender.id && m.type === "location", {
                 time: 100 * 1000,
                 max: 1,
                 errors: ["time"],
             })).first()
 
 
-        const { lat, lng } = mess
+        const { lat, lng, loc } = mess
+
+        console.log(loc)
 
         var geocoder = NodeGeocoder({
             provider: 'opencage',

@@ -15,7 +15,6 @@ module.exports.run = async(client, message, args, config) => {
             await fs.writeFileSync(filename, mediaData)
             client.sendMp4AsSticker(from, `./media/gifs/stickergif.${quotedMsg.mimetype.split('/')[1]}`, {
                 crop: false,
-                endTime: '00:00:10.0'
             }, {
                 author: 'ig: @Cyopn_',
                 pack: 'CyopnBot'
@@ -38,7 +37,7 @@ module.exports.run = async(client, message, args, config) => {
                 pack: 'CyopnBot'
             }).catch(e => {
                 client.reply(from, 'El gif es demasiado largo', id)
-                console.log(e)
+                console.log(e.data)
             })
         } else {
             client.reply(from, 'El video debe durar menos de 10 segundos', id)

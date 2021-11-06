@@ -39,7 +39,6 @@ Comandos:
             })
             client.reply(from, txt, id)
         })
-        console.log(txt)
     } catch (e) {
         console.error(e)
     }
