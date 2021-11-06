@@ -6,7 +6,6 @@ const { prefix } = require("./config")
 
 const start = async(client = new Client()) => {
     console.log("[SR] Cliente listo")
-    client.sendText('5215627127780@c.us', `Bot listo`)
     client.onStateChanged((state) => {
         console.log("[SR]", state)
         if (state === 'CONFLICT' || state === 'UNLAUNCHED') {
