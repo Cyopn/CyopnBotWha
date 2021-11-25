@@ -10,7 +10,7 @@ module.exports.run = async(client, message, args, config) => {
 
         if (!dataText) return client.reply(from, `Escribe *${prefix}tts [idioma] [texto], ejemplo: ${prefix}tts es hola`, id)
         ttsGB.save('./media/audio/tts.mp3', dataText, function() {
-            client.sendPtt(from, './media/audio/tts.mp3', id)
+            client.sendPtt(from, './media/audio/tts.mp3', id);
         })
     } catch (e) {
         let er = e.toString()
@@ -25,7 +25,7 @@ module.exports.run = async(client, message, args, config) => {
 }
 
 module.exports.config = {
-    name: "tts",
+    name: "tts", 
     aliases: 'tts',
     desc: 'Envia audios en un lenguaje especifico'
 }
