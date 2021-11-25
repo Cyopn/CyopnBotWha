@@ -14,7 +14,7 @@ const start = async(client = new Client()) => {
     })
 
     client.onMessage((async(message) => {
-        handler(client, message)
+        await handler(client, message)
     }))
 
     client.onGlobalParticipantsChanged((async(event) => {
