@@ -22,20 +22,17 @@ module.exports = msgHandler = async(client, message) => {
     var { name, formattedTitle } = chat
     let { pushname, verifiedName, formattedName } = sender
     pushname = pushname || verifiedName || formattedName
+    body = (type === 'chat' && body.startsWith(config.prefix)) ? body : ((type === 'image' && caption || type === 'video' && caption) && caption.startsWith(config.prefix)) ? caption : ''
+    
     try {
         const { lvlFunc } = require('./lib/level')
         await lvlFunc(client, message)
         if (body.startsWith(config.prefix)) {
             const args = body.slice(config.prefix.length).trim().split(' ')
-            var comm
-            if (!args) {
-                comm = body
-            } else {
-                comm = args.shift().toLowerCase()
-            }
-            const sr = command.indexOf(comm) === -1 ? alias.indexOf(comm) : command.indexOf(comm)
+            const comm = args.shift().toLowerCase()
+            const sr = command.indexOf(comm) && alias.indexOf(comm)
+            if (sr === -1) return
             const commFil = command[sr]
-            if (commFil === undefined || args.join('') === 'null') return
             const commFile = require(`./commands/${commFil}`)
             commFile.run(client, message, args, config)
         } else {
