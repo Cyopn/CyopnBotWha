@@ -10,11 +10,7 @@ database/dataLevel.json
 media/images/imgSt.jpg
 media/images/imgSt.png
 media/images/imgRs.png
-media/gifs/stickergif.mp4
-media/gifs/stickergif.gif
 media/audio/tts.mp3
-media/gifs/togif.gif
-media/gifs/togif.mp4
 commands/pin.js
 .idea
 **.data.json
