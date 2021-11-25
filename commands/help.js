@@ -2,7 +2,9 @@ const fs = require('fs')
 var command = []
 var alias = []
 var desc = []
-var txt
+var txt = ""
+
+txt = txt.replace(txt, "")
 
 module.exports.run = async(client, message, args, config) => {
     var { from, id } = message

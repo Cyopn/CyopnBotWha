@@ -1,7 +1,7 @@
 const db = require('megadb')
 const lvldB = new db.crearDB({
     nombre: 'dataLevel',
-    carpeta: './configdata'
+    carpeta: './database'
 })
 
 module.exports.run = async(client, message, args, config) => {

@@ -10,16 +10,16 @@ module.exports.run = async(client, message, args, config) => {
     if (isMedia && mimetype === 'video/mp4') {
         if (message.duration < 10 || mimetype === 'image/gif' && message.duration < 10) {
             client.reply(from, `Espera un poco`, id)
-            const mediaData = await decryptMedia(message, uaOverride)
-            const filename = `./media/gifs/stickergif.${mimetype.split('/')[1]}`
-            await fs.writeFileSync(filename, mediaData)
-            client.sendMp4AsSticker(from, `./media/gifs/stickergif.${quotedMsg.mimetype.split('/')[1]}`, {
+            const mediaData=await decryptMedia(message, uaOverride)
+            const basePath=`data:${message.mimetype};base64,${mediaData.toString('base64')}`
+            client.sendMp4AsSticker(from, basePath, {
                 crop: false,
-            }, {
-                author: 'ig: @Cyopn_',
-                pack: 'CyopnBot'
-            }).catch(e => {
-                client.reply(from, 'El gif es demasiado largo', id)
+                endTime:'00:00:10.0'
+            },{
+                author:'ig: @Cyopn_',
+                pack:'CyopnBot'
+                }).catch(e=>{
+                    if (e.toString().includes("STICKER_TOO_LARGE")) return client.reply(from, 'Es imposible crear el sticker', id)
             })
         } else(
             client.reply(from, 'El video debe durar menos de 10 segundos', id)
@@ -27,17 +27,16 @@ module.exports.run = async(client, message, args, config) => {
     } else if (quotedMsg && quotedMsg.mimetype === 'video/mp4') {
         if (quotedMsg.duration < 10 || quotedMsg.mimetype === 'image/gif' && quotedMsg.duration < 10) {
             client.reply(from, `Espera un poco`, id)
-            const mediaData = await decryptMedia(quotedMsg, uaOverride)
-            const filename = `./media/gifs/stickergif.gif`
-            await fs.writeFileSync(filename, mediaData)
-            client.sendMp4AsSticker(from, `./media/gifs/stickergif.gif`, {
+            const mediaData=await decryptMedia(quotedMsg, uaOverride)
+            const basePath=`data:${quotedMsg.mimetype};base64,${mediaData.toString('base64')}`
+            client.sendMp4AsSticker(from, basePath, {
                 crop: false,
-            }, {
-                author: 'ig: @Cyopn_',
-                pack: 'CyopnBot'
-            }).catch(e => {
-                client.reply(from, 'El gif es demasiado largo', id)
-                console.log(e.data)
+                endTime:'00:00:10.0'
+            },{
+                author:'ig: @Cyopn_',
+                pack:'CyopnBot'
+            }).catch(e=>{
+                if (e.toString().includes("STICKER_TOO_LARGE")) return client.reply(from, 'Es imposible crear el sticker', id)
             })
         } else {
             client.reply(from, 'El video debe durar menos de 10 segundos', id)

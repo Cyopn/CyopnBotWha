@@ -5,8 +5,8 @@ logs
 package-lock.json
 session.data.json
 test.js
-configdata/dataDesc.json
-configdata/dataLevel.json
+database/dataDesc.json
+database/dataLevel.json
 media/images/imgSt.jpg
 media/images/imgSt.png
 media/images/imgRs.png
@@ -15,5 +15,7 @@ media/gifs/stickergif.gif
 media/audio/tts.mp3
 media/gifs/togif.gif
 media/gifs/togif.mp4
+commands/pin.js
+.idea
 **.data.json
 **.node-persist**

@@ -15,7 +15,7 @@ module.exports.run = async(client, message, args, config) => {
                 time: 100 * 1000,
                 max: 1,
                 errors: ["time"],
-            })).first()
+            }))
 
 
         const { lat, lng, loc } = mess
@@ -24,10 +24,9 @@ module.exports.run = async(client, message, args, config) => {
 
         var geocoder = NodeGeocoder({
             provider: 'opencage',
-            apiKey: '2036dca6340149e9a419aa15613873ee'
+            apiKey: mapKey
         });
 
-        // Using callback
         geocoder.geocode(`${lat}, ${lng}`, function(err, res) {
             const { country, city, state, zipcode, streetName } = res[0]
             client.reply(from, `Informacion de la ubicacion
@@ -40,7 +39,6 @@ Codigo Postal: ${zipcode}`, id)
     } catch (e) {
         console.error(e)
         client.reply(from, `Fin del tiempo`, id)
-        return
     }
 }
 
