@@ -1,6 +1,6 @@
 const fs = require('fs')
-var command = []
-var alias = []
+let command = []
+let alias = []
 const config = require('./config.json')
 
 fs.readdir('./commands/', (err, files) => {
@@ -14,14 +14,13 @@ fs.readdir('./commands/', (err, files) => {
         alias.push(pull.config.aliases)
     });
     console.log(`Se cargaron ${command.length} comandos, de ${files.length} archivos`)
+    console.log(command)
+    console.log(alias)
 })
 
 module.exports = msgHandler = async(client, message) => {
-    const { type, id, from, t, sender, author, isGroupMsg, chat, chatId, caption, isMedia, mimetype, quotedMsg, quotedMsgObj, mentionedJidList } = message
+    const { type, id, from, caption } = message
     let { body } = message
-    var { name, formattedTitle } = chat
-    let { pushname, verifiedName, formattedName } = sender
-    pushname = pushname || verifiedName || formattedName
     body = (type === 'chat' && body.startsWith(config.prefix)) ? body : ((type === 'image' && caption || type === 'video' && caption) && caption.startsWith(config.prefix)) ? caption : ''
     
     try {
@@ -30,17 +29,15 @@ module.exports = msgHandler = async(client, message) => {
         if (body.startsWith(config.prefix)) {
             const args = body.slice(config.prefix.length).trim().split(' ')
             const comm = args.shift().toLowerCase()
-            const sr = command.indexOf(comm) && alias.indexOf(comm)
+            const sr = command.indexOf(comm) === -1 ? alias.indexOf(comm) : command.indexOf(comm)
             if (sr === -1) return
             const commFil = command[sr]
             const commFile = require(`./commands/${commFil}`)
             commFile.run(client, message, args, config)
-        } else {
-            return
         }
 
     } catch (e) {
         console.error(e)
-        client.reply(from, `Ocurrio un error`, id)
+        await client.reply(from, `Ocurrio un error`, id)
     }
 }
