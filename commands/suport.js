@@ -8,12 +8,12 @@ module.exports.run = async(client, message, args, config) => {
             'ORG:Cyopn;\n' +
             'TEL;type=CELL;type=VOICE;waid=525627127780:+525627127780\n' +
             'END:VCARD'
-        client.sendVCard(from, vcard, `Cyopn`, `525627127780`)
-        client.reply(from, 'Aquí está el número del creador del bot\nAqui puedes resolver tus preguntas y errores \nEste es el numero del creador del bot', id)
+        await client.sendVCard(from, vcard, `Cyopn`, `525627127780`)
+        await client.reply(from, 'Aquí está el número del creador del bot\nAqui puedes resolver tus preguntas y errores', id)
 
     } catch (e) {
         console.error(e)
-        client.reply(from, `Ocurrio un error`, id)
+        await client.reply(from, `Ocurrio un error`, id)
     }
 }
 

@@ -18,7 +18,7 @@ module.exports.run = async(client, message, args, config) => {
 
             await createSt(client, message)
 
-        } else if (quotedMsg && quotedMsg.type == 'image') {
+        } else if (quotedMsg && quotedMsg.type === 'image') {
             const mediaData = await decryptMedia(quotedMsg, uaOverride)
             fs.writeFile('./media/images/imgSt.jpg', mediaData, function(err) {
                 if (err) {
@@ -37,15 +37,15 @@ module.exports.run = async(client, message, args, config) => {
                     }, id)
                     .catch(err => console.error(err))
             } else {
-                client.reply(from, `El enlace no es valido`, id)
+                await client.reply(from, `El enlace no es valido`, id)
             }
         } else {
-            client.reply(from, `Envia una imagen con el comando *${config.prefix}sticker*, responde a una imagen ya enviada o con un link`, id)
+            await client.reply(from, `Envia una imagen con el comando *${config.prefix}sticker*, responde a una imagen ya enviada o con un link`, id)
         }
 
     } catch (e) {
         console.error(e)
-        client.reply(from, `Ocurrio un error`, id)
+        await client.reply(from, `Ocurrio un error`, id)
     }
 }
 

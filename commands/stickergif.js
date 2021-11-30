@@ -1,6 +1,4 @@
 const { decryptMedia } = require('@open-wa/wa-decrypt')
-const { exec } = require('child_process')
-const fs = require('fs')
 
 module.exports.run = async(client, message, args, config) => {
     const { id, from, isMedia, mimetype, quotedMsg } = message
@@ -9,7 +7,7 @@ module.exports.run = async(client, message, args, config) => {
 
     if (isMedia && mimetype === 'video/mp4') {
         if (message.duration < 10 || mimetype === 'image/gif' && message.duration < 10) {
-            client.reply(from, `Espera un poco`, id)
+            await client.reply(from, `Espera un poco`, id)
             const mediaData=await decryptMedia(message, uaOverride)
             const basePath=`data:${message.mimetype};base64,${mediaData.toString('base64')}`
             client.sendMp4AsSticker(from, basePath, {
@@ -20,13 +18,13 @@ module.exports.run = async(client, message, args, config) => {
                 pack:'CyopnBot'
                 }).catch(e=>{
                     if (e.toString().includes("STICKER_TOO_LARGE")) return client.reply(from, 'Es imposible crear el sticker', id)
-            })
+                })
         } else(
-            client.reply(from, 'El video debe durar menos de 10 segundos', id)
+            await client.reply(from, 'El video debe durar menos de 10 segundos', id)
         )
     } else if (quotedMsg && quotedMsg.mimetype === 'video/mp4') {
         if (quotedMsg.duration < 10 || quotedMsg.mimetype === 'image/gif' && quotedMsg.duration < 10) {
-            client.reply(from, `Espera un poco`, id)
+            await client.reply(from, `Espera un poco`, id)
             const mediaData=await decryptMedia(quotedMsg, uaOverride)
             const basePath=`data:${quotedMsg.mimetype};base64,${mediaData.toString('base64')}`
             client.sendMp4AsSticker(from, basePath, {
@@ -39,10 +37,10 @@ module.exports.run = async(client, message, args, config) => {
                 if (e.toString().includes("STICKER_TOO_LARGE")) return client.reply(from, 'Es imposible crear el sticker', id)
             })
         } else {
-            client.reply(from, 'El video debe durar menos de 10 segundos', id)
+            await client.reply(from, 'El video debe durar menos de 10 segundos', id)
         }
     } else {
-        client.reply(from, `Envia un video/gif con el comando *${prefix}sg* o responde a uno ya enviado`, id)
+        await client.reply(from, `Envia un video/gif con el comando *${prefix}sg* o responde a uno ya enviado`, id)
     }
 }
 module.exports.config = {

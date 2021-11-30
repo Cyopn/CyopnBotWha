@@ -16,9 +16,9 @@ module.exports.run = async(client, message, args, config) => {
         let er = e.toString()
         let a = er.split(" ").pop()
         if (er.includes('Error: Language not supported:')) {
-            client.reply(from, `El idioma ${a} no existe o no esta disponible`, id)
+            await client.reply(from, `El idioma ${a} no existe o no esta disponible`, id)
         } else {
-            client.reply(from, `Ocurrio un error`, id)
+            await client.reply(from, `Ocurrio un error`, id)
             console.error(e)
         }
     }

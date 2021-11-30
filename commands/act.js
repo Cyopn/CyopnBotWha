@@ -11,7 +11,6 @@ module.exports.run = async(client, message, args, config) => {
     const groupAdmins = isGroupMsg ? await client.getGroupAdmins(groupId) : ''
     const isGroupAdmins = isGroupMsg ? groupAdmins.includes(sender.id) : false
 
-
     try {
         if (!isGroupMsg) return client.reply(from, 'Comando solo disponible en grupos', id)
         if (!isGroupAdmins) return client.reply(from, 'Necesitas ser administrador para usar este comando', id)

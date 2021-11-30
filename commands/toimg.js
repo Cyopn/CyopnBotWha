@@ -5,21 +5,21 @@ module.exports.run = async(client, message, args, config) => {
     const fs = require('fs')
 
     try {
-        if (quotedMsg && quotedMsg.type == 'sticker') {
-            client.reply(from, `Espera un poco`, id)
+        if (quotedMsg && quotedMsg.type === 'sticker') {
+            await client.reply(from, `Espera un poco`, id)
             const mediaData = await decryptMedia(quotedMsg)
             fs.writeFile('./media/images/imgRs.png', mediaData, function(err) {
                 if (err) {
                     return console.error(err);
                 }
             });
-            client.sendFile(from, './media/images/imgRs.png', id)
+            await client.sendFile(from, './media/images/imgRs.png', id)
         } else {
-            client.reply(from, `Usa *${prefix}toimg* respondiendo un sticker`)
+            await client.reply(from, `Usa *${prefix}toimg* respondiendo un sticker`)
         }
     } catch (e) {
         console.error(e)
-        client.reply(from, `Ocurrio un error`, id)
+        await client.reply(from, `Ocurrio un error`, id)
     }
 }
 

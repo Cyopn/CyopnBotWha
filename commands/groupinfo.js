@@ -1,4 +1,3 @@
-const fs = require('fs')
 const db = require('megadb')
 let dBase = new db.crearDB({
     nombre: 'dataDesc',
@@ -7,13 +6,13 @@ let dBase = new db.crearDB({
 
 module.exports.run = async(client, message, args, config) => {
     const { id, from, isGroupMsg, chat } = message
-    var { name } = chat
+    let { name } = chat
 
     try {
         if (!isGroupMsg) return client.reply(from, 'Comando solo disponible para grupos', id)
-        var totalMem = chat.groupMetadata.participants.length
-        var des = chat.groupMetadata.desc
-        var desc = des === undefined ? 'Sin descripcion' : des
+        let totalMem = chat.groupMetadata.participants.length
+        let des = chat.groupMetadata.desc
+        let desc = des === undefined ? 'Sin descripcion' : des
         const groupId = isGroupMsg ? chat.groupMetadata.id : ''
         if (!dBase.has(groupId)) {
             dBase.set(groupId, {
@@ -22,8 +21,8 @@ module.exports.run = async(client, message, args, config) => {
             })
         }
         const res = await dBase.get(groupId)
-        var grouppic = await client.getProfilePicFromServer(chat.id)
-        if (grouppic == undefined) {
+        let grouppic = await client.getProfilePicFromServer(chat.id)
+        if (grouppic === undefined) {
             await client.reply(from, `*${name}* 
 
 *Miembros: ${totalMem}*
@@ -34,7 +33,7 @@ module.exports.run = async(client, message, args, config) => {
 ${desc}`, id)
 
         } else {
-            var pfp = grouppic
+            let pfp = grouppic
             await client.sendFileFromUrl(from, pfp, 'group.png', `*${name}* 
             
 *Miembros: ${totalMem}*
@@ -47,7 +46,7 @@ ${desc}`)
         }
     } catch (e) {
         console.error(e)
-        client.reply(from, `Ocurrio un error`, id)
+        await client.reply(from, `Ocurrio un error`, id)
     }
 }
 
