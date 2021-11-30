@@ -31,6 +31,10 @@ Al arrancar, se cargara lo necesario para su funcionamiento, en el proceso se ne
     src="https://i.imgur.com/MDtfC1v.png" height="400px">
 
 Por ahora hemos finalizado la instalacion y esta listo para usarse, pueden ocurrir fallos del servidor o de codigo, en este caso lo correcto es reiniciar usando `Ctrl+c` y seguir el paso para finalizar la tarea, finalmente volver a iniciar con `npm start`.
+
+## Mas funciones
+Puedes hacer cambios en algunas funciones:
+- Reddit
   
 Si algun problema persiste o si existe alguna sugerencia, contactame, agradezco cada comentario.
 - [WhatsApp](https://wa.me/+52562712778)

@@ -4,7 +4,6 @@ node_modules
 logs
 package-lock.json
 session.data.json
-test.js
 database/dataDesc.json
 database/dataLevel.json
 media/images/imgSt.jpg
