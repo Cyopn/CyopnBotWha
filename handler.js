@@ -13,9 +13,6 @@ fs.readdir('./commands/', (err, files) => {
         command.push(pull.config.name)
         alias.push(pull.config.aliases)
     });
-    console.log(`Se cargaron ${command.length} comandos, de ${files.length} archivos`)
-    console.log(command)
-    console.log(alias)
 })
 
 module.exports = msgHandler = async(client, message) => {
@@ -24,8 +21,8 @@ module.exports = msgHandler = async(client, message) => {
     body = (type === 'chat' && body.startsWith(config.prefix)) ? body : ((type === 'image' && caption || type === 'video' && caption) && caption.startsWith(config.prefix)) ? caption : ''
     
     try {
-        const { lvlFunc } = require('./lib/level')
-        await lvlFunc(client, message)
+        /*const { lvlFunc } = require('./lib/level')
+        await lvlFunc(client, message)*/
         if (body.startsWith(config.prefix)) {
             const args = body.slice(config.prefix.length).trim().split(' ')
             const comm = args.shift().toLowerCase()
