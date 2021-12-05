@@ -7,8 +7,8 @@ module.exports.run = async(client, message, args, config) => {
     const { prefix } = config
     const arg = args.join(' ')
     try {
-        if (!args) {
-            await client.reply(`Envia un texto con el comando *${prefix}stext [texto]*, ejemplo : ${prefix}stext Hola`)
+        if (!arg) {
+            await client.reply(from, `Envia un texto con el comando *${prefix}stext [texto]*, ejemplo : ${prefix}stext Hola`, id)
         } else {
             await client.reply(from, `Espera un poco`, id)
             const res = await getBuffer(`https://api.xteam.xyz/attp?file&text=${arg}`)
