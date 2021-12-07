@@ -1,22 +1,18 @@
 const google=require("google-it")
+const fetch=require("node-fetch")
 module.exports.run = async(client, message, args, config) => {
-    const { type, id, from, t, sender, author, isGroupMsg, chat, chatId, caption, isMedia, mimetype, quotedMsg, quotedMsgObj, mentionedJidList } = message
-    let { body } = message
-    let { name, formattedTitle } = chat
-    let { pushname, verifiedName, formattedName } = sender
-    pushname = pushname || verifiedName || formattedName
+    const {  id, from } = message
     let arg=args.join(' ')
     try {
-        if(!args) return await client.reply(from, `Envia tu consulta con el comando *${prefix}search [consulta]*, ejemplo : ${prefix}search Cyopn`)
+        if(!arg) return await client.reply(from, `Envia tu consulta con el comando *${prefix}search [consulta]*, ejemplo : ${prefix}search Cyopn`, id)
         
+        let url=`https://google.com/search?q=${encodeURIComponent(arg)}`
         let search=await google({query:arg})
         let txt=search.map(({title, link, snippet})=>{
             return `*${title}*\n_${link}_\n_${snippet}_`
         }).join('\n\n')
         
-        
-        /*await client.sendFile(from, ss, 'screenshot.png', `${url}\n\n${txt}`, id)*/
-        await client.reply(from, `Resultados para *${arg}* \n\n${txt}`, id)
+        await client.sendFile(from, `https://nurutomo.herokuapp.com/api/ssweb?url=${url}&full=true&delay=1&type=jpg&quality=100`, 'screenshot.png', `Resultados para *${arg}* \n\n${txt}`, id)
     } catch (e) {
         console.error(e)
         await client.reply(from, `Ocurrio un error`, id)

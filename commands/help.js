@@ -1,7 +1,4 @@
-const fs = require('fs')
-let command = []
-let alias = []
-let desc = []
+const {loadCommands}=require("../lib/functions")
 let txt = ""
 
 txt = txt.replace(txt, "")
@@ -61,36 +58,6 @@ Convierte un sticker a imagen
 
 tts (alias: tts)
 Envia audios en un lenguaje especifico`
-        /*fs.readdir('./commands/', (err, files) => {
-
-            if (err) return console.error(err)
-            let jsfile = files.filter(f => f.split(".").pop() === "js")
-            if (jsfile.length <= 0) return console.log("No se encontro ningun comando");
-            jsfile.forEach((f, i) => {
-
-                let pull = require(`./${f}`)
-                command.push(pull.config.name)
-                alias.push(pull.config.aliases)
-                desc.push(pull.config.desc)
-            });
-
-            txt = `     〘 *CyopnBot* 〙
-*Informacion*
-prefijo: [ ${prefix} ]
-Creador: Cyopn
-Instagram: https://instagram.com/Cyopn_/
-
-Comandos: 
-`
-            command.forEach((name) => {
-                if (name === 'help') return
-                const sr = command.indexOf(name)
-                txt += `${name} (alias: ${alias[sr]})\n${desc[sr]}
-
-`
-            })
-            client.reply(from, txt, id)
-        })*/
         
         await client.reply(from, path, id)
     } catch (e) {
