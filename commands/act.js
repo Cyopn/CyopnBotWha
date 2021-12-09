@@ -1,4 +1,3 @@
-const fs = require('fs')
 const db = require('megadb')
 let dBase = new db.crearDB({
     nombre: 'dataDesc',
@@ -7,7 +6,7 @@ let dBase = new db.crearDB({
 
 module.exports.run = async(client, message, args, config) => {
     const { id, from, sender, isGroupMsg, chat } = message
-    const groupId = isGroupMsg ? chat.groupMetadata.id.replace('@g.us', '') : ''
+    const groupId = isGroupMsg ? chat.groupMetadata.id : ''
     const groupAdmins = isGroupMsg ? await client.getGroupAdmins(groupId) : ''
     const isGroupAdmins = isGroupMsg ? groupAdmins.includes(sender.id) : false
 

@@ -11,53 +11,59 @@ module.exports.run = async(client, message, args, config) => {
     try {
         path=`     〘 *CyopnBot* 〙
 *Informacion*
-prefijo: [ ${prefix} ]
-Creador: Cyopn
-Instagram: https://instagram.com/Cyopn_/
+*Prefijo*: [ ${prefix} ]
+*Creador*: Cyopn
+*Instagram*: https://instagram.com/Cyopn_/
 
-Comandos: 
+*Comandos*: 
  
-act (alias: ac)
-Activa algunas funciones(bienvebida/nsfw)
+*Act* (alias: ac)
+_Activa algunas funciones(bienvebida/nsfw)._
 
-covid (alias: cd)
-Obten informacion sobre el covid-19 en tu pais
+*Covid* (alias: cd)
+_Obten informacion sobre el covid-19 en tu pais._
 
-deact (alias: dc)
-Desactiva algunas funciones(bienvebida/nsfw)
+*Deact* (alias: dc)
+_Desactiva algunas funciones(bienvebida/nsfw)._
 
-groupinfo (alias: ginfo)
-Obten informacion sobre el grupo
+*Groupinfo* (alias: ginfo)
+_Obten informacion sobre el grupo._
 
-level (alias: lvl)
-Obten informacion sobre tu nivel y xp
+*Level* (alias: lvl)
+_Obten informacion sobre tu nivel y xp._
 
-math (alias: mt)
-Resuelve problemas, operaciones aritmeticas: !math sim [operacion], pronto mas opciones
+*Math* (alias: mt)
+_Resuelve problemas, operaciones aritmeticas: !math sim [operacion], pronto mas opciones._
 
-meme (alias: m)
-Momazos en r/ChingaTuMadreNoko
+*Meme* (alias: m)
+_Momazos en r/ChingaTuMadreNoko._
 
-play (alias: p)
-Descarga una cancion
+*Play* (alias: p)
+_Descarga una cancion._
 
-stext (alias: st)
-Crea un sticker a partir de texto
+*Stext* (alias: st)
+_Crea un sticker a partir de texto._
 
-sticker (alias: s)
-Crea stickers
+*Sticker* (alias: s)
+_Crea stickers._
 
-stickergif (alias: sg)
-Crea un sticker en movimiento
+*Stickergif* (alias: sg)
+_Crea un sticker en movimiento._
 
-suport (alias: sp)
-Obten ayuda si existe algun problema
+*Suport* (alias: sp)
+_Obten ayuda si existe algun problema._
 
-toimg (alias: ti)
-Convierte un sticker a imagen
+*Toimg* (alias: ti)
+_Convierte un sticker a imagen._
 
-tts (alias: tts)
-Envia audios en un lenguaje especifico`
+*Tts* (alias: tts)
+_Envia audios en un lenguaje especifico._
+
+*Search* (alias: sr)
+_Realiza una busqueda en Google._
+
+*Hornycard* (alias: hcd)
+_Crea tu permiso para estar "horny"._`
         
         await client.reply(from, path, id)
     } catch (e) {

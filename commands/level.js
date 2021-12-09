@@ -5,8 +5,7 @@ const lvldB = new db.crearDB({
 })
 
 module.exports.run = async(client, message, args, config) => {
-    const { type, id, from, t, sender, author, isGroupMsg, chat, chatId, caption, isMedia, mimetype, quotedMsg, quotedMsgObj, mentionedJidList } = message
-    let { body } = message
+    const { id, from, sender, author, isGroupMsg, chat} = message
     const groupId = isGroupMsg ? chat.groupMetadata.id.replace('@g.us', '') : ''
     const sid = author.replace('@c.us', '')
     const { pushname } = sender
@@ -14,9 +13,12 @@ module.exports.run = async(client, message, args, config) => {
         if (lvldB.has(groupId) && lvldB.has(`${groupId}.${sid}`)) {
             const res = await lvldB.get(`${groupId}.${sid}`)
             if (res.xp === 0) {
-                client.reply(from, `Aun no envias suficientes mensajes para tener un nivel o experiencia`, id)
+                await client.reply(from, `Aun no envias suficientes mensajes para tener un nivel o experiencia`, id)
             } else {
-                client.reply(from, `Buen trabajo ${pushname}!
+                /*await client.reply(from, `Buen trabajo ${pushname}!
+*Xp: ${res.xp}*
+*Nivel: ${res.level}*`, id)*/
+                await client.sendReplyWithMentions(from, `Buen trabajo ${author}!
 *Xp: ${res.xp}*
 *Nivel: ${res.level}*`, id)
             }
@@ -28,7 +30,7 @@ module.exports.run = async(client, message, args, config) => {
         }
     } catch (e) {
         console.error(e)
-        client.reply(from, `Ocurrio un error`, id)
+        await client.reply(from, `Ocurrio un error`, id)
     }
 }
 
