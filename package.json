@@ -3,7 +3,6 @@
     "version": "1.2.1",
     "description": "Un bot de WhatsApp facil e intuitivo de usar",
     "main": "index.js",
-    
     "directories": {
         "lib": "lib"
     },
@@ -21,6 +20,7 @@
         "got": "^11.8.3",
         "image-size": "^1.0.0",
         "jimp": "^0.16.1",
+        "ko-sleep": "^1.1.4",
         "mathjs": "^2.7.0",
         "megadb": "^3.4.0",
         "node-fetch": "^2.0.0",

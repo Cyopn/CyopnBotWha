@@ -15,7 +15,7 @@ module.exports.run = async(client, message, args, config) => {
             });
             await client.sendFile(from, './media/images/imgRs.png', id)
         } else {
-            await client.reply(from, `Usa *${prefix}toimg* respondiendo un sticker`)
+            await client.reply(from, `Usa *${prefix}toimg* respondiendo un sticker`, id)
         }
     } catch (e) {
         console.error(e)
