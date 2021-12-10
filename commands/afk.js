@@ -11,8 +11,9 @@ module.exports.run = async(client, message, args, config) => {
     var { name, formattedTitle } = chat
     let { pushname, verifiedName, formattedName } = sender
     pushname = pushname || verifiedName || formattedName
-    let razon=args[0]
-    let time=args[1]
+    
+    let time=args[args.length-1]
+    let razon=args.join(" ").replace(` ${time}`, "")
     const { prefix }=config
     try {
         if(!razon && !time){
@@ -28,8 +29,9 @@ module.exports.run = async(client, message, args, config) => {
                 if(status==="afk"){
                     await client.reply(from, `Por el momento ya estas en akf, espera _~${(delay/60).toFixed(2)} minuto(s)_ para intentar de nuevo`, id)
                 }else if(status==="none"){
+                    
                     let razon=args[0]
-                    let time=args[args.length-1]
+                    let time=args
                     let s=time*60
                     let count=1
                     afkdB.set(`${groupId}.${sid}`, {
@@ -56,8 +58,8 @@ module.exports.run = async(client, message, args, config) => {
                     }
                 }
             }else{
-                let razon=args[0]
                 let time=args[args.length-1]
+                let razon=args.join(" ").replace(` ${time}`, "")
                 let s=time*60
                 let count=1
                 afkdB.set(`${groupId}.${sid}`, {
