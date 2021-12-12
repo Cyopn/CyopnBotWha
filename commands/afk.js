@@ -1,4 +1,3 @@
-const { getAfk }=require("../lib/functions")
 const db = require("megadb");
 const afkdB=new db.crearDB({
     nombre:'dataAkf',
@@ -7,10 +6,6 @@ const afkdB=new db.crearDB({
 const sleep=require("ko-sleep")
 module.exports.run = async(client, message, args, config) => {
     const { type, id, from, t, sender, author, isGroupMsg, chat, chatId, caption, isMedia, mimetype, quotedMsg, quotedMsgObj, mentionedJidList } = message
-    let { body } = message
-    var { name, formattedTitle } = chat
-    let { pushname, verifiedName, formattedName } = sender
-    pushname = pushname || verifiedName || formattedName
     
     let time=args[args.length-1]
     let razon=args.join(" ").replace(` ${time}`, "")
@@ -29,9 +24,9 @@ module.exports.run = async(client, message, args, config) => {
                 if(status==="afk"){
                     await client.reply(from, `Por el momento ya estas en akf, espera _~${(delay/60).toFixed(2)} minuto(s)_ para intentar de nuevo`, id)
                 }else if(status==="none"){
-                    
-                    let razon=args[0]
-                    let time=args
+
+                    let time=args[args.length-1]
+                    let razon=args.join(" ").replace(` ${time}`, "")
                     let s=time*60
                     let count=1
                     afkdB.set(`${groupId}.${sid}`, {
