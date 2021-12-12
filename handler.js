@@ -25,7 +25,7 @@ module.exports = msgHandler = async(client, message) => {
     try {
         /*await lvlFunc(client, message)*/
         if(mentionedJidList && mentionedJidList[0]){
-            await getAfk(client, message, "tag")
+            await getAfk(client, message)
         }
         if (body.startsWith(config.prefix)) {
             const args = body.slice(config.prefix.length).trim().split(' ')
