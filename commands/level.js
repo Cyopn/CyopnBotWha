@@ -18,7 +18,7 @@ module.exports.run = async(client, message, args, config) => {
                 /*await client.reply(from, `Buen trabajo ${pushname}!
 *Xp: ${res.xp}*
 *Nivel: ${res.level}*`, id)*/
-                await client.sendReplyWithMentions(from, `Buen trabajo ${author}!
+                await client.sendReplyWithMentions(from, `Buen trabajo @${author}!
 *Xp: ${res.xp}*
 *Nivel: ${res.level}*`, id)
             }

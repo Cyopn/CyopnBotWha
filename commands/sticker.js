@@ -34,7 +34,7 @@ module.exports.run = async(client, message, args, config) => {
                 await client.sendStickerfromUrl(from, url, { method: 'get' }, {
                         author: 'ig: @Cyopn_',
                         pack: 'CyopnBot'
-                    }, id)
+                    })
                     .catch(err => console.error(err))
             } else {
                 await client.reply(from, `El enlace no es valido`, id)

@@ -1,4 +1,4 @@
-const { resolve } = require('../lib/mathfunc')
+const { resolve } = require('../lib/math')
 
 module.exports.run = async(client, message, args, config) => {
     const { id, from } = message

@@ -15,7 +15,7 @@ module.exports.run = async(client, message, args, config) => {
             let ytm = res.data.result
             if (res.status === false) await client.reply(res.data.message)
             await client.sendFileFromUrl(from, `${ytm.thumb}`, `${ytm.title}.jpg`, `Inicia la descarga de *${ytm.title}*\nTamaño: ${ytm.size}\nCalidad: ${ytm.quality}`)
-            await client.sendFileFromUrl(from, `${ytm.link}`, `${ytm.title}.mp3`)
+            await client.sendFileFromUrl(from, `${ytm.link}`, `${ytm.title}.mp3`, "")
         } else {
             const a = await ytsr(arg, { limit: 1 })
             const as = a.items[0]
@@ -23,7 +23,7 @@ module.exports.run = async(client, message, args, config) => {
             let ytm = res.data.result
             if (res.status === false) await client.reply(res.data.message)
             await client.sendFileFromUrl(from, `${ytm.thumb}`, `${ytm.title}.jpg`, `Inicia la descarga de *${ytm.title}*\nTamaño: ${ytm.size}\nCalidad: ${ytm.quality}`)
-            await client.sendFileFromUrl(from, `${ytm.link}`, `${ytm.title}.mp3`)
+            await client.sendFileFromUrl(from, `${ytm.link}`, `${ytm.title}.mp3`, "")
         }
 
     } catch (e) {
