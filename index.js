@@ -1,7 +1,7 @@
 const { create, Client } = require("@open-wa/wa-automate")
-const welcome = require('./lib/welcome')
+const { welcome } = require("./lib/functions")
 const handler = require("./handler")
-const opt=require("./options")
+const opt = require("./options")
 const { prefix } = require("./config")
 
 const start = async(client = new Client()) => {
@@ -13,11 +13,11 @@ const start = async(client = new Client()) => {
         }
     })
 
-    await client.onMessage((async (message) => {
+    await client.onMessage((async(message) => {
         await handler(client, message)
     }))
 
-    await client.onGlobalParticipantsChanged((async (event) => {
+    await client.onGlobalParticipantsChanged((async(event) => {
         await welcome(client, event)
     }))
 
@@ -35,7 +35,7 @@ const start = async(client = new Client()) => {
         }
     }))
 
-    await client.onIncomingCall((async (call) => {
+    await client.onIncomingCall((async(call) => {
         await client.sendText(call.peerJid, "Llamar= Bloquear\nPara arreglar esto contactame\nwa.me/+525627127780")
             .then(() => {
                 client.contactBlock(call.peerJid)
