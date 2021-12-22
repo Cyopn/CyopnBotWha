@@ -2,8 +2,7 @@ const fs = require('fs')
 let command = []
 let alias = []
 const config = require('./config.json')
-const { lvlFunc } = require('./lib/level')
-const { getAfk }=require("./lib/functions")
+const { getAfk, lvlFunc } = require("./lib/functions")
 
 fs.readdir('./commands/', (err, files) => {
 
@@ -21,10 +20,10 @@ module.exports = msgHandler = async(client, message) => {
     const { type, id, from, caption, mentionedJidList } = message
     let { body } = message
     body = (type === 'chat' && body.startsWith(config.prefix)) ? body : ((type === 'image' && caption || type === 'video' && caption) && caption.startsWith(config.prefix)) ? caption : ''
-    
+
     try {
         /*await lvlFunc(client, message)*/
-        if(mentionedJidList && mentionedJidList[0]){
+        if (mentionedJidList && mentionedJidList[0]) {
             await getAfk(client, message)
         }
         if (body.startsWith(config.prefix)) {
