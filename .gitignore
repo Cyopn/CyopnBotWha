@@ -13,3 +13,7 @@ commands/pin.js
 **.data.json
 **.node-persist**
 test.js
+
+# managed
+**_IGNORE_**
+# end managed
