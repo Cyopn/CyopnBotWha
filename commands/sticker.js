@@ -40,7 +40,7 @@ module.exports.run = async(client, message, args, config) => {
                 await client.reply(from, `El enlace no es valido`, id)
             }
         } else {
-            await client.reply(from, `Envia una imagen con el comando *${config.prefix}sticker*, responde a una imagen ya enviada o con un link`, id)
+            await client.reply(from, `Envia una imagen con el comando *${config.prefix}sticker*, responde a una imagen ya enviada o un link`, id)
         }
 
     } catch (e) {
