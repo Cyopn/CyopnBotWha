@@ -1,5 +1,6 @@
 const google = require("google-it")
 const fetch = require("node-fetch")
+const axios = require("axios")
 module.exports.run = async(client, message, args, config) => {
     const { id, from } = message
     let arg = args.join(' ')
@@ -9,10 +10,19 @@ module.exports.run = async(client, message, args, config) => {
         let url = `https://google.com/search?q=${encodeURIComponent(arg)}`
         let search = await google({ query: arg })
         let txt = search.map(({ title, link, snippet }) => {
-            return `*${title}*\n_${link}_\n_${snippet}_`
-        }).join('\n\n')
-
-        await client.sendFile(from, `https://nurutomo.herokuapp.com/api/ssweb?url=${url}&full=false&delay=1&type=jpeg`, 'screenshot.png', `Resultados para *${arg}* \n\n${txt}`, id)
+                return `*${title}*\n_${link}_\n_${snippet}_`
+            }).join('\n\n')
+            /* await client.sendFile(from, `https://nurutomo.herokuapp.com/api/ssweb?url=${url}&full=false&delay=1&type=jpeg`, 'screenshot.png', `Resultados para *${arg}* \n\n${txt}`, id) */
+        await axios.get(`https://nurutomo.herokuapp.com/api/ssweb?url=${url}&full=false&delay=1&type=jpeg`).then(r => {
+                console.log("Servidor disponible")
+                client.sendFile(from, `https://nurutomo.herokuapp.com/api/ssweb?url=${url}&full=false&delay=1&type=jpeg`, 'screenshot.png', `Resultados para *${arg}* \n\n${txt}`, id)
+            })
+            .catch(e => {
+                if (e.response.status === 503) {
+                    console.log("El servidor no esta disponible")
+                    client.reply(from, `Resultados para *${arg}* \n\n${txt}`, id)
+                }
+            })
     } catch (e) {
         console.error(e)
         await client.reply(from, `Ocurrio un error`, id)
