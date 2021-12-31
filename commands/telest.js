@@ -2,9 +2,13 @@ const axios = require("axios")
 module.exports.run = async(client, message, args, config) => {
     const { id, from } = message
     const { prefix, zeeksKey } = config
+    const arg = args.join("")
     try {
 
-        if (args) {
+        if (!arg) {
+
+            await client.reply(from, `Envia el comando *${prefix}telest [url], la url debe ser directo al paquete de stickers. \nEs recomendable no usar el comando en grupos, para evitar spam`, id)
+        } else {
             const response = await axios.get(`https://api.zeks.me/api/telegram-sticker?apikey=${zeeksKey}&url=${args.join("")}`)
             const res = response.data.result
 
@@ -18,11 +22,7 @@ module.exports.run = async(client, message, args, config) => {
                         pack: 'CyopnBot'
                     })
                 });
-                3
             }
-
-        } else {
-            await client.reply(from, `Envia el comando *${prefix}telest [url], la url debe ser directo al paquete de stickers. \nEs recomendable no usar el comando en grupos, para evitar spam`, id)
         }
 
 
