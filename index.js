@@ -1,7 +1,6 @@
 const { create, Client } = require("@open-wa/wa-automate")
 const { welcome } = require("./lib/functions")
 const handler = require("./handler")
-const opt = require("./options")
 const { prefix } = require("./config")
 
 const start = async(client = new Client()) => {
@@ -43,28 +42,29 @@ const start = async(client = new Client()) => {
     }))
 }
 
-/*create({
-    sessionId:"Cyopn",
-    headless:true,
-    qrTimeout:0,
-    authTimeout:0,
-    cacheEnabled:false,
-    useChrome:true,
-    killProcessOnBrowserClose:true,
-    throwErrorOnTosBlock:true,
-    chromiumArgs:[
-        '--no-sandbox',
-        '--disable-setuid-sandbox',
-        '--aggressive-cache-discard',
-        '--disable-cache',
-        '--disable-application-cache',
-        '--disable-offline-load-stale-cache',
-        '--disk-cache-size=0'
-    ],
-    onError:'AS_STRING'})
+create({
+        sessionId: "Cyopn",
+        headless: true,
+        qrTimeout: 0,
+        authTimeout: 0,
+        cacheEnabled: false,
+        useChrome: true,
+        killProcessOnBrowserClose: true,
+        throwErrorOnTosBlock: true,
+        chromiumArgs: [
+            '--no-sandbox',
+            '--disable-setuid-sandbox',
+            '--aggressive-cache-discard',
+            '--disable-cache',
+            '--disable-application-cache',
+            '--disable-offline-load-stale-cache',
+            '--disk-cache-size=0'
+        ],
+        onError: 'AS_STRING'
+    })
     .then(client => start(client))
-    .catch(e => console.log("[SR]", e))*/
+    .catch(e => console.log("[SR]", e))
 
-create(opt(true, start))
+/* create(opt(true, start))
     .then(client => start(client))
-    .catch((err) => console.log("[SR]", err))
+    .catch((err) => console.log("[SR]", err)) */
