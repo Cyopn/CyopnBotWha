@@ -16,7 +16,8 @@ module.exports.run = async(client, message, args, config) => {
         let er = e.toString()
         let a = er.split(" ").pop()
         if (er.includes('Error: Language not supported:')) {
-            await client.reply(from, `El idioma ${a} no existe o no esta disponible`, id)
+            await client.reply(from, `El idioma ${a} no existe, intenta de nuevo, escribe *${prefix}tts [idioma] [texto]*
+            Escribe ${prefix}lang para ver los idiomas`, id)
         } else {
             await client.reply(from, `Ocurrio un error`, id)
             console.error(e)
@@ -25,7 +26,7 @@ module.exports.run = async(client, message, args, config) => {
 }
 
 module.exports.config = {
-    name: "tts", 
+    name: "tts",
     aliases: 'tts',
     desc: 'Envia audios en un lenguaje especifico'
 }
