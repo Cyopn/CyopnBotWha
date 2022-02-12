@@ -1,3 +1,4 @@
+const sleep = require('ko-sleep')
 module.exports.run = async(client, message, args, config) => {
     const { type, id, from, t, sender, author, isGroupMsg, chat, chatId, caption, isMedia, mimetype, quotedMsg, quotedMsgObj, mentionedJidList } = message
     const arg = args.join("")
@@ -10,8 +11,10 @@ module.exports.run = async(client, message, args, config) => {
                 await client.reply(from, `Envia un enlace de invitacion valido`, id)
             } else {
                 await client.joinGroupViaLink(arg, { returnChatObj: true }).then(a => {
-                    client.sendText(a.id, `Gracias por invitarme, usa ${config.prefix}help para conocer los comandos`)
+                    as = a
                 })
+                await sleep(2 * 1000)
+                client.sendText(as.id, `Gracias por invitarme, usa ${config.prefix}help para conocer los comandos`)
             }
         }
     } catch (e) {
