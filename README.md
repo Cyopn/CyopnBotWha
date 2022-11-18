@@ -46,10 +46,6 @@ Escrito en JavaScript, usando JSON para bases de datos simples, ademas del API [
 - Juan Antonio - _Trabajo inicial_ - [Cyopn](https://github.com/Cyopn/)
 
 ## Expresiones de Gratitud
-El projecto no esta sujeto a derechos de autor para su uso libre, y es desarrollado sin fines de lucro (pero agradeceria los creditos), si es necesario ser asesorado o quisiera ser contribuidor pongase en contacto.
-  
-Pronto mas comandos.
-
-Gracias por usarlo :)
+El projecto no esta sujeto a derechos de autor para su uso libre, y es desarrollado sin fines de lucro.
 
 Cyopn.
