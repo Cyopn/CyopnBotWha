@@ -1,17 +1,10 @@
 config.json
-path.txt
 node_modules
-logs
 package-lock.json
-session.data.json
 media/images/imgSt.jpg
 media/images/imgSt.png
 media/images/imgRs.png
 media/audio/tts.mp3
-media/audio/sndres.mp3
-commands/pin.js
-.idea
-.vs
 **.data.json
 **.node-persist**
 test.js
