@@ -7,7 +7,7 @@ let path
 module.exports.run = async(client, message, args, config) => {
     let { from, id } = message
     const { prefix } = config
-
+    let pathh="nose"
     try {
         path=`     〘 *CyopnBot* 〙
 *Informacion*
@@ -65,7 +65,7 @@ _Realiza una busqueda en Google._
 *Hornycard* (alias: hcd)
 _Crea tu permiso para estar "horny"._`
         
-        await client.reply(from, path, id)
+        await client.reply(from, pathh, id)
     } catch (e) {
         console.error(e)
     }

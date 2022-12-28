@@ -4,8 +4,8 @@ const lvldB = new db.crearDB({
     carpeta: './database'
 })
 
-module.exports.run = async(client, message, args, config) => {
-    const { id, from, sender, author, isGroupMsg, chat} = message
+module.exports.run = async (client, message, args, config) => {
+    const { id, from, sender, author, isGroupMsg, chat } = message
     const groupId = isGroupMsg ? chat.groupMetadata.id.replace('@g.us', '') : ''
     const sid = author.replace('@c.us', '')
     const { pushname } = sender

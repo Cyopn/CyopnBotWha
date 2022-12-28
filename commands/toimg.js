@@ -1,8 +1,8 @@
 const { decryptMedia } = require('@open-wa/wa-decrypt')
+const fs = require('fs')
 module.exports.run = async(client, message, args, config) => {
     const { id, from, quotedMsg } = message
     const { prefix } = config
-    const fs = require('fs')
 
     try {
         if (quotedMsg && quotedMsg.type === 'sticker') {

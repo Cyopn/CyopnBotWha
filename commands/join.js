@@ -14,7 +14,7 @@ module.exports.run = async(client, message, args, config) => {
                     as = a
                 })
                 await sleep(2 * 1000)
-                client.sendText(as.id, `Gracias por invitarme, usa ${config.prefix}help para conocer los comandos`)
+                client.sendText(as.id, `Holi uwu`)
             }
         }
     } catch (e) {

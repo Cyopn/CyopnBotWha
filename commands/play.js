@@ -8,7 +8,7 @@ module.exports.run = async(client, message, args, config) => {
     const arg = args.join('')
 
     try {
-        if (!arg) return await client.reply(from, `Envia el comando *${prefix}play [consulta/url]`, id)
+        if (!arg) return await client.reply(from, `Envia el comando *${prefix}play [consulta/url]*`, id)
         await client.reply(from, `Espera un momento`, id)
         if (isUrl && arg.startsWith('www.youtu')) {
             const res = await axios.get(`https://api.zeks.me/api/ytmp3/2?apikey=${zeeksKey}&url=${as.url}?v`)
