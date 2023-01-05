@@ -1,7 +1,6 @@
 const axios = require('axios')
 const { getBuffer } = require('../lib/functions')
 
-
 module.exports.run = async(client, message, args, config) => {
     const { id, from } = message
     const { prefix } = config
@@ -20,13 +19,12 @@ module.exports.run = async(client, message, args, config) => {
                     pack: 'CyopnBot'
                 })
             }
-
-
         }
     } catch (e) {
         console.error(e)
         await client.reply(from, `Ocurrio un error`, id)
     }
+    await client.simulateTyping(from, false)
 }
 
 module.exports.config = {
