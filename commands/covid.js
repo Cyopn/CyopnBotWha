@@ -20,6 +20,7 @@ Casos activos - ${active}`, id)
         console.error(e)
         client.reply(from, `Ocurrio un error`, id)
     }
+    await client.simulateTyping(from, false)
 }
 
 module.exports.config = {

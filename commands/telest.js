@@ -4,7 +4,6 @@ module.exports.run = async(client, message, args, config) => {
     const { prefix, zeeksKey } = config
     const arg = args.join("")
     try {
-
         if (!arg) {
 
             await client.reply(from, `Envia el comando *${prefix}telest [url], la url debe ser directo al paquete de stickers. \nEs recomendable no usar el comando en grupos, para evitar spam`, id)
@@ -33,14 +32,13 @@ module.exports.run = async(client, message, args, config) => {
                 })
             });
         }
-
-
-
     } catch (e) {
         console.error(e)
         await client.reply(from, `Ocurrio un error`, id)
     }
+    await client.simulateTyping(from, false)
 }
+
 module.exports.config = {
     name: "telest",
     aliases: 'tst',

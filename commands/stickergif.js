@@ -4,7 +4,6 @@ module.exports.run = async(client, message, args, config) => {
     const { id, from, isMedia, mimetype, quotedMsg } = message
     const uaOverride = 'WhatsApp/2.2029.4 Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.116 Safari/537.36'
     const { prefix } = config
-
     if (isMedia && mimetype === 'video/mp4') {
         if (message.duration <= 10 || mimetype === 'image/gif' && message.duration <= 10) {
             await client.reply(from, `Espera un poco`, id)
@@ -44,7 +43,9 @@ module.exports.run = async(client, message, args, config) => {
     } else {
         await client.reply(from, `Envia un video/gif con el comando *${prefix}sg* o responde a uno ya enviado`, id)
     }
+    await client.simulateTyping(from, false)
 }
+
 module.exports.config = {
     name: "stickergif",
     aliases: 'sg',

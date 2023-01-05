@@ -21,6 +21,7 @@ module.exports.run = async(client, message, args, config) => {
         console.error(e)
         await client.reply(from, ` Ocurrio un error `, id)
     }
+    await client.simulateTyping(from, false)
 }
 
 module.exports.config = {

@@ -1,6 +1,5 @@
 module.exports.run = async(client, message, args, config) => {
     const { id, from } = message
-
     try {
         const vcard = 'BEGIN:VCARD\n' +
             'VERSION:3.0\n' +
@@ -15,6 +14,7 @@ module.exports.run = async(client, message, args, config) => {
         console.error(e)
         await client.reply(from, `Ocurrio un error`, id)
     }
+    await client.simulateTyping(from, false)
 }
 
 module.exports.config = {

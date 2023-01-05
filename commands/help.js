@@ -69,6 +69,7 @@ _Crea tu permiso para estar "horny"._`
     } catch (e) {
         console.error(e)
     }
+    await client.simulateTyping(from, false)
 }
 
 module.exports.config = {
