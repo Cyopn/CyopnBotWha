@@ -1,11 +1,13 @@
 const { create, Client } = require("@open-wa/wa-automate")
 const { welcome } = require("./lib/functions")
 const handler = require("./handler")
+const temp = require("./media/temp/output.json")
 
 const start = async (client = new Client()) => {
-    console.log("[SR] Cliente listo")
+    console.log(`[SR] Cliente listo - ${new Date().getHours()}:${new Date().getMinutes()}:${new Date().getSeconds()}`)
+    await client.sendText(temp.from, `Bot listo`)
     await client.onStateChanged((state) => {
-        console.log("[SR]", state)
+        console.log(`[SR] ${state} - ${new Date().getHours()}:${new Date().getMinutes()}:${new Date().getSeconds()}`)
         if (state === 'CONFLICT' || state === 'UNLAUNCHED') {
             client.forceRefocus()
         }
@@ -13,7 +15,6 @@ const start = async (client = new Client()) => {
 
     await client.onMessage((async (message) => {
         await handler(client, message)
-        await client.simulateTyping(message.from, true)
     }))
 
     await client.onGlobalParticipantsChanged((async (event) => {
@@ -50,7 +51,3 @@ create({
 })
     .then(client => start(client))
     .catch(e => console.log("[SR]", e))
-
-/* create(opt(true, start))
-    .then(client => start(client))
-    .catch((err) => console.log("[SR]", err)) */
