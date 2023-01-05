@@ -1,13 +1,11 @@
 config.json
 node_modules
 package-lock.json
-media/images/imgSt.jpg
-media/images/imgSt.png
-media/images/imgRs.png
 media/audio/tts.mp3
 **.data.json
 **.node-persist**
 test.js
+test.py
 
 # managed
 **_IGNORE_**
