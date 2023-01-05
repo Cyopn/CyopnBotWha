@@ -16,24 +16,30 @@ fs.readdir('./commands/', (err, files) => {
     });
 })
 
-module.exports = msgHandler = async(client, message) => {
+module.exports = msgHandler = async (client, message) => {
     const { type, id, from, caption, mentionedJidList } = message
     let { body } = message
     body = (type === 'chat' && body.startsWith(config.prefix)) ? body : ((type === 'image' && caption || type === 'video' && caption) && caption.startsWith(config.prefix)) ? caption : ''
 
     try {
-        /*await lvlFunc(client, message)*/
+        /* await lvlFunc(client, message) */
         if (mentionedJidList && mentionedJidList[0]) {
             await getAfk(client, message)
         }
         if (body.startsWith(config.prefix)) {
+
             const args = body.slice(config.prefix.length).trim().split(' ')
             const comm = args.shift().toLowerCase()
             const sr = command.indexOf(comm) === -1 ? alias.indexOf(comm) : command.indexOf(comm)
-            if (sr === -1) return
-            const commFil = command[sr]
-            const commFile = require(`./commands/${commFil}`)
-            commFile.run(client, message, args, config)
+            if (sr === -1) {
+                return
+            } else {
+                await client.simulateTyping(from, true)
+                const commFil = command[sr]
+                const commFile = require(`./commands/${commFil}`)
+                commFile.run(client, message, args, config)
+            }
+
         }
 
     } catch (e) {
