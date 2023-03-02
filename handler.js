@@ -3,6 +3,7 @@ let command = []
 let alias = []
 const config = require('./config.json')
 const { getAfk, lvlFunc } = require("./lib/functions")
+const temp = require("./media/temp/output.json")
 
 fs.readdir('./commands/', (err, files) => {
 
@@ -22,7 +23,8 @@ module.exports = msgHandler = async (client, message) => {
     body = (type === 'chat' && body.startsWith(config.prefix)) ? body : ((type === 'image' && caption || type === 'video' && caption) && caption.startsWith(config.prefix)) ? caption : ''
 
     try {
-        /* await lvlFunc(client, message) */
+        await lvlFunc(client, message)
+
         if (mentionedJidList && mentionedJidList[0]) {
             await getAfk(client, message)
         }
@@ -39,7 +41,6 @@ module.exports = msgHandler = async (client, message) => {
                 const commFile = require(`./commands/${commFil}`)
                 commFile.run(client, message, args, config)
             }
-
         }
 
     } catch (e) {
