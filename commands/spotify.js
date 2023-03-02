@@ -1,9 +1,9 @@
 const request = require("request")
-const client_id = "0a3465198998447bbcb8437aa9c2d289"
-const client_secret = "e64a9a0904fe4e39a67cbc64e3797fc6"
 
 module.exports.run = async (client, message, args, config) => {
     const { from, sender, author, isGroupMsg, chat, body, id } = message
+    const client_id = config.client_id
+    const client_secret = config.client_secret
 
     var authOptions = {
         url: 'https://accounts.spotify.com/api/token',
