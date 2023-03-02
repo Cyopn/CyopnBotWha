@@ -2,15 +2,33 @@ const igd = require('fg-ig')
 module.exports.run = async (client, message, args, config) => {
     const { id, from } = message
     const { prefix } = config
-    try {
-        if (!args) {
-            await client.reply(from, `Usa *${prefix}igdl [enlace]*`, id)
-        } else {
-            let res = await igd(args.join())
+    let ra = []
 
-            res.url_list.forEach(r => {
-                client.sendFile(from, r, "nose", `w`, id)
-            });
+    try {
+        if (!args.join("")) {
+            await client.reply(from, `Usa *${prefix}igdl [enlace] [indice(opcional)]*`, id)
+        } else {
+            const arg = args[0]
+            const index = args[1]
+            const isUrl = arg.match(/(?:(?:http|https):\/\/)?(?:www\.)?(?:instagram\.com|instagr\.am)\/([A-Za-z0-9-_\.]+)/im)
+
+            if (isUrl) {
+                if (index) {
+                    let res = await igd(arg)
+                    res.url_list.forEach(r => {
+                        ra.push(r)
+                    });
+                    await client.sendFile(from, ra[index - 1], "nose", `w`, id)
+                } else {
+                    let res = await igd(arg)
+
+                    res.url_list.forEach(r => {
+                        client.sendFile(from, r, "nose", `w`, id)
+                    });
+                }
+            } else {
+                await client.reply(from, `El enlace no es valido`, id)
+            }
         }
     } catch (e) {
         console.error(e)

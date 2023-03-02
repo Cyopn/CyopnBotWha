@@ -8,7 +8,7 @@ module.exports.run = async (client, message, args, config) => {
     const isUrl = arg.match(/^((?:https?:)?\/\/)?((?:www|m)\.)?((?:youtube(-nocookie)?\.com|youtu.be))(\/(?:[\w\-]+\?v=|embed\/|v\/)?)([\w\-]+)(\S+)?$/img)
 
     try {
-        if (!arg) return await client.reply(from, `Envia el comando *${prefix}play [consulta/url]*`, id)
+        if (!arg) return await client.reply(from, `Envia el comando *${config.prefix}play [consulta/url]*`, id)
         await client.reply(from, `Espera un momento`, id)
         if (isUrl) {
             let r = await youtubeDl([arg, config.fgmKey])
@@ -28,7 +28,7 @@ module.exports.run = async (client, message, args, config) => {
                 a = 1
                 txt = "     Resultados"
                 ytm.forEach(rs => {
-                    if (a <= 10 && rs.type == "video") {
+                    if (a <= 5 && rs.type == "video") {
                         txt += `
 ${a}-. Titulo: ${rs.title}
 Duracion: ${rs.timestamp}
@@ -40,53 +40,49 @@ Autor/Canal: ${rs.author.name}
                     }
                 });
 
-                await client.reply(from, txt += "Responde este mensaje con la opcion a descargar\nEl tiempo de espera es de solo un minuto", id)
-                const filter = message => message.author
+                await client.reply(from, txt += "\nResponde este mensaje con la opcion (numero) a descargar\nEl tiempo de espera es de solo un minuto", id)
+                const filter = m => m.author === message.author && (m.quotedMsg ? m.quotedMsg.body : '').includes("Responde este mensaje")
                 client.awaitMessages(from, filter, { max: 1, time: 60000, errors: ['time', 'max'] }).then(c => {
                     let d
                     c.forEach(r => {
                         d = r
                     });
-                    if (d.quotedMsg == null) {
-                        client.reply(from, `Debes reponder al mensaje indicado
-Intenta de nuevo`, id)
-                    } else {
-                        if (d.quotedMsg.body.includes("Responde este mensaje con la opcion a descargar")) {
-                            if (!isNaN(d.body)) {
-                                if (d.body > 10) {
-                                    client.reply(from, `El numero excede al de las opciones
+                    if (!isNaN(d.body)) {
+                        if (d.body > 5) {
+                            client.reply(from, `El numero excede al de las opciones
 Intenta de nuevo`)
-                                } else {
-                                    rs = parseInt(d.body)
-                                    youtubeDl([ytm[rs-1].url, config.fgmKey]).then(rss => {
-                                        if (rss == false) {
-                                            client.reply(from, `El servicio no esta disponible`, id)
-                                        } else {
-                                            client.sendFileFromUrl(from, `${rss.thumb}`, `a.jpg`, `Inicia la descarga de *${rss.title}*\nTamaño: ${rss.size}\nCanal/Autor: ${rss.channel}`, id)
-                                            client.sendFileFromUrl(from, `${rss.result}`, `${rss.title}.mp3`, "", id)
-                                        }
-                                     })
-
-                                }
-                            } else {
-                                console.log("w")
-                                client.reply(from, `No de admiten caracteres
-Intenta de nuevo`)
-                            }
                         } else {
-                            client.reply(from, `Debes reponder al mensaje indicado
-Intenta de nuevo`, id)
+                            rs = parseInt(d.body)
+                            youtubeDl([ytm[rs - 1].url, config.fgmKey]).then(rss => {
+                                if (rss == false) {
+                                    client.reply(from, `El servicio no esta disponible`, id)
+                                } else {
+                                    client.sendFileFromUrl(from, `${rss.thumb}`, `a.jpg`, `Inicia la descarga de *${rss.title}*\nTamaño: ${rss.size}\nCanal/Autor: ${rss.channel}`, id)
+                                    client.sendFileFromUrl(from, `${rss.result}`, `${rss.title}.mp3`, "", id)
+                                }
+                            })
+
                         }
+                    } else {
+                        client.reply(from, `No de admiten caracteres
+Intenta de nuevo`)
                     }
                 }).catch(e => {
-                    console.log(e)
+                    if (e.size == 0) {
+                        client.reply(from, `El tiempo se ha agotado
+Intenta de nuevo`, id)
+                    }
                 })
             }
         }
     } catch (e) {
         console.error(e.toString())
-        await client.reply(from, `Ocurrio un error`, id)
-
+        if (e.toString() == "Error: getaddrinfo ENOTFOUND api-fgmods.ddns.net") {
+            await client.reply(from, `El servicio de busqueda no esta disponble
+Intenta introducir el enlace`, id)
+        } else {
+            await client.reply(from, `Ocurrio un error`, id)
+        }
     }
     await client.simulateTyping(from, false)
 }

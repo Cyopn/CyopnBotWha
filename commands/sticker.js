@@ -1,7 +1,4 @@
 const { decryptMedia } = require('@open-wa/wa-decrypt')
-const fs = require("fs")
-const { exec } = require("child_process")
-const getVideoDimensions = require('get-video-dimensions')
 
 module.exports.run = async (client, message, args, config) => {
     const { type, id, from, isMedia, quotedMsg, mimetype } = message
@@ -37,7 +34,8 @@ module.exports.run = async (client, message, args, config) => {
                     author: 'ig: @Cyopn_',
                     pack: 'CyopnBot'
                 }).catch(e => {
-                    if (e.toString().includes("Error: Request failed with status code 550")) return client.reply(from, 'Es imposible crear el sticker, el archivo es demasiado pesado', id)
+                    console.log(e.toString())
+                    if (e.toString().includes("STICKER_TOO_LARGE: maxContentLength size of 1500000 exceeded")) return client.reply(from, 'Es imposible crear el sticker, el archivo es demasiado pesado', id)
                 })
             } else {
                 await client.reply(from, 'El video debe durar menos de 10 segundos', id)
@@ -46,12 +44,13 @@ module.exports.run = async (client, message, args, config) => {
             if (quotedMsg.duration <= 10 || quotedMsg.mimetype === 'image/gif' && quotedMsg.duration <= 10) {
                 await client.reply(from, `Espera un poco`, id)
                 const mediaData = await decryptMedia(quotedMsg)
-                
+
                 await client.sendMp4AsSticker(from, `data:${quotedMsg.mimetype};base64,${mediaData.toString('base64')}`, { crop: false }, {
                     author: 'ig: @Cyopn_',
                     pack: 'CyopnBot'
                 }).catch(e => {
-                    if (e.toString().includes("Error: Request failed with status code 550")) return client.reply(from, 'Es imposible crear el sticker, el archivo es demasiado pesado', id)
+                    console.log(e.toString())
+                    if (e.toString().includes("STICKER_TOO_LARGE: maxContentLength size of 1500000 exceeded")) return client.reply(from, 'Es imposible crear el sticker, el archivo es demasiado pesado', id)
                 })
 
             } else {

@@ -5,22 +5,21 @@ const lvldB = new db.crearDB({
 })
 
 module.exports.run = async (client, message, args, config) => {
-    const { id, from, sender, author, isGroupMsg, chat } = message
+    const { id, from, sender, author, isGroupMsg, chat, quotedMsg, mentionedJidList } = message
+    if(!isGroupMsg)return client.reply(from, `Comando solo disponible en grupos`, id)
     const groupId = isGroupMsg ? chat.groupMetadata.id.replace('@g.us', '') : ''
-    const sid = author.replace('@c.us', '')
-    const { pushname } = sender
+    let sid = quotedMsg ? quotedMsg.author.replace('@c.us', '') : mentionedJidList && mentionedJidList[0] ? mentionedJidList[0].replace('@c.us', '') : author.replace('@c.us', '')
     try {
         if (lvldB.has(groupId) && lvldB.has(`${groupId}.${sid}`)) {
-            const res = await lvldB.get(`${groupId}.${sid}`)
-            if (res.xp === 0) {
+            const { xp, level } = await lvldB.get(`${groupId}.${sid}`)
+            let lvlup = 5 * (level ** 2) + 50 * level + 100
+            if (xp === 0) {
                 await client.reply(from, `Aun no envias suficientes mensajes para tener un nivel o experiencia`, id)
             } else {
-                /*await client.reply(from, `Buen trabajo ${pushname}!
-*Xp: ${res.xp}*
-*Nivel: ${res.level}*`, id)*/
-                await client.sendReplyWithMentions(from, `Buen trabajo @${author}!
-*Xp: ${res.xp}*
-*Nivel: ${res.level}*`, id)
+                await client.sendReplyWithMentions(from, `Buen trabajo @${sid.concat('@c.us')}!
+*Experiencia: ${xp}*
+*Nivel: ${level}*
+_Necesitas ${lvlup - xp} puntos de experiencia mas para subir de nivel_`, id)
             }
         } else {
             lvldB.set(`${groupId}.${sid}`, {
@@ -38,5 +37,5 @@ module.exports.run = async (client, message, args, config) => {
 module.exports.config = {
     name: "level",
     aliases: 'lvl',
-    desc: 'Obten informacion sobre tu nivel y xp'
+    desc: 'Obten informacion sobre tu nivel y expetiencia (o el de otro miembro).'
 }

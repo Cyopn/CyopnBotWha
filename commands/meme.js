@@ -1,11 +1,17 @@
-const { exec } = require('child_process')
-const { getRed } = require('../lib/functions')
+const utf = require("utf8")
+const ex = require("child_process").execSync
+const { loadJson } = require("../lib/functions")
+
 module.exports.run = async (client, message, args, config) => {
     const { id, from } = message
     try {
-        /* const urlRed = await getRed('ChingaTuMadreNoko')
-        const { subreddit, title, url, author } = urlRed.data */
-        await client.sendFileFromUrl(from, url, 'yo.jpg', `${title}\nPost en r/${subreddit} de ${author}`, id)
+        const rs = ex(`python ./lib/python/meme.py`, { encoding: "utf8" })
+
+        loadJson().then(a => {
+            client.sendFileFromUrl(from, a.url, 'yo.jpg', `${a.title}
+Publicado por u/${a.author}`, id)
+
+        })
     } catch (e) {
         console.error(e)
         await client.reply(from, `Ocurrio un error`, id)

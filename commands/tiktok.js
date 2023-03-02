@@ -4,9 +4,9 @@ module.exports.run = async (client, message, args, config) => {
     const { id, from } = message
     let arg = args.join('')
     try {
-        if (!arg) return await client.reply(from, `Envia tu consulta con el comando *${prefix}tiktok [url]*, ejemplo : ${prefix}tiktok https://vm.tiktok.com/ZM8KHKpUv`, id)
+        if (!arg) return await client.reply(from, `Envia tu consulta con el comando *${config.prefix}tiktok [url]*, ejemplo : ${config.prefix}tiktok https://vm.tiktok.com/ZM8KHKpUv`, id)
         await client.reply(from, `Espera un poco`, id)
-        let response = await axios.get(`https://zenzapis.xyz/downloader/musically?apikey=${config.zenKey}&url=${arg}`)
+        let response = await axios.get(`https://api.zahwazein.xyz/downloader/musically?apikey=${config.zenKey}&url=${arg}`)
         if ((!response.data.result.url_hd)) {
             await client.reply(from, `El enlace no es valido`, id)
         } else if (response.data.status == "OK") {

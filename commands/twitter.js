@@ -4,9 +4,9 @@ module.exports.run = async (client, message, args, config) => {
     const { id, from } = message
     let arg = args.join('')
     try {
-        if (!arg) return await client.reply(from, `Envia tu consulta con el comando *${prefix}twitter [url]*`, id)
+        if (!arg) return await client.reply(from, `Envia tu consulta con el comando *${config.prefix}twitter [url]*`, id)
         await client.reply(from, `Espera un poco`, id)
-        let response = await axios.get(`https://zenzapis.xyz/downloader/twitter?apikey=${config.zenKey}&url=${arg}`)
+        let response = await axios.get(`https://api.zahwazein.xyz/downloader/twitter?apikey=${config.zenKey}&url=${arg}`)
         if ((!response.data.result.hd)) {
             await client.reply(from, `El enlace no es valido`, id)
         } else if (response.data.status == "OK") {
@@ -24,5 +24,5 @@ module.exports.run = async (client, message, args, config) => {
 module.exports.config = {
     name: "twitter",
     aliases: 'tw',
-    desc: 'Descarga algun tiktok sin marca de agua'
+    desc: 'Descarga algun video de twitter'
 }

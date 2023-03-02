@@ -9,63 +9,66 @@ module.exports.run = async(client, message, args, config) => {
     const { prefix } = config
     let pathh="nose"
     try {
-        path=`     〘 *CyopnBot* 〙
+        path=`       *CyopnBot* 
 *Informacion*
-*Prefijo*: [ ${prefix} ]
-*Creador*: Cyopn
-*Instagram*: https://instagram.com/Cyopn_/
+*Prefijo*: [  ${prefix}  ]
+_yo_ : https://instagram.com/Cyopn_
 
 *Comandos*: 
- 
-*Act* (alias: ac)
-_Activa algunas funciones(bienvebida/nsfw)._
 
-*Covid* (alias: cd)
-_Obten informacion sobre el covid-19 en tu pais._
+*afk* (alias: af)
+_Establece tiempo en el que no estes disponible_
 
-*Deact* (alias: dc)
-_Desactiva algunas funciones(bienvebida/nsfw)._
+*attp* (alias: af)
+_Envia un sticker animado a partir de un texto escrito: ${prefix}attp hola_
 
-*Groupinfo* (alias: ginfo)
-_Obten informacion sobre el grupo._
+*groupinfo* (alias: ginfo)
+_Obten informacion sobre el grupo_
 
-*Level* (alias: lvl)
-_Obten informacion sobre tu nivel y xp._
+*igdownload* (alias: igdl)
+_Obten multimedia de una publicacion de instagram_
 
-*Math* (alias: mt)
-_Resuelve problemas, operaciones aritmeticas: !math sim [operacion], pronto mas opciones._
+*imageia* (alias: ima)
+_Genera imagenes con inteligencia artificial_
 
-*Meme* (alias: m)
-_Momazos en r/ChingaTuMadreNoko._
+*join* (alias: j)
+_Añade el bot a un grupo con solo un comando_
 
-*Play* (alias: p)
-_Descarga una cancion._
+*lang* (alias: la)
+_Muestra la lista de idiomas disponibles para el comando !tts_
 
-*Stext* (alias: st)
-_Crea un sticker a partir de texto._
+*level* (alias: lvl)
+_Obten informacion sobre tu nivel y experiencia_
 
-*Sticker* (alias: s)
-_Crea stickers._
+*meme* (alias: m)
+_Momazos en r/ChingaTuMadreNoko_
+Conviertete en colaborador aqui: https://www.reddit.com/r/ChingaTuMadreNoko/
 
-*Stickergif* (alias: sg)
-_Crea un sticker en movimiento._
+*sticker* (alias: s)
+_Crea stickers estaticos o animados_
 
-*Suport* (alias: sp)
-_Obten ayuda si existe algun problema._
+*suggest* (alias: sg)
+_Envia una sugerencia para el desarrollo del bot_
 
-*Toimg* (alias: ti)
-_Convierte un sticker a imagen._
+*suport* (alias: sp)
+_Obten ayuda si existe algun problema_
 
-*Tts* (alias: tts)
-_Envia audios en un lenguaje especifico._
+*tiktok* (alias: tk)
+_Descarga algun tiktok sin marca de agua_
 
-*Search* (alias: sr)
-_Realiza una busqueda en Google._
+*toimg* (alias: ti)
+_Convierte un sticker a imagen_
 
-*Hornycard* (alias: hcd)
-_Crea tu permiso para estar "horny"._`
+*tts* (alias: tts)
+_Envia audios en un lenguaje especifico_
+
+*twitter* (alias: tw)
+_Descarga algun video de twitter_
+
+*videodl* (alias: vd)
+_Descarga un video corto de youtube_`
         
-        await client.reply(from, pathh, id)
+        await client.reply(from, path, id)
     } catch (e) {
         console.error(e)
     }

@@ -6,7 +6,6 @@ const afkdB = new db.crearDB({
 const sleep = require("ko-sleep")
 module.exports.run = async(client, message, args, config) => {
     const { id, from, author, isGroupMsg, chat } = message
-
     let tim = args[args.length - 1]
     let razon = args.join(" ").replace(` ${tim}`, "")
     const { prefix } = config
@@ -15,7 +14,7 @@ module.exports.run = async(client, message, args, config) => {
     let count = 1
     try {
         if ((!razon && !time) || isNaN(time)) {
-            await client.reply(from, `Envia el comando *${prefix}afk [razon] [tiempo(minutos)]`, id)
+            await client.reply(from, `Envia el comando ${prefix}afk _[razon] [tiempo(minutos)]_`, id)
         } else {
             if (!isGroupMsg) return
             const groupId = isGroupMsg ? chat.groupMetadata.id.replace('@g.us', '') : ''
@@ -27,11 +26,6 @@ module.exports.run = async(client, message, args, config) => {
                 if (status === "afk") {
                     await client.reply(from, `Por el momento ya estas en akf, espera _~${(delay/60).toFixed(2)} minuto(s)_ para intentar de nuevo`, id)
                 } else if (status === "none") {
-
-                    /* let time = args[args.length - 1]
-                    let razon = args.join(" ").replace(` ${time}`, "")
-                    let s = time * 60
-                    let count = 1 */
                     afkdB.set(`${groupId}.${sid}`, {
                         status: "afk",
                         reason: razon,
@@ -56,10 +50,6 @@ module.exports.run = async(client, message, args, config) => {
                     }
                 }
             } else {
-                /* let time = args[args.length - 1]
-                let razon = args.join(" ").replace(` ${time}`, "")
-                let s = time * 60
-                let count = 1 */
                 afkdB.set(`${groupId}.${sid}`, {
                     status: "afk",
                     reason: razon,
