@@ -2,6 +2,10 @@ config.json
 node_modules
 package-lock.json
 media/audio/tts.mp3
+media/images/imgRs.png
+media/temp/output.json
+Cyopn.data.json
+database/dataTest.json
 **.data.json
 **.node-persist**
 test.js
