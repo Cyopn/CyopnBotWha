@@ -22,9 +22,6 @@ _Establece tiempo en el que no estes disponible_
 *attp* (alias: af)
 _Envia un sticker animado a partir de un texto escrito: ${prefix}attp hola_
 
-*groupinfo* (alias: ginfo)
-_Obten informacion sobre el grupo_
-
 *igdownload* (alias: igdl)
 _Obten multimedia de una publicacion de instagram_
 
@@ -43,6 +40,7 @@ _Obten informacion sobre tu nivel y experiencia_
 *meme* (alias: m)
 _Momazos en r/ChingaTuMadreNoko_
 Conviertete en colaborador aqui: https://www.reddit.com/r/ChingaTuMadreNoko/
+El usar este comando repetidamente puede causar el que el bot deje de funcionar
 
 *sticker* (alias: s)
 _Crea stickers estaticos o animados_
@@ -55,6 +53,7 @@ _Obten ayuda si existe algun problema_
 
 *tiktok* (alias: tk)
 _Descarga algun tiktok sin marca de agua_
+Algunos pueden ser enviados como documentos, pues son enviados en la mejor calidad disponible
 
 *toimg* (alias: ti)
 _Convierte un sticker a imagen_

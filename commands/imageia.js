@@ -16,14 +16,15 @@ module.exports.run = async (client, message, args, config) => {
         let image_url = r.data.data[0].url;
         client.sendFileFromUrl(from, image_url, "", "w", id)
     }).catch(e => {
-        if (e.response.data.error.message == "Your request was rejected as a result of our safety system. Your prompt may contain text that is not allowed by our safety system.") {
-            client.reply(from, `Tu solicitud fue rechazada debido a contiene texto que no esta permitido.`, id)
-        } else {
+        if (e.response.data.error.message) {
+            console.log(e.response.data.error.message)
             translate(e.response.data.error.message, { to: 'es' }).then(res => {
                 client.reply(from, res, id)
             }).catch(err => {
                 console.error(err)
             })
+        }else{
+            
         }
     })
     await client.simulateTyping(from, false)

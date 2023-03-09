@@ -1,5 +1,5 @@
 const sleep = require('ko-sleep')
-module.exports.run = async(client, message, args, config) => {
+module.exports.run = async (client, message, args, config) => {
     const { type, id, from, t, sender, author, isGroupMsg, chat, chatId, caption, isMedia, mimetype, quotedMsg, quotedMsgObj, mentionedJidList } = message
     const arg = args.join("")
     const isUrl = arg.match(/(http(s)?:\/\/.)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/g)
@@ -14,7 +14,12 @@ module.exports.run = async(client, message, args, config) => {
                     as = a
                 })
                 await sleep(2 * 1000)
-                client.sendText(as.id, `Holi uwu`)
+                client.sendText(as.id, `Gracias por la invitacion
+Puedes escribir ${config.prefix}help para ver los comandos
+Para resolver tus dudas sobre el desarrollo del bot, puedes contactarme aqui:
+WhatsApp: wa.me/525633592644
+Discord: Cyopn#7302
+Instagram: https://instagram.com/Cyopn_`)
             }
         }
     } catch (e) {
