@@ -20,8 +20,8 @@ Con el comando (De igual manera en cmd o en la terminal de VS Code usando `Ctrl+
 ## Arrancando
 Luego de instalar dependencias, escriba `npm start` para el arraque del API, al finalizar este paso, se crearan 3 carpetas:
 - node_modules (Paqeterias)
-- logs (Inicios de sesion)
-- database (Base de datos local)
+- _IGNORE_Cyopn (Registro general de eventos del API)
+- .node-persist (Ruta ejecutable de Chrome)
 
 Ademas de crear un archivo (session.data.json), que guarda el usuario (cuenta de WhatsApp).
   
