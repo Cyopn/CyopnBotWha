@@ -21,6 +21,11 @@ module.exports.run = async (client, message, args, config) => {
         }
     } catch (e) {
         console.log(e)
+        if(e.toString().includes("Error: Evaluation failed: Error: MediaFileTooLarge: File (video/mp4)")){
+            await client.reply(from, `Es imposible enviar el video`, id)
+        }else{
+            await client.reply(from, `Ocurrio un error`, id)
+        }
     }
     await client.simulateTyping(from, false)
 }
