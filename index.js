@@ -17,22 +17,14 @@ const start = async (client = new Client()) => {
     })
 
     await client.onAddedToGroup(async (chat) => {
-        let tMem = chat.groupMetadata.participants.length
-        if (tMem < 5) {
-            client.sendText(chat.id, `Para usarme necesita al menos 5 miembros en el grupo, total de miembros : ${tMem}`)
-                .then(() => {
-                    setTimeout(() => {
-                        client.leaveGroup(chat.id)
-                    }, 3000)
-                })
-        } else {
-            client.sendText(chat.groupMetadata.id, `Gracias por la invitacion
-Puedes escribir ${config.prefix}help para ver los comandos
+
+        client.sendText(chat.groupMetadata.id, `Gracias por la invitacion
+Puedes escribir !help para ver los comandos
 Para resolver tus dudas sobre el desarrollo del bot, puedes contactarme aqui:
 WhatsApp: wa.me/525633592644
 Discord: Cyopn#7302
 Instagram: https://instagram.com/Cyopn_`)
-        }
+
     })
 
     await client.onIncomingCall(async (call) => {
