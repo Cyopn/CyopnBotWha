@@ -10,6 +10,7 @@
         "@juliendu11/instagram-downloader": "^0.2.0",
         "@open-wa/wa-automate": "^4.58.0",
         "@open-wa/wa-decrypt": "^2.0.1",
+        "@ytdl/ytdl": "^1.4.16",
         "arrayed": "^0.0.2",
         "axios": "^0.21.4",
         "canvas": "^2.10.1",
@@ -46,6 +47,7 @@
         "translate-google": "^1.5.0",
         "utf8": "^3.0.0",
         "video-url-link": "^0.1.5",
+        "ytdl-core": "^4.11.2",
         "ytsr": "^3.5.3"
     },
     "scripts": {
