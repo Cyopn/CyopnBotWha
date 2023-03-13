@@ -6,10 +6,10 @@
     "comment": "",
     "fgmKey": "",
     "comment": "Clave API para uso de api-fgmods(descarga de audio)",
-    "opentk":"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",
+    "opentk":"",
     "comment":"Clave API que puedes obtener en openia",
-    "client_id" :"0a3465198998447bbcb8437aa9c2d289",
+    "client_id" :"",
     "comment":"Id de cliente, se obtiene en la plataforma de desarrolladores de reddit",
-    "client_secret" : "e64a9a0904fe4e39a67cbc64e3797fc6",
+    "client_secret" : "",
     "comment":"Token secreto, se obtiene en la plataforma de desarrolladores de reddit"
 }
