@@ -8,8 +8,7 @@ Cyopn.data.json
 database/dataTest.json
 **.data.json
 **.node-persist**
-test.js
-test.py
+commands/test.js
 
 # managed
 **_IGNORE_**
