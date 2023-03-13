@@ -57,12 +57,18 @@ module.exports.run = async (client, message, args, config) => {
                 await client.reply(from, 'El video debe durar menos de 10 segundos', id)
             }
         } else {
-            await client.reply(from, `Envia una imagen/video/gif con el comando *${config.prefix}sticker*, responde a una imagen ya enviada o un link`, id)
+            await client.reply(from, `Envia una imagen/video/gif con el comando *${config.prefix}sticker*, o bien, responde a una imagen ya enviada`, id)
         }
 
     } catch (e) {
         console.error(e)
+        if(e.toString().includes("TypeError [ERR_INVALID_ARG_TYPE]: The first argument must be of type string or an instance of Buffer, ArrayBuffer, or Array or an Array-like Object. Received undefined")){
+            await client.reply(from, `Ocurrio un error
+Probablemente el mensaje fue enviada en visualizacion unica`, id)
+        }else{
         await client.reply(from, `Ocurrio un error`, id)
+
+        }
     }
     await client.simulateTyping(from, false)
 }

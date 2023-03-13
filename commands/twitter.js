@@ -10,7 +10,7 @@ module.exports.run = async (client, message, args, config) => {
         if ((!response.data.result.hd)) {
             await client.reply(from, `El enlace no es valido`, id)
         } else if (response.data.status == "OK") {
-            await client.sendFileFromUrl(from, `${response.data.result.hd}`, "", `holis bonis`, id)
+            await client.sendFileFromUrl(from, `${response.data.result.hd}`, "", `w`, id)
         } else {
             await client.reply(from, `Ocurrio un error`, id)
         }

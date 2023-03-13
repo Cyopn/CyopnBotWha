@@ -16,15 +16,20 @@ module.exports.run = async (client, message, args, config) => {
         let image_url = r.data.data[0].url;
         client.sendFileFromUrl(from, image_url, "", "w", id)
     }).catch(e => {
+        console.log(e.response.data.error.message)
         if (e.response.data.error.message) {
-            console.log(e.response.data.error.message)
-            translate(e.response.data.error.message, { to: 'es' }).then(res => {
-                client.reply(from, res, id)
-            }).catch(err => {
-                console.error(err)
-            })
-        }else{
-            
+            if (e.response.data.error.message.includes("Billing hard limit has been reached")) {
+                client.reply(from, `Se ha alcanzado el limite de solicitudes
+Se reinicia cada dia despues de las 4:00 am hora México`, id)
+            } else {
+                translate(e.response.data.error.message, { to: 'es' }).then(res => {
+                    client.reply(from, res, id)
+                }).catch(err => {
+                    console.error(err)
+                })
+            }
+        } else {
+
         }
     })
     await client.simulateTyping(from, false)

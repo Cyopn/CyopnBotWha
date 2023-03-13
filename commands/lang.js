@@ -42,7 +42,6 @@ module.exports.run = async(client, message, args, config) => {
     ko: Korean
     la: Latin
     lv: Latvian
-    mk: Macedonian
     no: Norwegian
     pl: Polish
     pt: Portuguese

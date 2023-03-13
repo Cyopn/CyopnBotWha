@@ -11,15 +11,19 @@ module.exports.run = async(client, message, args, config) => {
     try {
         path=`       *CyopnBot* 
 *Informacion*
-*Prefijo*: [  ${prefix}  ]
+*Prefijo*: [  ${prefix}  
 _yo_ : https://instagram.com/Cyopn_
 
+Escribe ${prefix} seguido de cualquiera de los comandos, recuerda que puedes usar el nombre del comando o su alias
+_Uso: ${prefix}[Comando] [Argumentos/Texto/Enlace/Otros]_
+Se deben sustituir los corchetes segun corresponda
+_Ejemplo: ${prefix}attp Hola_
 *Comandos*: 
 
 *afk* (alias: af)
 _Establece tiempo en el que no estes disponible_
 
-*attp* (alias: af)
+*attp* (alias: ap)
 _Envia un sticker animado a partir de un texto escrito: ${prefix}attp hola_
 
 *igdownload* (alias: igdl)
@@ -65,7 +69,7 @@ _Envia audios en un lenguaje especifico_
 _Descarga algun video de twitter_
 
 *videodl* (alias: vd)
-_Descarga un video corto de youtube_`
+_Descarga un video corto de youtube, *En construccion*_`
         
         await client.reply(from, path, id)
     } catch (e) {
