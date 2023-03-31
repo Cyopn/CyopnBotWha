@@ -1,6 +1,3 @@
-const google = require("google-it")
-const fetch = require("node-fetch")
-const axios = require("axios")
 module.exports.run = async(client, message, args, config) => {
     const { id, from } = message
     const { prefix } = config

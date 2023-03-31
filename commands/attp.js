@@ -16,7 +16,12 @@ module.exports.run = async (client, message, args, config) => {
 
     } catch (e) {
         console.error(e)
-        await client.reply(from, `Ocurrio un error`, id)
+        if (e.response.status === 404) {
+            await client.reply(from, `El servicio no esta disponible en este momento, intenta mas tarde`, id)
+        } else {
+            await client.reply(from, `Ocurrio un error`, id)
+        }
+
     }
     await client.simulateTyping(from, false)
 }

@@ -1,23 +1,31 @@
 const axios = require('axios')
-const { youtubeDl } = require('../lib/functions')
+const { ytSolver } = require('../lib/functions')
+const yt = require("yt-converter")
+const fs = require("fs")
 
 module.exports.run = async (client, message, args, config) => {
     const { id, from } = message
     const arg = args.join('')
-    //const isUrl = arg.match(/https?:\/\/(www\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_+.~#?&/=]*)/gi)
     const isUrl = arg.match(/^((?:https?:)?\/\/)?((?:www|m)\.)?((?:youtube(-nocookie)?\.com|youtu.be))(\/(?:[\w\-]+\?v=|embed\/|v\/)?)([\w\-]+)(\S+)?$/img)
 
     try {
         if (!arg) return await client.reply(from, `Envia el comando *${config.prefix}play [consulta/url]*`, id)
         await client.reply(from, `Espera un momento`, id)
         if (isUrl) {
-            let r = await youtubeDl([arg, config.fgmKey])
-            if (r == false) {
-                await client.reply(from, `El servicio no esta disponible`, id)
-            } else {
-                await client.sendFileFromUrl(from, `${r.thumb}`, `a.jpg`, `Inicia la descarga de *${r.title}*\nTamaño: ${r.size}\nCanal/Autor: ${r.channel}`, id)
-                await client.sendFileFromUrl(from, `${r.result}`, `${r.title}.mp3`, "", id)
-            }
+            await ytSolver(arg).then(r => {
+                client.sendFileFromUrl(from, `${r.thumb}`, `a.jpg`, `Inicia la descarga de *${r.title}*\nCanal/Autor: ${r.author}`, id)
+                yt.convertAudio({
+                    url: args.join(""),
+                    itag: 140,
+                    directoryDownload: __dirname.replace("commands", "media/audio"),
+                    title: `${r.title}`
+                }, function () { }, function () {
+                    client.sendFileFromUrl(from, `./media/audio/${r.title}.mp3`, `${r.title}.mp3`, `w`, id)
+                    fs.unlink(`./media/audio/${r.title}.mp3`, function (e) {
+                        if (e) console.log(e)
+                    })
+                })
+            })
         } else {
             const res = await axios.get(`https://api-fgmods.ddns.net/api/ytsearch?q=${args.join(" ")}&apikey=${config.fgmKey}`)
             let ytm = res.data.result
@@ -53,15 +61,20 @@ Autor/Canal: ${rs.author.name}
 Intenta de nuevo`)
                         } else {
                             rs = parseInt(d.body)
-                            youtubeDl([ytm[rs - 1].url, config.fgmKey]).then(rss => {
-                                if (rss == false) {
-                                    client.reply(from, `El servicio no esta disponible`, id)
-                                } else {
-                                    client.sendFileFromUrl(from, `${rss.thumb}`, `a.jpg`, `Inicia la descarga de *${rss.title}*\nTamaño: ${rss.size}\nCanal/Autor: ${rss.channel}`, id)
-                                    client.sendFileFromUrl(from, `${rss.result}`, `${rss.title}.mp3`, "", id)
-                                }
+                            ytSolver(ytm[rs - 1].url).then(r => {
+                                client.sendFileFromUrl(from, `${r.thumb}`, `a.jpg`, `Inicia la descarga de *${r.title}*\nCanal/Autor: ${r.author}`, id)
+                                yt.convertAudio({
+                                    url: ytm[rs - 1].url,
+                                    itag: 140,
+                                    directoryDownload: __dirname.replace("commands", "media/audio"),
+                                    title: `${r.title}`
+                                }, function () { }, function () {
+                                    client.sendFileFromUrl(from, `./media/audio/${r.title}`, `${r.title}`, `w`, id)
+                                    fs.unlink(`./media/audio/${r.title}`, function (e) {
+                                        if (e) console.log(e)
+                                    })
+                                })
                             })
-
                         }
                     } else {
                         client.reply(from, `No de admiten caracteres

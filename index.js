@@ -28,7 +28,7 @@ Instagram: https://instagram.com/Cyopn_`)
     })
 
     await client.onIncomingCall(async (call) => {
-        await client.sendText(call.peerJid, "Llamar = Bloquear\nPara arreglar esto contactame\nwa.me/+525627127780")
+        await client.sendText(call.peerJid, "Llamar = Bloquear\nPara arreglar esto contactame\nwa.me/525633592644")
             .then(() => {
                 client.contactBlock(call.peerJid)
             })

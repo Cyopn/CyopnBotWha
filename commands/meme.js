@@ -1,4 +1,3 @@
-const utf = require("utf8")
 const ex = require("child_process").execSync
 const { loadJson } = require("../lib/functions")
 
@@ -9,7 +8,7 @@ module.exports.run = async (client, message, args, config) => {
         if (!a.url) {
             return
         } else {
-            client.sendFileFromUrl(from, a.url, 'yo.jpg', `${a.title}
+            client.sendFileFromUrl(from, a.url, 'yo', `${a.title}
 Publicado por u/${a.author}`, id)
         }
     }).catch(e => {

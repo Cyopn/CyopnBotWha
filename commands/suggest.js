@@ -13,7 +13,7 @@ module.exports.run = async (client, message, args, config) => {
         if (!arg) {
             await client.reply(from, `Escribe tu sugerencia`, id)
         } else {
-            await ss.set(`${groupId}.${sid}-${new Date().getDate()}/${new Date().getUTCMonth() + 1}/${new Date().getHours()}:${new Date().getMinutes()}:${new Date().getSeconds()}`, {
+            await ss.set(`${groupId}.${sid}-${new Date().getDate()}/${new Date().getUTCMonth() + 1}-${new Date().getHours()}:${new Date().getMinutes()}:${new Date().getSeconds()}`, {
                 isGroup: isGroupMsg,
                 suggestion: arg
             })

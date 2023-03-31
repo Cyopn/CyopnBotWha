@@ -11,14 +11,19 @@ module.exports.run = async(client, message, args, config) => {
     try {
         path=`       *CyopnBot* 
 *Informacion*
-*Prefijo*: [  ${prefix}  
+*Prefijo*: [  ${prefix}  ] 
 _yo_ : https://instagram.com/Cyopn_
 
 Escribe ${prefix} seguido de cualquiera de los comandos, recuerda que puedes usar el nombre del comando o su alias
 _Uso: ${prefix}[Comando] [Argumentos/Texto/Enlace/Otros]_
 Se deben sustituir los corchetes segun corresponda
 _Ejemplo: ${prefix}attp Hola_
+
 *Comandos*: 
+
+*Nuevo*
+*fbdownload* (alias: fbdl)
+_Obtién multimedia de una publicacion de facebook_
 
 *afk* (alias: af)
 _Establece tiempo en el que no estes disponible_

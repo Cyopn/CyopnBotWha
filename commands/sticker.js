@@ -35,7 +35,7 @@ module.exports.run = async (client, message, args, config) => {
                     pack: 'CyopnBot'
                 }).catch(e => {
                     console.log(e.toString())
-                    if (e.toString().includes("STICKER_TOO_LARGE: maxContentLength size of 1500000 exceeded")) return client.reply(from, 'Es imposible crear el sticker, el archivo es demasiado pesado', id)
+                    if (e.toString().includes("STICKER_TOO_LARGE: maxContentLength size of 1500000 exceeded") || e.toString().includes("Error: Evaluation failed: a")) return client.reply(from, 'Es imposible crear el sticker, el archivo es demasiado pesado', id)
                 })
             } else {
                 await client.reply(from, 'El video debe durar menos de 10 segundos', id)
@@ -50,7 +50,7 @@ module.exports.run = async (client, message, args, config) => {
                     pack: 'CyopnBot'
                 }).catch(e => {
                     console.log(e.toString())
-                    if (e.toString().includes("STICKER_TOO_LARGE: maxContentLength size of 1500000 exceeded")) return client.reply(from, 'Es imposible crear el sticker, el archivo es demasiado pesado', id)
+                    if (e.toString().includes("STICKER_TOO_LARGE: maxContentLength size of 1500000 exceeded") || e.toString().includes("Error: Evaluation failed: a")) return client.reply(from, 'Es imposible crear el sticker, el archivo es demasiado pesado', id)
                 })
 
             } else {
@@ -62,11 +62,11 @@ module.exports.run = async (client, message, args, config) => {
 
     } catch (e) {
         console.error(e)
-        if(e.toString().includes("TypeError [ERR_INVALID_ARG_TYPE]: The first argument must be of type string or an instance of Buffer, ArrayBuffer, or Array or an Array-like Object. Received undefined")){
+        if (e.toString().includes("TypeError [ERR_INVALID_ARG_TYPE]: The first argument must be of type string or an instance of Buffer, ArrayBuffer, or Array or an Array-like Object. Received undefined")) {
             await client.reply(from, `Ocurrio un error
 Probablemente el mensaje fue enviada en visualizacion unica`, id)
-        }else{
-        await client.reply(from, `Ocurrio un error`, id)
+        } else {
+            await client.reply(from, `Ocurrio un error`, id)
 
         }
     }
