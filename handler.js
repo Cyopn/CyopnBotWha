@@ -3,7 +3,6 @@ let command = []
 let alias = []
 const config = require('./config.json')
 const { getAfk, lvlFunc } = require("./lib/functions")
-const temp = require("./media/temp/output.json")
 
 fs.readdir('./commands/', (err, files) => {
 
