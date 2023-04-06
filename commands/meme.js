@@ -1,7 +1,7 @@
 const ex = require("child_process").execSync;
 const { loadJson } = require("../lib/functions");
 
-module.exports.run = async (client, message, args, config) => {
+module.exports.run = async (client, message) => {
   const { id, from } = message;
   try {
     const rs = ex(`python ./lib/python/meme.py`, { encoding: "utf8" });
