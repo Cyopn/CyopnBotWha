@@ -4,23 +4,7 @@ const ss = new db.crearDB({
   carpeta: "./database",
 });
 
-<<<<<<< Updated upstream
 module.exports.run = async (client, message, args, config) => {
-    const { from, author, isGroupMsg, chat, id } = message
-    const sid = isGroupMsg ? author.replace('@c.us', '') : from.replace('@c.us', '')
-    const groupId = isGroupMsg ? chat.groupMetadata.id.replace('@g.us', '') : sid
-    let arg = args.join(' ')
-    try {
-        if (!arg) {
-            await client.reply(from, `Escribe tu sugerencia`, id)
-        } else {
-            await ss.set(`${groupId}.${sid}-${new Date().getDate()}/${new Date().getUTCMonth() + 1}/${new Date().getHours()}:${new Date().getMinutes()}:${new Date().getSeconds()}`, {
-                isGroup: isGroupMsg,
-                suggestion: arg
-            })
-            await client.reply(from, `Gracias por tu sugerencia`, id)
-=======
-module.exports.run = async (client, message, args) => {
   const { from, author, isGroupMsg, chat, id } = message;
   const sid = isGroupMsg
     ? author.replace("@c.us", "")
@@ -38,7 +22,6 @@ module.exports.run = async (client, message, args) => {
         {
           isGroup: isGroupMsg,
           suggestion: arg,
->>>>>>> Stashed changes
         }
       );
       await client.reply(from, `Gracias por tu sugerencia`, id);
