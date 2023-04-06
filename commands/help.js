@@ -1,15 +1,15 @@
-const {loadCommands}=require("../lib/functions")
-let txt = ""
+const { loadCommands } = require("../lib/functions");
+let txt = "";
 
-txt = txt.replace(txt, "")
-let path
+txt = txt.replace(txt, "");
+let path;
 
-module.exports.run = async(client, message, args, config) => {
-    let { from, id } = message
-    const { prefix } = config
-    let pathh="nose"
-    try {
-        path=`       *CyopnBot* 
+module.exports.run = async (client, message, args, config) => {
+  let { from, id } = message;
+  const { prefix } = config;
+  let pathh = "nose";
+  try {
+    path = `       *CyopnBot* 
 *Informacion*
 *Prefijo*: [  ${prefix}  
 _yo_ : https://instagram.com/Cyopn_
@@ -69,17 +69,22 @@ _Envia audios en un lenguaje especifico_
 _Descarga algun video de twitter_
 
 *videodl* (alias: vd)
-_Descarga un video corto de youtube, *En construccion*_`
-        
-        await client.reply(from, path, id)
-    } catch (e) {
-        console.error(e)
-    }
-    await client.simulateTyping(from, false)
-}
+_Descarga un video corto de youtube, *En construccion*_`;
+
+    await client.reply(from, path, id);
+  } catch (e) {
+    console.error(
+      `Error en ${this.config.name}
+Hora: ${new Date().getHours()}:${new Date().getMinutes()}:${new Date().getSeconds()}`,
+      e
+    );
+    await client.reply(from, `Ocurrio un error`, id);
+  }
+  await client.simulateTyping(from, false);
+};
 
 module.exports.config = {
-    name: "help",
-    aliases: 'h',
-    desc: 'nada'
-}
+  name: "help",
+  aliases: "h",
+  desc: "nada",
+};

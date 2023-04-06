@@ -1,3 +1,4 @@
+<<<<<<< Updated upstream
 const google = require("google-it")
 const fetch = require("node-fetch")
 const axios = require("axios")
@@ -10,6 +11,14 @@ module.exports.run = async(client, message, args, config) => {
 
 
         await client.reply(from, `Lista de idiomas disponibles
+=======
+module.exports.run = async (client, message) => {
+  const { id, from } = message;
+  try {
+    await client.reply(
+      from,
+      `Lista de idiomas disponibles
+>>>>>>> Stashed changes
     af: Afrikaans
     sq: Albanian
     ar: Arabic
@@ -59,17 +68,22 @@ module.exports.run = async(client, message, args, config) => {
     th: Thai
     tr: Turkish
     vi: Vietnamese
-    cy: Welsh`, id)
-
-    } catch (e) {
-        console.error(e)
-        await client.reply(from, `Ocurrio un error`, id)
-    }
-    await client.simulateTyping(from, false)
-}
+    cy: Welsh`,
+      id
+    );
+  } catch (e) {
+    console.error(
+      `Error en ${this.config.name}
+Hora: ${new Date().getHours()}:${new Date().getMinutes()}:${new Date().getSeconds()}`,
+      e
+    );
+    await client.reply(from, `Ocurrio un error`, id);
+  }
+  await client.simulateTyping(from, false);
+};
 
 module.exports.config = {
-    name: "lang",
-    aliases: 'la',
-    desc: 'Haz una busqueda en Google'
-}
+  name: "lang",
+  aliases: "la",
+  desc: "Haz una busqueda en Google",
+};
