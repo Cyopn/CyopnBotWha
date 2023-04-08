@@ -28,23 +28,24 @@ module.exports.run = async (client, message, args, config) => {
             `Inicia la descarga de *${r.title}*\nCanal/Autor: ${r.author}\nDuracion: ${r.time} minutos`,
             id
           );
+          const tl = r.title.toString().replaceAll("|", "");
           yt.convertAudio(
             {
               url: args.join(""),
               itag: 140,
               directoryDownload: "./media/audio",
-              title: `${r.title}`,
+              title: `${tl}`,
             },
             function () {},
             function () {
               client.sendFileFromUrl(
                 from,
-                `./media/audio/${r.title}.mp3`,
-                `${r.title}.mp3`,
+                `./media/audio/${tl}.mp3`,
+                `${tl}.mp3`,
                 `w`,
                 id
               );
-              fs.unlink(`./media/audio/${r.title}.mp3`, function (e) {
+              fs.unlink(`./media/audio/${tl}.mp3`, function (e) {
                 if (e) console.log(e);
               });
             }
@@ -52,7 +53,7 @@ module.exports.run = async (client, message, args, config) => {
         } else {
           console.error(
             `Error en ${this.config.name}
-    Hora: ${new Date().getHours()}:${new Date().getMinutes()}:${new Date().getSeconds()}:`,
+Hora: ${new Date().getHours()}:${new Date().getMinutes()}:${new Date().getSeconds()}:`,
             e.toString()
           );
           client.reply(from, `Ocurrio un error`, id);
@@ -117,23 +118,24 @@ Intenta de nuevo`,
                       `Inicia la descarga de *${r.title}*\nCanal/Autor: ${r.author}\nDuracion: ${r.time} minutos`,
                       id
                     );
+                    const tl = r.title.toString().replaceAll("|", "");
                     yt.convertAudio(
                       {
                         url: rs[rss - 1].url,
                         itag: 140,
                         directoryDownload: "./media/audio",
-                        title: `${r.title}`,
+                        title: `${tl}`,
                       },
                       function () {},
                       function () {
                         client.sendFileFromUrl(
                           from,
-                          `./media/audio/${r.title}.mp3`,
-                          `${r.title}.mp3`,
+                          `./media/audio/${tl}.mp3`,
+                          `${tl}.mp3`,
                           `w`,
                           id
                         );
-                        fs.unlink(`./media/audio/${r.title}.mp3`, function (e) {
+                        fs.unlink(`./media/audio/${tl}.mp3`, function (e) {
                           if (e) console.log(e);
                         });
                       }
