@@ -9,7 +9,7 @@ database/dataTest.json
 **.data.json
 **.node-persist**
 commands/test.js
-
+test.*
 # managed
 **_IGNORE_**
 # end managed
