@@ -62,8 +62,8 @@ module.exports.run = async (client, message, args) => {
   } catch (e) {
     console.error(
       `Error en ${this.config.name}
-Hora: ${new Date().getHours()}:${new Date().getMinutes()}:${new Date().getSeconds()}`,
-      e
+Hora: ${new Date().getHours()}:${new Date().getMinutes()}:${new Date().getSeconds()}:`,
+      e.toString()
     );
     client.reply(from, `Ocurrio un error`, id);
   }

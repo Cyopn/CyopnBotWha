@@ -11,7 +11,7 @@ Discord: Cyopn#7302`,
   } catch (e) {
     console.error(
       `Error en ${this.config.name}
-Hora: ${new Date().getHours()}:${new Date().getMinutes()}:${new Date().getSeconds()}`,
+Hora: ${new Date().getHours()}:${new Date().getMinutes()}:${new Date().getSeconds()}:`,
       e.toString()
     );
     await client.reply(from, `Ocurrio un error`, id);

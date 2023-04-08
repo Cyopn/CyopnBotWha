@@ -53,7 +53,7 @@ Escuchala aqui: ${a[i].track.external_urls.spotify}`,
   } catch (e) {
     console.error(
       `Error en ${this.config.name}
-Hora: ${new Date().getHours()}:${new Date().getMinutes()}:${new Date().getSeconds()}`,
+Hora: ${new Date().getHours()}:${new Date().getMinutes()}:${new Date().getSeconds()}:`,
       e.toString()
     );
     client.reply(from, `Ocurrio un error`, id);

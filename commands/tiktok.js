@@ -25,12 +25,12 @@ module.exports.run = async (client, message, args, config) => {
         id
       );
     } else {
-      await client.reply(from, `Ocurrio un error`, id);
+      await client.reply(from, `No se pudo establecer conexion con el servidor`, id);
     }
   } catch (e) {
     console.error(
       `Error en ${this.config.name}
-Hora: ${new Date().getHours()}:${new Date().getMinutes()}:${new Date().getSeconds()}`,
+Hora: ${new Date().getHours()}:${new Date().getMinutes()}:${new Date().getSeconds()}:`,
       e.toString()
     );
     await client.reply(from, `Ocurrio un error`, id);

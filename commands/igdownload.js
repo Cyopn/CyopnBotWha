@@ -12,6 +12,7 @@ module.exports.run = async (client, message, args, config) => {
         id
       );
     } else {
+      await client.reply(from, `Espera un poco`, id);
       const arg = args[0];
       const index = args[1];
       const isUrl = arg.match(

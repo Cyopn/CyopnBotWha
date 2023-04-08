@@ -3,12 +3,6 @@ const translate = require("translate-google");
 
 module.exports.run = async (client, message, args, config) => {
   const { from, id } = message;
-  client.reply(
-    from,
-    `Se ha alcanzado el limite de solicitudes
-Por ahora no estara disponible hasta nuevo aviso`,
-    id
-  );
   if (!args)
     return await client.reply(
       from,
@@ -34,8 +28,8 @@ Por ahora no estara disponible hasta nuevo aviso`,
     .catch((e) => {
       console.error(
         `Error en ${this.config.name}
-Hora: ${new Date().getHours()}:${new Date().getMinutes()}:${new Date().getSeconds()}`,
-        e
+Hora: ${new Date().getHours()}:${new Date().getMinutes()}:${new Date().getSeconds()}:`,
+        e.toString()
       );
       client.reply(
         from,

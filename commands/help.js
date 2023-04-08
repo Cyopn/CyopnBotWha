@@ -11,7 +11,7 @@ module.exports.run = async (client, message, args, config) => {
   try {
     path = `       *CyopnBot* 
 *Informacion*
-*Prefijo*: [  ${prefix}  
+*Prefijo*: [  ${prefix}  ]
 _yo_ : https://instagram.com/Cyopn_
 
 Escribe ${prefix} seguido de cualquiera de los comandos, recuerda que puedes usar el nombre del comando o su alias
@@ -75,8 +75,8 @@ _Descarga un video corto de youtube, *En construccion*_`;
   } catch (e) {
     console.error(
       `Error en ${this.config.name}
-Hora: ${new Date().getHours()}:${new Date().getMinutes()}:${new Date().getSeconds()}`,
-      e
+Hora: ${new Date().getHours()}:${new Date().getMinutes()}:${new Date().getSeconds()}:`,
+      e.toString()
     );
     await client.reply(from, `Ocurrio un error`, id);
   }

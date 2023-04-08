@@ -34,12 +34,17 @@ Intenta mas tarde`,
               client
                 .sendFile(from, res.medias[0].url, "nose", `w`, id)
                 .catch((e) => {
-                  console.log(e);
+                  console.error(
+                    `Error en ${this.config.name}
+Hora: ${new Date().getHours()}:${new Date().getMinutes()}:${new Date().getSeconds()}:`,
+                    e.toString()
+                  );
+                  client.reply(from, `Es imposible enviar el video`, id);
                 });
             } else {
               console.error(
                 `Error en ${this.config.name}
-Hora: ${new Date().getHours()}:${new Date().getMinutes()}:${new Date().getSeconds()}`,
+Hora: ${new Date().getHours()}:${new Date().getMinutes()}:${new Date().getSeconds()}:`,
                 e.toString()
               );
               client.reply(from, `Es imposible enviar el video`, id);
@@ -62,7 +67,7 @@ Hora: ${new Date().getHours()}:${new Date().getMinutes()}:${new Date().getSecond
                 .catch((e) => {
                   console.error(
                     `Error en ${this.config.name}
-Hora: ${new Date().getHours()}:${new Date().getMinutes()}:${new Date().getSeconds()}`,
+Hora: ${new Date().getHours()}:${new Date().getMinutes()}:${new Date().getSeconds()}:`,
                     e.toString()
                   );
                   client.reply(from, `Es imposible enviar el video`, id);

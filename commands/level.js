@@ -44,8 +44,8 @@ _Necesitas ${lvlup - xp} puntos de experiencia mas para subir de nivel_`,
   } catch (e) {
     console.error(
       `Error en ${this.config.name}
-Hora: ${new Date().getHours()}:${new Date().getMinutes()}:${new Date().getSeconds()}`,
-      e
+Hora: ${new Date().getHours()}:${new Date().getMinutes()}:${new Date().getSeconds()}:`,
+      e.String()
     );
     await client.reply(from, `Ocurrio un error`, id);
   }
