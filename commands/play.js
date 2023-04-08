@@ -1,4 +1,4 @@
-const axios = require("axios");
+const yts = require("youtube-sr").default;
 const { ytSolver } = require("../lib/functions");
 const yt = require("yt-converter");
 const fs = require("fs");
@@ -19,64 +19,59 @@ module.exports.run = async (client, message, args, config) => {
       );
     await client.reply(from, `Espera un momento`, id);
     if (isUrl) {
-      await ytSolver(arg).then((r) => {
-        client.sendFileFromUrl(
-          from,
-          `${r.thumb}`,
-          `a.jpg`,
-          `Inicia la descarga de *${r.title}*\nCanal/Autor: ${r.author}`,
-          id
-        );
-        yt.convertAudio(
-          {
-            url: args.join(""),
-            itag: 140,
-            directoryDownload: __dirname.replace("commands", "media/audio"),
-            title: `${r.title}`,
-          },
-          function () {},
-          function () {
-            client.sendFileFromUrl(
-              from,
-              `./media/audio/${r.title}.mp3`,
-              `${r.title}.mp3`,
-              `w`,
-              id
-            );
-            fs.unlink(`./media/audio/${r.title}.mp3`, function (e) {
-              if (e) console.log(e);
-            });
-          }
-        );
+      await ytSolver(args.join("")).then((r) => {
+        if (r.status === 200) {
+          client.sendFileFromUrl(
+            from,
+            `${r.thumb}`,
+            `a.jpg`,
+            `Inicia la descarga de *${r.title}*\nCanal/Autor: ${r.author}\nDuracion: ${r.time} minutos`,
+            id
+          );
+          yt.convertAudio(
+            {
+              url: args.join(""),
+              itag: 140,
+              directoryDownload: "./media/audio",
+              title: `${r.title}`,
+            },
+            function () {},
+            function () {
+              client.sendFileFromUrl(
+                from,
+                `./media/audio/${r.title}.mp3`,
+                `${r.title}.mp3`,
+                `w`,
+                id
+              );
+              fs.unlink(`./media/audio/${r.title}.mp3`, function (e) {
+                if (e) console.log(e);
+              });
+            }
+          );
+        } else {
+          console.error(
+            `Error en ${this.config.name}
+    Hora: ${new Date().getHours()}:${new Date().getMinutes()}:${new Date().getSeconds()}:`,
+            e.toString()
+          );
+          client.reply(from, `Ocurrio un error`, id);
+        }
       });
     } else {
-      const res = await axios.get(
-        `https://api-fgmods.ddns.net/api/ytsearch?q=${args.join(" ")}&apikey=${
-          config.fgmKey
-        }`
-      );
-      let ytm = res.data.result;
-      let rs;
-      if (!ytm || ytm == undefined) {
-        await client.reply(
-          from,
-          `No se encontraron resultados para tu busqueda`,
-          id
-        );
+      //Buscador
+      if (false) {
       } else {
+        const rs = await yts.search(args.join(" "), { limit: 5 });
         a = 1;
-        txt = "     Resultados";
-        ytm.forEach((rs) => {
-          if (a <= 5 && rs.type == "video") {
-            txt += `
-${a}-. Titulo: ${rs.title}
-Duracion: ${rs.timestamp}
-Autor/Canal: ${rs.author.name}
+        txt = "Resultados";
+        rs.forEach((r) => {
+          txt += `
+${a}-. Titulo: ${r.title}
+Duracion: ${r.durationFormatted}
+Autor/Canal: ${r.channel.name}
 `;
-            a += 1;
-          } else {
-            return;
-          }
+          a += 1;
         });
 
         await client.reply(
@@ -97,58 +92,68 @@ Autor/Canal: ${rs.author.name}
             errors: ["time", "max"],
           })
           .then((c) => {
-            let d;
-            c.forEach((r) => {
-              d = r;
-            });
-            if (!isNaN(d.body)) {
-              if (d.body > 5) {
+            const ob = Object.fromEntries(c);
+            let k;
+            for (const o in ob) {
+              k = o;
+            }
+            const d = ob[k];
+            let rss = parseInt(d.body);
+            if (Number.isInteger(rss)) {
+              if (rss > 5) {
                 client.reply(
                   from,
                   `El numero excede al de las opciones
-Intenta de nuevo`
+Intenta de nuevo`,
+                  id
                 );
               } else {
-                rs = parseInt(d.body);
-                ytSolver(ytm[rs - 1].url).then((r) => {
-                  client.sendFileFromUrl(
-                    from,
-                    `${r.thumb}`,
-                    `a.jpg`,
-                    `Inicia la descarga de *${r.title}*\nCanal/Autor: ${r.author}`,
-                    id
-                  );
-                  yt.convertAudio(
-                    {
-                      url: ytm[rs - 1].url,
-                      itag: 140,
-                      directoryDownload: __dirname.replace(
-                        "commands",
-                        "media/audio"
-                      ),
-                      title: `${r.title}`,
-                    },
-                    function () {},
-                    function () {
-                      client.sendFileFromUrl(
-                        from,
-                        `./media/audio/${r.title}`,
-                        `${r.title}`,
-                        `w`,
-                        id
-                      );
-                      fs.unlink(`./media/audio/${r.title}`, function (e) {
-                        if (e) console.log(e);
-                      });
-                    }
-                  );
+                ytSolver(rs[rss - 1].url).then((r) => {
+                  if (r.status === 200) {
+                    client.sendFileFromUrl(
+                      from,
+                      `${r.thumb}`,
+                      `a.jpg`,
+                      `Inicia la descarga de *${r.title}*\nCanal/Autor: ${r.author}\nDuracion: ${r.time} minutos`,
+                      id
+                    );
+                    yt.convertAudio(
+                      {
+                        url: rs[rss - 1].url,
+                        itag: 140,
+                        directoryDownload: "./media/audio",
+                        title: `${r.title}`,
+                      },
+                      function () {},
+                      function () {
+                        client.sendFileFromUrl(
+                          from,
+                          `./media/audio/${r.title}.mp3`,
+                          `${r.title}.mp3`,
+                          `w`,
+                          id
+                        );
+                        fs.unlink(`./media/audio/${r.title}.mp3`, function (e) {
+                          if (e) console.log(e);
+                        });
+                      }
+                    );
+                  } else {
+                    console.error(
+                      `Error en ${this.config.name}
+Hora: ${new Date().getHours()}:${new Date().getMinutes()}:${new Date().getSeconds()}: `,
+                      r.error
+                    );
+                    client.reply(from, `Ocurrio un error`, id);
+                  }
                 });
               }
             } else {
               client.reply(
                 from,
                 `No de admiten caracteres
-Intenta de nuevo`
+Intenta de nuevo`,
+                id
               );
             }
           })
@@ -167,19 +172,10 @@ Intenta de nuevo`,
   } catch (e) {
     console.error(
       `Error en ${this.config.name}
-Hora: ${new Date().getHours()}:${new Date().getMinutes()}:${new Date().getSeconds()}`,
+Hora: ${new Date().getHours()}:${new Date().getMinutes()}:${new Date().getSeconds()}:`,
       e.toString()
     );
-    if (e.toString() == "Error: getaddrinfo ENOTFOUND api-fgmods.ddns.net") {
-      await client.reply(
-        from,
-        `El servicio de busqueda no esta disponble
-Intenta introducir el enlace`,
-        id
-      );
-    } else {
-      await client.reply(from, `Ocurrio un error`, id);
-    }
+    await client.reply(from, `Ocurrio un error`, id);
   }
   await client.simulateTyping(from, false);
 };
