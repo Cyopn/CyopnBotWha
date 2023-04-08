@@ -28,7 +28,7 @@ module.exports.run = async (client, message, args, config) => {
             `Inicia la descarga de *${r.title}*\nCanal/Autor: ${r.author}\nDuracion: ${r.time} minutos`,
             id
           );
-          const tl = r.title.toString().replaceAll("|", "");
+          const tl = r.title.toString().replaceAll("|", "").replaceAll("?", "").replaceAll(",", "");
           yt.convertAudio(
             {
               url: args.join(""),
@@ -118,7 +118,7 @@ Intenta de nuevo`,
                       `Inicia la descarga de *${r.title}*\nCanal/Autor: ${r.author}\nDuracion: ${r.time} minutos`,
                       id
                     );
-                    const tl = r.title.toString().replaceAll("|", "");
+                    const tl = r.title.toString().replaceAll("|", "").replaceAll("?", "").replaceAll(",", "");
                     yt.convertAudio(
                       {
                         url: rs[rss - 1].url,
@@ -153,7 +153,7 @@ Hora: ${new Date().getHours()}:${new Date().getMinutes()}:${new Date().getSecond
             } else {
               client.reply(
                 from,
-                `No de admiten caracteres
+                `No se admiten caracteres
 Intenta de nuevo`,
                 id
               );
