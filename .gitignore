@@ -10,7 +10,9 @@ database/dataTest.json
 **.node-persist**
 commands/test.js
 test.*
-
+path.js
+.wwebjs_auth
+output.json
 # managed
 **_IGNORE_**
 # end managed
