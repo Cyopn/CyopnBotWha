@@ -10,6 +10,7 @@ database/dataTest.json
 **.node-persist**
 commands/test.js
 test.*
+backup.json
 # managed
 **_IGNORE_**
 # end managed
