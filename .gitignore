@@ -11,6 +11,9 @@ database/dataTest.json
 commands/test.js
 test.*
 backup.json
+path.js
+.wwebjs_auth
+output.json
 # managed
 **_IGNORE_**
 # end managed
