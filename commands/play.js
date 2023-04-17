@@ -28,7 +28,7 @@ module.exports.run = async (client, message, args, config) => {
             `Inicia la descarga de *${r.title}*\nCanal/Autor: ${r.author}\nDuracion: ${r.time} minutos`,
             id
           );
-          const tl = r.title.toString().replaceAll("|", "").replaceAll("?", "").replaceAll(",", "");
+          const tl = r.title.toString().replaceAll("|", "").replaceAll("?", "").replaceAll(",", "").replaceAll("#", "").replaceAll(".", "");
           yt.convertAudio(
             {
               url: args.join(""),
@@ -36,7 +36,7 @@ module.exports.run = async (client, message, args, config) => {
               directoryDownload: "./media/audio",
               title: `${tl}`,
             },
-            function () {},
+            function () { },
             function () {
               client.sendFileFromUrl(
                 from,
@@ -44,7 +44,17 @@ module.exports.run = async (client, message, args, config) => {
                 `${tl}.mp3`,
                 `w`,
                 id
-              );
+              ).catch(e => {
+                console.error(
+                  `Error en ${this.config.name}
+                  Hora: ${new Date().getHours()}:${new Date().getMinutes()}:${new Date().getSeconds()}: ${tl}
+`,
+                  e.toString()
+                );
+                client.reply(from, `Ocurrio un error
+Esto ocurre por que no fue posible resolver el titulo del audio o el achivo es demasiado largo
+Intenta de nuevo con un audio distinto`, id);
+              });
               fs.unlink(`./media/audio/${tl}.mp3`, function (e) {
                 if (e) console.log(e);
               });
@@ -118,7 +128,7 @@ Intenta de nuevo`,
                       `Inicia la descarga de *${r.title}*\nCanal/Autor: ${r.author}\nDuracion: ${r.time} minutos`,
                       id
                     );
-                    const tl = r.title.toString().replaceAll("|", "").replaceAll("?", "").replaceAll(",", "");
+                    const tl = r.title.toString().replaceAll("|", "").replaceAll("?", "").replaceAll(",", "").replaceAll("#", "").replaceAll(".", "");
                     yt.convertAudio(
                       {
                         url: rs[rss - 1].url,
@@ -126,7 +136,7 @@ Intenta de nuevo`,
                         directoryDownload: "./media/audio",
                         title: `${tl}`,
                       },
-                      function () {},
+                      function () { },
                       function () {
                         client.sendFileFromUrl(
                           from,
@@ -134,7 +144,17 @@ Intenta de nuevo`,
                           `${tl}.mp3`,
                           `w`,
                           id
-                        );
+                        ).catch(e => {
+                          console.error(
+                            `Error en ${this.config.name}
+                            Hora: ${new Date().getHours()}:${new Date().getMinutes()}:${new Date().getSeconds()}: ${tl}
+`,
+                            e.toString()
+                          );
+                          client.reply(from, `Ocurrio un error
+Esto ocurre por que no fue posible resolver el titulo del audio o el achivo es demasiado largo
+Intenta de nuevo con un audio distinto`, id);
+                        });
                         fs.unlink(`./media/audio/${tl}.mp3`, function (e) {
                           if (e) console.log(e);
                         });

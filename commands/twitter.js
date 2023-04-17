@@ -14,12 +14,12 @@ module.exports.run = async (client, message, args, config) => {
     let response = await axios.get(
       `https://api.zahwazein.xyz/downloader/twitter?apikey=${config.zenKey}&url=${arg}`
     );
-    if (!response.data.result.hd) {
+    if (!response.data.result.url) {
       await client.reply(from, `El enlace no es valido`, id);
     } else if (response.data.status == "OK") {
       await client.sendFileFromUrl(
         from,
-        `${response.data.result.hd}`,
+        `${response.data.result.url}`,
         "",
         `w`,
         id

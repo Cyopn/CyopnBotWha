@@ -20,6 +20,11 @@ Se deben sustituir los corchetes segun corresponda
 _Ejemplo: ${prefix}attp Hola_
 *Comandos*: 
 
+*Nuevo:*
+*play* (alias: p)
+_Descarga alguna cancion de youtube, Uso: ${prefix}play [url/consulta]_
+_El comando ya es funcional, pero esta sujeto a errores de testeo con fueza bruta_
+
 *afk* (alias: af)
 _Establece tiempo en el que no estes disponible_
 
