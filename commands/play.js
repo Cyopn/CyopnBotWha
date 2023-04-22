@@ -146,7 +146,7 @@ Intenta de nuevo`,
                           id
                         ).catch(e => {
                           console.error(
-                            `Error en ${this.config.name}
+                            `Error en play
                             Hora: ${new Date().getHours()}:${new Date().getMinutes()}:${new Date().getSeconds()}: ${tl}
 `,
                             e.toString()
@@ -162,7 +162,7 @@ Intenta de nuevo con un audio distinto`, id);
                     );
                   } else {
                     console.error(
-                      `Error en ${this.config.name}
+                      `Error en play
 Hora: ${new Date().getHours()}:${new Date().getMinutes()}:${new Date().getSeconds()}: `,
                       r.error
                     );
