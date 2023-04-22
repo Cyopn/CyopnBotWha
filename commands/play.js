@@ -251,6 +251,6 @@ Hora: ${new Date().getHours()}:${new Date().getMinutes()}:${new Date().getSecond
 
 module.exports.config = {
 	name: "play",
-	aliases: "p",
+	alias: "p",
 	desc: "Descarga una cancion",
 };

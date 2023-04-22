@@ -25,13 +25,7 @@ module.exports.run = async (client, message, args, config) => {
 								)
 						) {
 							client
-								.sendFile(
-									from,
-									res.url[1].url,
-									"nose",
-									`w`,
-									id
-								)
+								.sendFile(from, res.url[1].url, "nose", `w`, id)
 								.catch((e) => {
 									console.error(
 										`Error en ${this.config.name}
@@ -57,7 +51,7 @@ Hora: ${new Date().getHours()}:${new Date().getMinutes()}:${new Date().getSecond
 							);
 						}
 					});
-			}else {
+			} else {
 				client.reply(from, `EL video fue eliminado o es privado`, id);
 			}
 		} else {
@@ -70,6 +64,6 @@ Hora: ${new Date().getHours()}:${new Date().getMinutes()}:${new Date().getSecond
 
 module.exports.config = {
 	name: "fbdownload",
-	aliases: "fbdl",
+	alias: "fbdl",
 	desc: "Obtién multimedia de una publicacion de facebook",
 };

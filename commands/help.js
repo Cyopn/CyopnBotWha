@@ -1,15 +1,13 @@
 const { loadCommands } = require("../lib/functions");
-let txt = "";
-
-txt = txt.replace(txt, "");
+const fs = require("fs");
 let path;
 
 module.exports.run = async (client, message, args, config) => {
-  let { from, id } = message;
-  const { prefix } = config;
-  let pathh = "nose";
-  try {
-    path = `       *CyopnBot* 
+	let { from, id } = message;
+	const { prefix } = config;
+	let pathh = "nose";
+	try {
+		path = `       *CyopnBot* 
 *Informacion*
 *Prefijo*: [  ${prefix}  ]
 _yo_ : https://instagram.com/Cyopn_
@@ -21,9 +19,8 @@ _Ejemplo: ${prefix}attp Hola_
 *Comandos*: 
 
 *Nuevo:*
-*play* (alias: p)
-_Descarga alguna cancion de youtube, Uso: ${prefix}play [url/consulta]_
-_El comando ya es funcional, pero esta sujeto a errores de testeo con fueza bruta_
+*fbdownload* (alias: fbdl)
+_Descarga algun video de facebook, Uso: ${prefix}play [url]_
 
 *afk* (alias: af)
 _Establece tiempo en el que no estes disponible_
@@ -51,6 +48,9 @@ _Momazos en r/ChingaTuMadreNoko_
 Conviertete en colaborador aqui: https://www.reddit.com/r/ChingaTuMadreNoko/
 El usar este comando repetidamente puede causar el que el bot deje de funcionar
 
+*play* (alias: p)
+_Descarga alguna cancion de youtube, Uso: ${prefix}play [url/consulta]_
+
 *sticker* (alias: s)
 _Crea stickers estaticos o animados_
 
@@ -76,20 +76,64 @@ _Descarga algun video de twitter_
 *videodl* (alias: vd)
 _Descarga un video corto de youtube, *En construccion*_`;
 
-    await client.reply(from, path, id);
-  } catch (e) {
-    console.error(
-      `Error en ${this.config.name}
+		await client.reply(from, path, id);
+	} catch (e) {
+		console.error(
+			`Error en ${this.config.name}
 Hora: ${new Date().getHours()}:${new Date().getMinutes()}:${new Date().getSeconds()}:`,
-      e.toString()
-    );
-    await client.reply(from, `Ocurrio un error`, id);
-  }
-  await client.simulateTyping(from, false);
+			e.toString()
+		);
+		await client.reply(from, `Ocurrio un error`, id);
+	}
+	/* let txt = `*CyopnBot* 
+*Prefijo*: [  ${prefix}  ] 
+_yo_ : https://instagram.com/Cyopn_
+
+*Informacion*
+Escribe ${prefix} seguido de cualquiera de los comandos, recuerda que puedes usar el nombre del comando o su alias
+_Uso: ${prefix}[Comando] [Texto/Enlace/Otros]_
+Se deben sustituir los corchetes segun corresponda
+_Ejemplo: ${prefix}attp Hola_
+  
+*Comandos*:`;
+	let command = [];
+	let alias = [];
+	let type = [];
+	let desc = [];
+	fs.readdir("./commands/", (err, files) => {
+		if (err) return console.error(err);
+		let jsfile = files.filter((f) => f.split(".").pop() === "js");
+		if (jsfile.length <= 0)
+			return console.log("No se encontro ningun comando");
+		jsfile.forEach((f) => {
+			let pull = require(`../commands/${f}`);
+			command.push(pull.config.name);
+			alias.push(pull.config.alias);
+			//type.push(pull.config.type);
+			desc.push(pull.config.desc);
+		});
+		command.forEach((name) => {
+			const sr = command.indexOf(name);
+			//if (type[sr] === "ign" || type[sr] === "adm") return;
+			if (
+				name === "test" ||
+				name === "spotify" ||
+				name === "help" ||
+				name === "hornycard" ||
+				name === "simpcard"
+			)
+				return;
+			txt += `\n*${name}* (alias: ${alias[sr]})\n_${desc[sr]}_
+`;
+		});
+		client.reply(from, txt, id);
+		txt = "";
+	}); */
+	await client.simulateTyping(from, false);
 };
 
 module.exports.config = {
-  name: "help",
-  aliases: "h",
-  desc: "nada",
+	name: "help",
+	alias: "h",
+	desc: "nada",
 };

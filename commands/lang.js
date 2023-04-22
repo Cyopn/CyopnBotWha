@@ -1,9 +1,9 @@
 module.exports.run = async (client, message, args, config) => {
-  const { id, from } = message;
-  try {
-    await client.reply(
-      from,
-      `Lista de idiomas disponibles
+	const { id, from } = message;
+	try {
+		await client.reply(
+			from,
+			`Lista de idiomas disponibles
     af: Afrikaans
     sq: Albanian
     ar: Arabic
@@ -55,21 +55,21 @@ module.exports.run = async (client, message, args, config) => {
     tr: Turkish
     vi: Vietnamese
     cy: Welsh`,
-      id
-    );
-  } catch (e) {
-    console.error(
-      `Error en ${this.config.name}
+			id
+		);
+	} catch (e) {
+		console.error(
+			`Error en ${this.config.name}
 Hora: ${new Date().getHours()}:${new Date().getMinutes()}:${new Date().getSeconds()}:`,
-      e.toString()
-    );
-    await client.reply(from, `Ocurrio un error`, id);
-  }
-  await client.simulateTyping(from, false);
+			e.toString()
+		);
+		await client.reply(from, `Ocurrio un error`, id);
+	}
+	await client.simulateTyping(from, false);
 };
 
 module.exports.config = {
-  name: "lang",
-  aliases: "la",
-  desc: "Haz una busqueda en Google",
+	name: "lang",
+	alias: "la",
+	desc: "Haz una busqueda en Google",
 };
