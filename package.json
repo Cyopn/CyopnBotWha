@@ -7,7 +7,7 @@
         "lib": "lib"
     },
     "dependencies": {
-        "@open-wa/wa-automate": "^4.64.3",
+        "@open-wa/wa-automate": "^4.64.5",
         "@open-wa/wa-decrypt": "^2.0.1",
         "axios": "^0.21.4",
         "canvas": "^2.11.2",
