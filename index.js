@@ -1,12 +1,12 @@
 const { create, Client } = require("@open-wa/wa-automate");
 const handler = require("./handler");
-//const temp = require("./media/temp/output.json")
+const temp = require("./media/temp/output.json")
 
 const start = async (client = new Client()) => {
   console.log(
     `[SR] Cliente listo - ${new Date().getHours()}:${new Date().getMinutes()}:${new Date().getSeconds()}`
   );
-  //await client.sendText(temp.from, `Bot listo`)
+  await client.sendText(temp.from, `Bot listo`)
   await client.onStateChanged((state) => {
     console.log(
       `[SR] ${state} - ${new Date().getHours()}:${new Date().getMinutes()}:${new Date().getSeconds()}`
