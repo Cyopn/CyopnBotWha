@@ -12,7 +12,7 @@ Debe tener instalado en su equipo:
 
 ## Comenzando
 Para iniciar, debemos conocer como podemos abrir tanto la consola de Windows y la integrada en Visual Studio Code:
-- Para hacerlo en Windows debemos usar la combinacion de teclas `Win + r`, escibir `cmd` en el cuadro de texto y presionar Enter.
+- Para hacerlo en Windows debemos usar la combinacion de teclas `Win + r`, escribir `cmd` en el cuadro de texto y presionar Enter.
 - En Visual Studio Code solo es necesario usar la combinacon de teclas `Ctrl + ñ`, se abrira una pestaña en la parte inferior del editor con otras varias pestañas, usaremos siempre la pestaña terminal.
 
 Ya en la consola de comandos o la terminal, escriba el comando:
