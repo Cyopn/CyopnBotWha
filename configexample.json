@@ -1,15 +1,13 @@
 {
     "prefix": "!",
-    "nobgkey": "",
-    "comment": "Clave API para uso de remove.bg(stickers sin fondo)",
     "zenKey": "",
-    "comment": "",
-    "fgmKey": "",
-    "comment": "Clave API para uso de api-fgmods(descarga de audio)",
+    "comment": "Clave API para https://api.zahwazein.xyz/",
     "opentk":"",
     "comment":"Clave API que puedes obtener en openia",
     "client_id" :"",
     "comment":"Id de cliente, se obtiene en la plataforma de desarrolladores de reddit",
     "client_secret" : "",
-    "comment":"Token secreto, se obtiene en la plataforma de desarrolladores de reddit"
+    "comment":"Token secreto, se obtiene en la plataforma de desarrolladores de reddit",
+    "owner":"",
+    "comment":"Numero del propietario (Codigo de pais + Numero)"
 }
