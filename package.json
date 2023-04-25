@@ -46,5 +46,8 @@
     "bugs": {
         "url": "https://github.com/Cyopn/CyopnBotWha/issues"
     },
-    "homepage": "https://github.com/Cyopn/CyopnBotWha#readme"
+    "homepage": "https://github.com/Cyopn/CyopnBotWha#readme",
+    "devDependencies": {
+        "typescript": "^5.0.4"
+    }
 }
