@@ -2,7 +2,7 @@ const fs = require("fs");
 let command = [];
 let alias = [];
 const config = require("./config.json");
-const { lvlFunc, getAfk } = require("./lib/functions");
+//const { lvlFunc, getAfk } = require("./lib/functions");
 
 fs.readdir("./commands/", (err, files) => {
 	if (err) return console.error(err);
@@ -16,14 +16,23 @@ fs.readdir("./commands/", (err, files) => {
 });
 
 module.exports = async (client, message) => {
-	const { body, quotedMsg, isGroupMsg } = message;
-	if (isGroupMsg) {
+	const { quotedMsg, isGroupMsg, mentionedJidList, isMedia, from } = message;
+	let body = isMedia
+		? message.caption
+			? message.caption
+			: ""
+		: message.body;
+	/* if (isGroupMsg) {
 		if (mentionedJidList && mentionedJidList[0]) {
 			await getAfk(client, message);
 		}
 		await lvlFunc(client, message);
-	}
-	let q = quotedMsg ? quotedMsg.body.trim().split(" ") : undefined;
+	} */
+	let q = quotedMsg
+		? quotedMsg.isMedia
+			? quotedMsg.caption.trim().split(" ")
+			: quotedMsg.body.trim().split(" ")
+		: undefined;
 	if (body.startsWith(config.prefix)) {
 		const arg = body.slice(config.prefix.length).trim().split(" ");
 		const cmd = arg.shift().toLowerCase();
@@ -33,9 +42,10 @@ module.exports = async (client, message) => {
 				? alias.indexOf(cmd)
 				: command.indexOf(cmd);
 		if (cm >= 0) {
-			const commFil = command[sr];
+			const commFil = command[cm];
 			const commFile = require(`./commands/${commFil}`);
-			commFile.run(message, args);
+			await client.simulateTyping(from, true);
+			commFile.run(client, message, args);
 		}
 	}
 };
