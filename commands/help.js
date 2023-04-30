@@ -1,9 +1,9 @@
 const { prefix } = require("../config.json");
-const { loadCommands } = require("../lib/functions");
+const { getCommands } = require("../lib/functions");
 
 module.exports.run = async (client, message, args) => {
 	const { id, from } = message;
-	const { command, alias, type, desc, fulldesc } = await loadCommands();
+	const { command, alias, type, desc, fulldesc } = await getCommands();
 	const arg = args[0].join(" ");
 	if (!arg) {
 		let txt = `*CyopnBot* 
@@ -15,13 +15,13 @@ Escribe ${prefix} seguido de cualquiera de los comandos, recuerda que puedes usa
 _Uso: ${prefix}[Comando] [Texto/Enlace/Otros]_
 Se deben sustituir los corchetes segun corresponda
 _Ejemplo: ${prefix}attp Hola_
-  
+
 *Comandos*:`;
 
 		command.forEach((name) => {
 			const sr = command.indexOf(name);
 			if (type[sr] === "ign" || type[sr] === "adm") return;
-			txt += `\n*${name}* (alias: ${alias[sr]})\n_${desc[sr]}._
+			txt += `\n*${name}* (alias: ${alias[sr]})\n_${desc[sr]}_
 `;
 		});
 		await client.reply(from, txt, id);
@@ -37,7 +37,7 @@ Descripcion: ${fulldesc[cmd]}`;
 			await client.reply(from, txt, id);
 			txt = "";
 		}else{
-			await client.reply(from, `El comando ${arg} no existe.`, id)
+			await client.reply(from, `El comando *${arg}* no existe.`, id)
 		}
 	}
 	await client.simulateTyping(from, false);
@@ -47,6 +47,6 @@ module.exports.config = {
 	name: "help",
 	alias: "h",
 	type: "help",
-	description: `Muestra este mensaje, si usas este comando con el nombre o alias de otro comando: ${prefix}help sticker, mostrara mas detalles sobre el uso del comando`,
-	fulldesc: "",
+	description: `Muestra este mensaje, escribe ${prefix}help help para obtener mas informacion.`,
+	fulldesc: `Este comando no solo funciona para obtener los comandos, si no, al escibir el nombre o alias de otro comando (${prefix}help sticker), mostrara mas detalles sobre su uso.\nEste comando lo puedes usar en grupos y mensajes directos.`,
 };
