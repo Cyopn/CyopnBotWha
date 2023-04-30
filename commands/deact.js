@@ -8,9 +8,7 @@ let dbs = new db.crearDB({
 module.exports.run = async (client, message, args) => {
 	const { id, from, sender, isGroupMsg, chat } = message;
 	const arg = args[0].join("");
-	const groupId = isGroupMsg
-		? chat.groupMetadata.id.replace("@g.us", "")
-		: "";
+	const groupId = isGroupMsg ? from.replace("@g.us", "") : "";
 	const groupAdmins = isGroupMsg
 		? await client.getGroupAdmins(groupId.concat("@g.us"))
 		: "";
@@ -82,7 +80,7 @@ module.exports.run = async (client, message, args) => {
 			);
 			break;
 	}
-	await client.simulateTyping(from, true);
+	await client.simulateTyping(from, false);
 };
 
 module.exports.config = {
