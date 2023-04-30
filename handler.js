@@ -29,7 +29,7 @@ module.exports = async (client, message) => {
 		await lvlFunc(client, message);
 	} */
 	let q = quotedMsg
-		? quotedMsg.isMedia
+		? quotedMsg.isMedia && quotedMsg.caption
 			? quotedMsg.caption.trim().split(" ")
 			: quotedMsg.body.trim().split(" ")
 		: undefined;
