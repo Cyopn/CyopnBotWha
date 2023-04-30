@@ -2,7 +2,7 @@ const fs = require("fs");
 let command = [];
 let alias = [];
 const config = require("./config.json");
-//const { lvlFunc, getAfk } = require("./lib/functions");
+const { evalLevel } = require("./lib/functions");
 
 fs.readdir("./commands/", (err, files) => {
 	if (err) return console.error(err);
@@ -22,12 +22,12 @@ module.exports = async (client, message) => {
 			? message.caption
 			: ""
 		: message.body;
-	/* if (isGroupMsg) {
-		if (mentionedJidList && mentionedJidList[0]) {
+	if (isGroupMsg) {
+		/* if (mentionedJidList && mentionedJidList[0]) {
 			await getAfk(client, message);
-		}
-		await lvlFunc(client, message);
-	} */
+		} */
+		await evalLevel(client, message);
+	}
 	let q = quotedMsg
 		? quotedMsg.isMedia && quotedMsg.caption
 			? quotedMsg.caption.trim().split(" ")
