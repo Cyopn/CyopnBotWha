@@ -13,6 +13,7 @@ test.*
 path.js
 .wwebjs_auth
 output.json
+database
 # managed
 **_IGNORE_**
 # end managed
