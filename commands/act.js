@@ -26,12 +26,6 @@ module.exports.run = async (client, message, args) => {
 			from,
 			`Comando solo disponible para administradores.`
 		);
-	if (!dbs.has(groupId)) {
-		dbs.set(groupId, {
-			welcome: false,
-			level: false,
-		});
-	}
 
 	if (!arg)
 		return await client.reply(
@@ -45,7 +39,7 @@ module.exports.run = async (client, message, args) => {
 			if (r.welcome) {
 				await client.reply(
 					from,
-					`La bienvenida ya se encontraba activada.`,
+					`El mensaje de bienvenida ya se encuentra activado.`,
 					id
 				);
 			} else {
@@ -65,7 +59,7 @@ module.exports.run = async (client, message, args) => {
 			if (t.level) {
 				await client.reply(
 					from,
-					`El sistema de niveles ya se encontraba activado.`,
+					`El sistema de niveles ya se encuentra activado.`,
 					id
 				);
 			} else {
@@ -73,9 +67,9 @@ module.exports.run = async (client, message, args) => {
 					welcome: t.welcome,
 					level: true,
 				});
-				await await client.reply(
+				await client.reply(
 					from,
-					`La opcion ${arg} no existe, escribe alguna de las opciones existentes: \nwelcome \nlevel \nSi tienes dudas escribe ${prefix}help ${this.config.name}.`,
+					`Se ha activado el sistema de niveles.`,
 					id
 				);
 			}

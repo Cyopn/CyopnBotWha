@@ -26,12 +26,6 @@ module.exports.run = async (client, message, args) => {
 			from,
 			`Comando solo disponible para administradores.`
 		);
-	if (!dbs.has(groupId)) {
-		dbs.set(groupId, {
-			welcome: false,
-			level: false,
-		});
-	}
 
 	if (!arg)
 		return await client.reply(
@@ -55,7 +49,7 @@ module.exports.run = async (client, message, args) => {
 			} else {
 				await client.reply(
 					from,
-					`La bienvenida ya se encontraba desactivada.`,
+					`El mensaje de bienvenida ya se encuentra desactivado.`,
 					id
 				);
 			}
@@ -75,7 +69,7 @@ module.exports.run = async (client, message, args) => {
 			} else {
 				await client.reply(
 					from,
-					`El sistema de niveles ya se encontraba desactivado.`,
+					`El sistema de niveles ya se encuentra desactivado.`,
 					id
 				);
 			}
