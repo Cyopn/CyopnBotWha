@@ -2,11 +2,13 @@ const { create, Client, ev } = require("@open-wa/wa-automate");
 const config = require("./config.json");
 const handler = require("./handler");
 const d = new Date();
+const { loadDatabase } = require("./lib/functions");
 
 const start = async (client = new Client()) => {
 	console.log(
 		`[SR] Cliente listo - ${d.getHours()}:${d.getMinutes()}:${d.getSeconds()}`
 	);
+	await loadDatabase(client);
 	//Nota: Debe existir una conversacion anterior entre el numero del propietario y el numero que hosteara el bot, de otro modo, el aviso no se enviara
 	await client.sendText(`${config.owner}@c.us`, "Cliente listo");
 	await client.onStateChanged((state) => {
