@@ -1,12 +1,12 @@
 const { prefix } = require("../config.json");
 
-module.exports.run = async (client, message, args) => {
+module.exports.run = async (client, message) => {
 	const { id, from, mentionedJidList, author, isGroupMsg, chat } = message;
 	const groupId = isGroupMsg ? chat.groupMetadata.id : "";
 	let adm = await client.getGroupAdmins(groupId);
 	let selfadm = await client.iAmAdmin();
 	if (!isGroupMsg)
-		return client.reply(from, "Comando solo disponible para grupos", id);
+		return client.reply(from, "Comando solo disponible para grupos.", id);
 	if (selfadm.indexOf(groupId) == -1)
 		return client.reply(
 			from,
@@ -32,7 +32,7 @@ module.exports.run = async (client, message, args) => {
 			await client.promoteParticipant(groupId, mentionedJidList[0]);
 			await client.sendReplyWithMentions(
 				from,
-				`El participante @${mentionedJidList[0]} ha sido promovido a administrador`,
+				`El participante @${mentionedJidList[0]} ahora es administrador`,
 				id
 			);
 		}
@@ -45,5 +45,5 @@ module.exports.config = {
 	alias: "pr",
 	type: "adm",
 	description: "Promueve a un participante a administrador de grupo.",
-	fulldesc: "",
+	fulldesc: `Este comando es util para llevar la administracion de grupos, escribiendo el prefijo (${prefix}) mientras etiquetas al participante del grupo que quieras hacer administrador.\nEste comando solo se puede usar en grupos.`,
 };
