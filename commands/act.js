@@ -24,7 +24,6 @@ module.exports.run = async (client, message, args) => {
 			from,
 			`Comando solo disponible para administradores.`
 		);
-
 	if (!arg)
 		return await client.reply(
 			from,
