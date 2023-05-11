@@ -12,7 +12,6 @@ let dbs = new db.crearDB({
 module.exports.run = async (client, message, args) => {
 	const { id, from, author, isGroupMsg, body, quotedMsg, mentionedJidList } =
 		message;
-	const arg = args[1] === undefined ? args[0].join("") : args[1].join("");
 	if (!isGroupMsg)
 		return await client.reply(
 			from,
@@ -54,5 +53,5 @@ module.exports.config = {
 	alias: `lvl`,
 	type: `misc`,
 	description: `Conoce tu progreso segun tu actividad (o de otro participante) en el grupo, conforme a la cantidad de palabras y mensajes enviados.`,
-	fulldesc: `Usa este comando para conocer el progreso (nivel y experiencia), ya sea el tuyo o algun otro participante al mencionarlo: _${prefix}level @nose_, segun la cantidad de palabras en un mensaje enviado, se excluiran los siguientes casos: \nStickers \nImagenes/videos \nAudios.`,
+	fulldesc: `Usa este comando para conocer el progreso (nivel y experiencia), ya sea el tuyo o algun otro participante al mencionarlo: _${prefix}level @nose_, segun la cantidad de palabras en un mensaje enviado, se excluiran los siguientes casos: \nStickers \nImagenes/videos \nAudios. \n Comando solo disponible en grupos.`,
 };
