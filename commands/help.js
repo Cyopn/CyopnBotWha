@@ -4,9 +4,7 @@ const { getCommands } = require("../lib/functions");
 module.exports.run = async (client, message, args) => {
 	const { id, from } = message;
 	const { command, alias, type, desc, fulldesc } = await getCommands();
-	const arg = args[0].join(" ");
-	if (!arg) {
-		let txt = `*CyopnBot* 
+	let txt = `*CyopnBot* 
 *Prefijo*: [  ${prefix}  ] 
 _yo_ : https://instagram.com/Cyopn_
 
@@ -17,7 +15,8 @@ Se deben sustituir los corchetes segun corresponda
 _Ejemplo: ${prefix}attp Hola_
 
 *Comandos*:`;
-
+	const arg = args[0].join(" ");
+	if (!arg) {
 		command.forEach((name) => {
 			const sr = command.indexOf(name);
 			if (type[sr] === "ign" || type[sr] === "adm") return;
@@ -36,8 +35,31 @@ _Ejemplo: ${prefix}attp Hola_
 Descripcion: ${fulldesc[cmd]}`;
 			await client.reply(from, txt, id);
 			txt = "";
-		}else{
-			await client.reply(from, `El comando *${arg}* no existe.`, id)
+		} else {
+			switch (arg) {
+				case "adm":
+					command.forEach((name) => {
+						const sr = command.indexOf(name);
+						if (
+							type[sr] === "ign" ||
+							type[sr] === "misc" ||
+							type[sr] === "help"
+						)
+							return;
+						txt += `\n*${name}* (alias: ${alias[sr]})\n_${desc[sr]}_
+			`;
+					});
+					await client.reply(from, txt, id);
+					txt = "";
+					break;
+				default:
+					await client.reply(
+						from,
+						`El comando *${arg}* no existe.`,
+						id
+					);
+					break;
+			}
 		}
 	}
 	await client.simulateTyping(from, false);
@@ -48,5 +70,5 @@ module.exports.config = {
 	alias: "h",
 	type: "help",
 	description: `Muestra este mensaje, escribe ${prefix}help help para obtener mas informacion.`,
-	fulldesc: `Este comando no solo funciona para obtener los comandos, si no, al escibir el nombre o alias de otro comando (${prefix}help sticker), mostrara mas detalles sobre su uso.\nEste comando lo puedes usar en grupos y mensajes directos.`,
+	fulldesc: `Este comando no solo funciona para obtener los comandos, si no, al escibir el nombre o alias de otro comando (${prefix}help sticker, incluso si lo usas con sus alias (${prefix}h s), mostrara mas detalles sobre su uso.\nEste comando lo puedes usar en grupos y mensajes directos.`,
 };
