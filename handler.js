@@ -2,7 +2,7 @@ const fs = require("fs");
 let command = [];
 let alias = [];
 const config = require("./config.json");
-const { evalLevel } = require("./lib/functions");
+const { evalLevel, getAfk, solveAfk } = require("./lib/functions");
 
 fs.readdir("./commands/", (err, files) => {
 	if (err) return console.error(err);
@@ -16,17 +16,45 @@ fs.readdir("./commands/", (err, files) => {
 });
 
 module.exports = async (client, message) => {
-	const { quotedMsg, isGroupMsg, mentionedJidList, isMedia, from } = message;
+	const {
+		quotedMsg,
+		isGroupMsg,
+		mentionedJidList,
+		isMedia,
+		from,
+		author,
+		id,
+	} = message;
 	let body = isMedia
 		? message.caption
 			? message.caption
 			: ""
 		: message.body;
 	if (isGroupMsg) {
-		/* if (mentionedJidList && mentionedJidList[0]) {
-			await getAfk(client, message);
-		} */
+		if (mentionedJidList && mentionedJidList[0]) {
+			const r = await getAfk(
+				from.replace("@g.us", ""),
+				mentionedJidList[0].replace("@c.us", "")
+			);
+			if (r !== undefined)
+				return await client.reply(
+					from,
+					`El miembro que haz mencionado no esta disponible por el momento, intenta mas tarde.\nRazon: _${r}_`,
+					id
+				);
+		}
 		await evalLevel(client, message);
+		if (
+			await solveAfk(
+				from.replace("@g.us", ""),
+				author.replace("@c.us", "")
+			)
+		)
+			await client.reply(
+				from,
+				`A partir de ahora ha terminado tu periodo de inactividad.`,
+				id
+			);
 	}
 	let q = quotedMsg
 		? quotedMsg.isMedia && quotedMsg.caption
