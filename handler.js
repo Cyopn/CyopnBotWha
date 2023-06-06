@@ -73,7 +73,11 @@ module.exports = async (client, message) => {
 			const commFil = command[cm];
 			const commFile = require(`./commands/${commFil}`);
 			await client.simulateTyping(from, true);
-			commFile.run(client, message, args);
+			try {
+				commFile.run(client, message, args);
+			} catch (e) {
+				console.log(e);
+			}
 		}
 	}
 };
