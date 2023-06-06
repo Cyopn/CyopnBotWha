@@ -87,5 +87,5 @@ module.exports.config = {
 	alias: `at`,
 	type: `adm`,
 	description: `Activa algunas funciones extra en grupos (mensaje de bienvenida y sistema de niveles, estaran desactivados por defecto).`,
-	fulldesc: `Este comando funciona para habilitar funciones adicionales (mensaje de bienvenida y sistema de niveles, estaran desactivados por defecto), es necesario escribir ${prefix}act (welcome o level), recuerda que no debes escribir los corchetes, solo la opcion, ejemplo: _${prefix}act level_, de este modo se activara el sistema de niveles. \nComando solo disponible en grupos.`,
+	fulldesc: `Este comando funciona para habilitar funciones adicionales (mensaje de bienvenida y sistema de niveles, estaran desactivados por defecto), es necesario escribir ${prefix}act (welcome o level), recuerda que no debes escribir los parentesis, solo la opcion, ejemplo: _${prefix}act level_, de este modo se activara el sistema de niveles. \nComando solo disponible en grupos.`,
 };

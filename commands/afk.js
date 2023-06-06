@@ -19,7 +19,7 @@ module.exports.run = async (client, message, args) => {
 	if (!arg)
 		return await client.reply(
 			from,
-			`Es necesario proporcionar un texto, escribe ${prefix}afk (texto), si tienes dudas sobre este comando escribe ${prefix}help afk`,
+			`Es necesario proporcionar un texto, escribe ${prefix}afk (texto), si tienes dudas sobre este comando escribe ${prefix}help afk.`,
 			id
 		);
 
@@ -54,6 +54,6 @@ module.exports.config = {
 	name: `afk`,
 	alias: `af`,
 	type: `misc`,
-	description: `Establece un periodo en el que no estes disponible, usa ${prefix}afk (razon de inactividad), recuerda que no es necesario escribir los corchetes, el periodo termina despues de enviar un mensaje.`,
+	description: `Establece un periodo en el que no estes disponible, usa ${prefix}afk (razon de inactividad), recuerda que no es necesario escribir los parentesis, el periodo termina despues de enviar un mensaje.`,
 	fulldesc: `Usa este comando para establecer tu inactividad dentro de un grupo, puedes usar ${prefix}afk (razon) o su alias ${prefix}af (razon), cada que otro participante del grupo te mecione, recibira una respuesta con la razon de tu inactividad, termina despues de enviar un mensaje. \nComando solo disponible en grupos.`,
 };

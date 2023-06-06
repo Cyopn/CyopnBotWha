@@ -23,21 +23,21 @@ module.exports.run = async (client, message) => {
 	if (mentionedJidList.length == 0) {
 		await client.reply(
 			from,
-			`Debes mecionar a un usuario: _${prefix}promote @nose_.`,
+			`Debes mecionar a un usuario: _${prefix}demote @nose_.`,
 			id
 		);
 	} else {
-		if (adm.indexOf(mentionedJidList[0]) != -1) {
-			await client.reply(
+		if (adm.indexOf(mentionedJidList[0]) === -1) {
+			await client.demoteParticipant(groupId, mentionedJidList[0]);
+			await client.sendReplyWithMentions(
 				from,
-				`El participante ya es administrador.`,
+				`El participante @${mentionedJidList[0]} fue degradado de administrador.`,
 				id
 			);
 		} else {
-			await client.promoteParticipant(groupId, mentionedJidList[0]);
-			await client.sendReplyWithMentions(
+			await client.reply(
 				from,
-				`El participante @${mentionedJidList[0]} ahora es administrador.`,
+				`El participante no es administrador.`,
 				id
 			);
 		}
@@ -46,9 +46,9 @@ module.exports.run = async (client, message) => {
 };
 
 module.exports.config = {
-	name: "promote",
-	alias: "pr",
+	name: "demote",
+	alias: "dm",
 	type: "adm",
-	description: "Promueve a un participante a administrador de grupo.",
-	fulldesc: `Este comando es util para llevar la administracion de grupos, escribiendo el prefijo (${prefix}) mientras etiquetas al participante del grupo que quieras hacer administrador.\nEste comando solo se puede usar en grupos.`,
+	description: "Degrada de administrador de grupo a un participante.",
+	fulldesc: `Este comando es util para llevar la administracion de grupos, escribiendo el prefijo (${prefix}) mientras etiquetas al participante del grupo que quieras degradar de administrador.\nEste comando solo se puede usar en grupos.`,
 };

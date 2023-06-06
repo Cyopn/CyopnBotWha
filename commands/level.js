@@ -9,7 +9,7 @@ let dbs = new db.crearDB({
 	carpeta: "./database",
 });
 
-module.exports.run = async (client, message, args) => {
+module.exports.run = async (client, message) => {
 	const { id, from, author, isGroupMsg, body, quotedMsg, mentionedJidList } =
 		message;
 	if (!isGroupMsg)

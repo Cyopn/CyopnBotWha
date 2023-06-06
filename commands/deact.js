@@ -6,7 +6,7 @@ let dbs = new db.crearDB({
 });
 
 module.exports.run = async (client, message, args) => {
-	const { id, from, sender, isGroupMsg, chat } = message;
+	const { id, from, sender, isGroupMsg } = message;
 	const arg = args[0].join("");
 	const groupId = isGroupMsg ? from.replace("@g.us", "") : "";
 	const groupAdmins = isGroupMsg
@@ -88,5 +88,5 @@ module.exports.config = {
 	alias: `dt`,
 	type: `adm`,
 	description: `Desactiva algunas funciones extra en grupos (mensaje de bienvenida y sistema de niveles, estaran desactivados por defecto).`,
-	fulldesc: `Este comando funciona para deshabilitar funciones adicionales (mensaje de bienvenida y sistema de niveles, estaran desactivados por defecto), es necesario escribir ${prefix}deact (welcome o level), recuerda que no debes escribir los corchetes, solo la opcion, ejemplo: _${prefix}deact level_, de este modo se desactivara el sistema de niveles. \nComando solo disponible en grupos.`,
+	fulldesc: `Este comando funciona para deshabilitar funciones adicionales (mensaje de bienvenida y sistema de niveles, estaran desactivados por defecto), es necesario escribir ${prefix}deact (welcome o level), recuerda que no debes escribir los parentesis, solo la opcion, ejemplo: _${prefix}deact level_, de este modo se desactivara el sistema de niveles. \nComando solo disponible en grupos.`,
 };

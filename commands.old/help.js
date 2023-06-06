@@ -14,7 +14,7 @@ _yo_ : https://instagram.com/Cyopn_
 
 Escribe ${prefix} seguido de cualquiera de los comandos, recuerda que puedes usar el nombre del comando o su alias
 _Uso: ${prefix}[Comando] [Argumentos/Texto/Enlace/Otros]_
-Se deben sustituir los corchetes segun corresponda
+Se deben sustituir los parentesis segun corresponda
 _Ejemplo: ${prefix}attp Hola_
 *Comandos*: 
 
@@ -92,7 +92,7 @@ _yo_ : https://instagram.com/Cyopn_
 *Informacion*
 Escribe ${prefix} seguido de cualquiera de los comandos, recuerda que puedes usar el nombre del comando o su alias
 _Uso: ${prefix}[Comando] [Texto/Enlace/Otros]_
-Se deben sustituir los corchetes segun corresponda
+Se deben sustituir los parentesis segun corresponda
 _Ejemplo: ${prefix}attp Hola_
   
 *Comandos*:`;
