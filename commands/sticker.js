@@ -1,67 +1,46 @@
 const { prefix } = require("../config.json");
-const { decryptMedia } = require("@open-wa/wa-decrypt");
+const { sticker } = require("../lib/functions");
+const { downloadContentFromMessage } = require("@whiskeysockets/baileys");
 
-module.exports.run = async (client, message) => {
-	const { quotedMsg, isMedia, id, from } = message;
-	const msg = isMedia
-		? message
-		: quotedMsg
-		? quotedMsg.isMedia
-			? quotedMsg
-			: undefined
-		: undefined;
-	if (msg !== undefined) {
-		if (msg.mimetype === "video/mp4") {
-			await client.reply(from, `Espera un momento.`, id);
-			const mediaData = await decryptMedia(msg);
-			await client
-				.sendMp4AsSticker(
-					from,
-					`data:${msg.mimetype};base64,${mediaData.toString(
-						"base64"
-					)}`,
-					{
-						crop: false,
-					},
-					{
-						author: "ig: @Cyopn_",
-						pack: "CyopnBot",
-					}
-				)
-				.catch((e) => {
-					if (
-						e
-							.toString()
-							.includes(
-								"STICKER_TOO_LARGE: maxContentLength size of 1500000 exceeded"
-							) ||
-						e.toString().includes("Error: Evaluation failed: a")
-					)
-						return client.reply(
-							from,
-							"Es imposible crear el sticker, el archivo excede el limite (tamaño de archivo) de envio.",
-							id
-						);
-				});
-		} else {
-			const mediaData = await decryptMedia(msg);
-			const imageBase64 = `data:${
-				msg.mimetype
-			};base64,${mediaData.toString("base64")}`;
-			client.sendImageAsSticker(from, imageBase64, {
-				author: "ig: @Cyopn_",
-				pack: "CyopnBot",
-				keepScale: true,
-			});
-		}
-	} else {
-		await client.reply(
-			from,
-			`Envia una imagen/video/gif con el comando *${prefix}sticker*, o bien, responde a alguno ya enviado.`,
-			id
+module.exports.run = async (sock, msg) => {
+	const type =
+		msg.message.imageMessage ||
+		msg.message?.extendedTextMessage?.contextInfo?.quotedMessage
+			?.imageMessage
+			? "image"
+			: msg.message?.videoMessage ||
+			  msg.message?.extendedTextMessage?.contextInfo?.quotedMessage
+					?.videoMessage
+			? "video"
+			: undefined;
+	const m = msg.message?.imageMessage
+		? msg.message?.imageMessage
+		: msg.message?.extendedTextMessage?.contextInfo?.quotedMessage
+				?.imageMessage
+		? msg.message?.extendedTextMessage?.contextInfo?.quotedMessage
+				?.imageMessage
+		: msg.message?.videoMessage
+		? msg.message?.videoMessage
+		: msg.message?.extendedTextMessage?.contextInfo?.quotedMessage
+				?.videoMessage;
+
+	if (m === undefined || m === null || type === undefined || type === null) {
+		sock.sendMessage(
+			msg.key.remoteJid,
+			{
+				text: `Envia una imagen/video/gif con el comando *${prefix}sticker*, o bien, responde a alguno ya enviado.`,
+			},
+			{ quoted: msg },
 		);
+	} else {
+		const w = await downloadContentFromMessage(m, type);
+		let buffer = Buffer.from([]);
+		for await (const chunk of w) {
+			buffer = Buffer.concat([buffer, chunk]);
+		}
+		let s = await sticker(buffer);
+		sock.sendMessage(msg.key.remoteJid, { sticker: s }, { quoted: msg });
 	}
-	await client.simulateTyping(from, false);
 };
 
 module.exports.config = {

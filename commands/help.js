@@ -1,8 +1,7 @@
 const { prefix } = require("../config.json");
 const { getCommands } = require("../lib/functions");
 
-module.exports.run = async (client, message, args) => {
-	const { id, from } = message;
+module.exports.run = async (sock, msg, args) => {
 	const { command, alias, type, desc, fulldesc } = await getCommands();
 	let txt = `*CyopnBot* 
 *Prefijo*: [  ${prefix}  ] 
@@ -23,7 +22,13 @@ _Ejemplo: ${prefix}attp Hola_
 			txt += `\n*${name}* (alias: ${alias[sr]})\n_${desc[sr]}_
 `;
 		});
-		await client.reply(from, txt, id);
+		sock.sendMessage(
+			msg.key.remoteJid,
+			{
+				text: txt,
+			},
+			{ quoted: msg },
+		);
 		txt = "";
 	} else {
 		const cmd =
@@ -33,7 +38,13 @@ _Ejemplo: ${prefix}attp Hola_
 		if (cmd >= 0) {
 			let txt = `Mas informacion sobre el comando: *${command[cmd]}*
 Descripcion: ${fulldesc[cmd]}`;
-			await client.reply(from, txt, id);
+			sock.sendMessage(
+				msg.key.remoteJid,
+				{
+					text: txt,
+				},
+				{ quoted: msg },
+			);
 			txt = "";
 		} else {
 			switch (arg) {
@@ -43,26 +54,41 @@ Descripcion: ${fulldesc[cmd]}`;
 						if (
 							type[sr] === "ign" ||
 							type[sr] === "misc" ||
-							type[sr] === "help"
+							type[sr] === "help" ||
+							type[sr] === "test"
 						)
 							return;
 						txt += `\n*${name}* (alias: ${alias[sr]})\n_${desc[sr]}_
 			`;
 					});
-					await client.reply(from, txt, id);
+					sock.sendMessage(
+						msg.key.remoteJid,
+						{
+							text: txt,
+						},
+						{ quoted: msg },
+					);
 					txt = "";
 					break;
 				default:
-					await client.reply(
-						from,
-						`El comando *${arg}* no existe.`,
-						id
+					sock.sendMessage(
+						msg.key.remoteJid,
+						{
+							text: txt,
+						},
+						{ quoted: msg },
+					);
+					sock.sendMessage(
+						msg.key.remoteJid,
+						{
+							text: `El comando *${arg}* no existe.`,
+						},
+						{ quoted: msg },
 					);
 					break;
 			}
 		}
 	}
-	await client.simulateTyping(from, false);
 };
 
 module.exports.config = {

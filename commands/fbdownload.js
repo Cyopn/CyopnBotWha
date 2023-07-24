@@ -1,42 +1,41 @@
 const { prefix } = require("../config.json");
-const { facebookdl } = require("@bochilteam/scraper");
+const { savefrom } = require("@bochilteam/scraper");
 
-module.exports.run = async (client, message, args) => {
-	const { id, from } = message;
-	const arg =
-		args[1] !== undefined && args[1].match(/www.facebook.com|fb.watch/g)
-			? args[1].join("")
-			: args[0].join("");
-
-	const isUrl = arg.match(/www.facebook.com|fb.watch/g);
+module.exports.run = async (sock, msg, args) => {
+	const arg = args[1] === undefined ? args[0].join("") : args[1].join("");
 	if (!arg)
-		return await client.reply(
-			from,
-			`Debes proporcionar un enlace, escribe ${prefix}fbdownload (enlace), recuerda que no es necesario escribir los parentesis.`,
-			id
+		return sock.sendMessage(
+			msg.key.remoteJid,
+			{
+				text: `Debes proporcionar un enlace, escribe ${prefix}fbdownload (enlace), recuerda que no es necesario escribir los parentesis.`,
+			},
+			{ quoted: msg },
 		);
+	const isUrl = arg.match(/www.facebook.com|fb.watch/g);
 	if (!isUrl)
 		return await client.reply(
 			from,
 			`El enlace proporcionado no es valido.`,
-			id
+			id,
 		);
-	const r = await facebookdl(arg);
-	let rs = null;
-	let q = 0;
-	r.result.forEach((w) => {
-		if (
-			w.ext === "mp4" &&
-			!isNaN(parseInt(w.quality)) &&
-			parseInt(w.quality) > q &&
-			!w.url.includes(`youtube4kdownloader`)
-		) {
-			rs = w.url;
-			q = parseInt(w.quality);
-		}
-	});
-	await client.sendFileFromUrl(from, rs, "nose", `w`, id);
-	await client.simulateTyping(from, false);
+	try {
+		const r = await savefrom(arg);
+
+		sock.sendMessage(
+			msg.key.remoteJid,
+			{ video: { url: r[0].hd.url }, caption: "w" },
+			{ quoted: msg },
+		);
+	} catch (e) {
+		if (e.toString().contains("Error: Cannot find data"))
+			return sock.sendMessage(
+				msg.key.remoteJid,
+				{
+					text: `El enlace proporcionado no es valido.`,
+				},
+				{ quoted: msg },
+			);
+	}
 };
 
 module.exports.config = {
