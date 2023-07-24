@@ -1,77 +1,91 @@
+const { prefix } = require("../config.json");
 const db = require("megadb");
-let dBase = new db.crearDB({
+let dbs = new db.crearDB({
 	nombre: "dataDesc",
 	carpeta: "./database",
 });
 
 module.exports.run = async (client, message, args) => {
 	const { id, from, sender, isGroupMsg, chat } = message;
-	const groupId = isGroupMsg ? chat.groupMetadata.id : "";
-	const groupAdmins = isGroupMsg ? await client.getGroupAdmins(groupId) : "";
+	const arg = args[0].join("");
+	const groupId = isGroupMsg ? from.replace("@g.us", "") : "";
+	const groupAdmins = isGroupMsg
+		? await client.getGroupAdmins(groupId.concat("@g.us"))
+		: "";
 	const isGroupAdmins = isGroupMsg ? groupAdmins.includes(sender.id) : false;
-
-	try {
-		if (!isGroupMsg)
-			return client.reply(from, "Comando solo disponible en grupos", id);
-		if (!isGroupAdmins)
-			return client.reply(
+	if (!isGroupMsg)
+		return await client.reply(
+			from,
+			`Comando solo disponible en grupos.`,
+			id
+		);
+	if (!isGroupAdmins)
+		return await client.reply(
+			from,
+			`Comando solo disponible para administradores.`
+		);
+	if (!arg)
+		return await client.reply(
+			from,
+			`Escribe alguna de las opciones existentes: \nwelcome \nlevel \nSi tienes dudas escribe ${prefix}help ${this.config.name}.`,
+			id
+		);
+	switch (arg) {
+		case "welcome":
+			const r = await dbs.get(groupId);
+			if (r.welcome) {
+				await client.reply(
+					from,
+					`El mensaje de bienvenida ya se encuentra activado.`,
+					id
+				);
+			} else {
+				dbs.set(groupId, {
+					welcome: true,
+					level: r.level,
+				});
+				await client.reply(
+					from,
+					`Se ha activado el mensaje de bienvenida.`,
+					id
+				);
+			}
+			break;
+		case "level":
+			const t = await dbs.get(groupId);
+			if (t.level) {
+				await client.reply(
+					from,
+					`El sistema de niveles ya se encuentra activado.`,
+					id
+				);
+			} else {
+				dbs.set(groupId, {
+					welcome: t.welcome,
+					level: true,
+				});
+				await client.reply(
+					from,
+					`Se ha activado el sistema de niveles.`,
+					id
+				);
+			}
+			break;
+		default:
+			await client.reply(
 				from,
-				"Necesitas ser administrador para usar este comando",
+				`La opcion _${arg}_ no existe, escribe alguna de las opciones existentes: \nwelcome \nlevel \nSi tienes dudas escribe ${prefix}help ${this.config.name}.`,
 				id
 			);
-		const opt = args.join("");
-		if (!dBase.has(groupId)) {
-			dBase.set(groupId, {
-				welcome: "No",
-				nsfw: "No",
-			});
-		}
-		switch (opt) {
-			case "welcome":
-				const res = await dBase.get(groupId);
-				if (res.welcome === "Si") {
-					client.reply(from, "La bienvenida ya esta activada", id);
-				} else {
-					let ns = res.nsfw === "No" ? "No" : "Si";
-					dBase.set(groupId, {
-						welcome: "Si",
-						nsfw: ns,
-					});
-					client.reply(from, "Se activo con exito la bienvenida", id);
-				}
-				break;
-
-			case "nsfw":
-				const resn = await dBase.get(groupId);
-				if (resn.nsfw === "Si") {
-					client.reply(from, "El nsfw ya esta activado", id);
-				} else {
-					let wel = resn.welcome === "No" ? "No" : "Si";
-					dBase.set(groupId, {
-						welcome: wel,
-						nsfw: "Si",
-					});
-					client.reply(from, "Se activo con exito el nsfw", id);
-				}
-				break;
-
-			default:
-				client.reply(from, `Opcion no disponible o no existe`, id);
-				break;
-		}
-	} catch (e) {
-		console.error(
-			`Error en ${this.config.name}
-Hora: ${new Date().getHours()}:${new Date().getMinutes()}:${new Date().getSeconds()}:`,
-			e.toString()
-		);
-		client.reply(from, `Ocurrio un error`, id);
+			break;
 	}
 	await client.simulateTyping(from, false);
 };
 
 module.exports.config = {
-	name: "act",
-	alias: "ac",
-	desc: "Activa algunas funciones(bienvebida/nsfw)",
+	name: `act`,
+	alias: `at`,
+	type: `adm`,
+	description: `Activa algunas funciones extra en grupos (mensaje de bienvenida y sistema de niveles, estaran desactivados por defecto).`,
+	fulldesc: `Este comando funciona para habilitar funciones adicionales (mensaje de bienvenida y sistema de niveles, estaran desactivados por defecto), es necesario escribir ${prefix}act (welcome o level), recuerda que no debes escribir los parentesis, solo la opcion, ejemplo: _${prefix}act level_, de este modo se activara el sistema de niveles. \nComando solo disponible en grupos.`,
 };

@@ -1,34 +1,33 @@
+const { prefix } = require("../config.json");
 const ex = require("child_process").execSync;
-const { loadJson } = require("../lib/functions");
+const fsPromises = require("fs/promises");
+const { loadJson } = require("../lib.old/functions");
 
-module.exports.run = async (client, message) => {
+module.exports.run = async (client, message, args) => {
 	const { id, from } = message;
 	try {
-		const rs = ex(`python ./lib/python/meme.py`, { encoding: "utf8" });
-
-		loadJson().then((a) => {
-			client.sendFileFromUrl(
-				from,
-				a.url,
-				"yo.jpg",
-				`${a.title}
-Publicado por u/${a.author}`,
-				id
-			);
+		const rs = ex(`python ./lib/pylib/meme.py`, { encoding: "utf8" });
+		loadJson().then((rs) => {
+			if (rs != undefined) {
+				client.sendFileFromUrl(
+					from,
+					rs.url,
+					"yo.jpg",
+					`${rs.title}
+    Publicado por u/${rs.author}`,
+					id,
+				);
+			}
 		});
-	} catch (e) {
-		console.error(
-			`Error en ${this.config.name}
-Hora: ${new Date().getHours()}:${new Date().getMinutes()}:${new Date().getSeconds()}:`,
-			e.toString()
-		);
-		await client.reply(from, `Ocurrio un error`, id);
-	}
+	} catch (e) {}
+
 	await client.simulateTyping(from, false);
 };
 
 module.exports.config = {
-	name: "meme",
-	alias: "m",
-	desc: "Momazos en r/ChingaTuMadreNoko",
+	name: `meme`,
+	alias: `m`,
+	type: ``,
+	description: ``,
+	fulldesc: ``,
 };

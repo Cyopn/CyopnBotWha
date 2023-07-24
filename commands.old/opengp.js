@@ -1,46 +1,43 @@
+const { prefix } = require("../config.json");
+
 module.exports.run = async (client, message) => {
-	const { id, from, author, isGroupMsg, chat } = message;
-	const groupId = isGroupMsg ? chat.groupMetadata.id : "";
-	let adm = await client.getGroupAdmins(groupId);
-	let selfadm = await client.iAmAdmin();
-	try {
-		if (!isGroupMsg)
-			return client.reply(
-				from,
-				"Comando solo disponible para grupos",
-				id
-			);
-		if (selfadm.indexOf(groupId) == -1)
-			return client.reply(
-				from,
-				"Para usar este comando debo ser administrador del grupo",
-				id
-			);
-		if (adm.indexOf(author) == -1)
-			return client.reply(
-				from,
-				"Para usar este comando debes ser administrador",
-				id
-			);
-		await client.setGroupToAdminsOnly(groupId, false);
-		await client.reply(
+	const { id, from, sender, isGroupMsg } = message;
+	const groupId = isGroupMsg ? from : "";
+	const groupAdmins = isGroupMsg ? await client.getGroupAdmins(groupId) : "";
+	const isGroupAdmins = isGroupMsg ? groupAdmins.includes(sender.id) : false;
+	let selfAdmin = await client.iAmAdmin();
+
+	if (!isGroupMsg)
+		return await client.reply(
 			from,
-			`El grupo esta disponible para todos los participantes`,
+			`Comando solo disponible en grupos.`,
 			id
 		);
-	} catch (e) {
-		console.error(
-			`Error en ${this.config.name}
-Hora: ${new Date().getHours()}:${new Date().getMinutes()}:${new Date().getSeconds()}:`,
-			e.toString()
+	if (selfAdmin.indexOf(groupId) === -1)
+		return await client.reply(
+			from,
+			`Comando solo disponible si soy administrador del grupo.`,
+			id
 		);
-		await client.reply(from, `Ocurrio un error`, id);
-	}
+	if (!isGroupAdmins)
+		return await client.reply(
+			from,
+			`Comando solo disponible para administradores del grupo.`,
+			id
+		);
+	await client.setGroupToAdminsOnly(groupId, false);
+	await client.reply(
+		from,
+		`A partir de ahora, el grupo esta disponible para todos los participantes.`,
+		id
+	);
 	await client.simulateTyping(from, false);
 };
 
 module.exports.config = {
-	name: "opengp",
-	alias: "opp",
-	desc: "Abre el grupo",
+	name: `opengp`,
+	alias: `opp`,
+	type: `adm`,
+	description: `Cambia los ajustes del grupo para que todos los participantes puedan enviar mensajes, es necesario que sea administrador de grupo.`,
+	fulldesc: `Cambia los ajustes del grupo para que todos los participantes puedan enviar mensajes (si el grupo esta disponible solo para administradores), para ello, tambien es necesario que sea administrador del grupo.\nComando solo disponible en grupos.`,
 };

@@ -1,55 +1,69 @@
-const igd = require("fg-ig");
-module.exports.run = async (client, message, args, config) => {
+const { prefix } = require("../config.json");
+const ig = require("instagram-url-dl");
+
+module.exports.run = async (client, message, args) => {
 	const { id, from } = message;
-	const { prefix } = config;
-	let ra = [];
-
-	try {
-		if (!args.join("")) {
-			await client.reply(
-				from,
-				`Usa *${prefix}igdl [enlace] [indice(opcional)]*`,
-				id
-			);
-		} else {
-			await client.reply(from, `Espera un poco`, id);
-			const arg = args[0];
-			const index = args[1];
-			const isUrl = arg.match(
-				/(?:(?:http|https):\/\/)?(?:www\.)?(?:instagram\.com|instagr\.am)\/([A-Za-z0-9-_\.]+)/im
-			);
-
-			if (isUrl) {
-				if (index) {
-					let res = await igd(arg);
-					res.url_list.forEach((r) => {
-						ra.push(r);
-					});
-					await client.sendFile(from, ra[index - 1], "nose", `w`, id);
-				} else {
-					let res = await igd(arg);
-
-					res.url_list.forEach((r) => {
-						client.sendFile(from, r, "nose", `w`, id);
-					});
-				}
-			} else {
-				await client.reply(from, `El enlace no es valido`, id);
-			}
-		}
-	} catch (e) {
-		console.error(
-			`Error en ${this.config.name}
-Hora: ${new Date().getHours()}:${new Date().getMinutes()}:${new Date().getSeconds()}`,
-			e
+	const arg = args[1] !== undefined ? args[1].join("") : args[0].join("");
+	if (!arg)
+		return await client.reply(
+			from,
+			`Debes proporcionar un enlace, escribe ${prefix}igdownload (enlace), recuerda que no es necesario escribir los parentesis.`,
+			id,
 		);
-		await client.reply(from, `Ocurrio un error`, id);
+	const isUrl = arg.match(
+		/(?:https?:\/\/)?(?:www.)?instagram.com\/?([a-zA-Z0-9\.\_\-]+)?\/([p]+)?([reel]+)?([tv]+)?([stories]+)?\/([a-zA-Z0-9\-\_\.]+)\/?([0-9]+)?/gm,
+	);
+	if (!isUrl)
+		return await client.reply(
+			from,
+			`El enlace proporcionado no es valido.`,
+			id,
+		);
+	const r = await ig(arg);
+	if (r.status) {
+		console.log(r.data);
+		r.data.forEach((rs) => {
+			client.sendFileFromUrl(from, rs.url, "nose", `w`, id).catch((e) => {
+				if (
+					e
+						.toString()
+						.includes(
+							"Error: Evaluation failed: Error: MediaFileTooLarge:",
+						)
+				) {
+					client
+						.sendFileFromUrl(from, rs.url, "nose", `w`, id)
+						.catch((e) => {
+							console.error(
+								`Error en ${this.config.name}
+Hora: ${new Date().getHours()}:${new Date().getMinutes()}:${new Date().getSeconds()}:`,
+								e.toString(),
+							);
+							client.reply(
+								from,
+								`Es imposible enviar el video`,
+								id,
+							);
+						});
+				} else {
+					console.error(
+						`Error en ${this.config.name}
+Hora: ${new Date().getHours()}:${new Date().getMinutes()}:${new Date().getSeconds()}:`,
+						e.toString(),
+					);
+					client.reply(from, `Es imposible enviar el video`, id);
+				}
+			});
+		});
 	}
+
 	await client.simulateTyping(from, false);
 };
 
 module.exports.config = {
-	name: "igdownload",
-	alias: "igdl",
-	desc: "Obtién multimedia de una publicacion de instagram",
+	name: `igdownload`,
+	alias: `igdl`,
+	type: `misc`,
+	description: ``,
+	fulldesc: ``,
 };

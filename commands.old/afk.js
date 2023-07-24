@@ -1,121 +1,59 @@
+const { prefix } = require("../config.json");
 const db = require("megadb");
-const afkdB = new db.crearDB({
-	nombre: "dataAkf",
+let dba = new db.crearDB({
+	nombre: "dataAfk",
 	carpeta: "./database",
 });
-const sleep = require("ko-sleep");
-module.exports.run = async (client, message, args, config) => {
-	const { id, from, author, isGroupMsg, chat } = message;
-	let tim = args[args.length - 1];
-	let razon = args.join(" ").replace(` ${tim}`, "");
-	const { prefix } = config;
-	let time = parseInt(tim, 10);
-	const s = time * 60;
-	let count = 1;
-	try {
-		if ((!razon && !time) || isNaN(time)) {
+
+module.exports.run = async (client, message, args) => {
+	const { id, from, author, isGroupMsg } = message;
+	const arg = args[0].join(" ");
+	if (!isGroupMsg)
+		return await client.reply(
+			from,
+			`Comando solo disponible en grupos.`,
+			id
+		);
+	const groupId = isGroupMsg ? from.replace("@g.us", "") : "";
+	const userId = author.replace("@c.us", "");
+	if (!arg)
+		return await client.reply(
+			from,
+			`Es necesario proporcionar un texto, escribe ${prefix}afk (texto), si tienes dudas sobre este comando escribe ${prefix}help afk.`,
+			id
+		);
+
+	if (dba.has(`${groupId}.${userId}`)) {
+		const { status } = await dba.get(`${groupId}.${userId}`);
+		if (status === "dep") {
 			await client.reply(
 				from,
-				`Envia el comando ${prefix}afk _[razon] [tiempo(minutos)]_`,
+				`Acada de terminar tu tiempo inactivo, intenta de nuevo.`,
 				id
 			);
+			dba.set(`${groupId}.${userId}`, {
+				status: "none",
+				reason: "",
+			});
 		} else {
-			if (!isGroupMsg) return;
-			const groupId = isGroupMsg
-				? chat.groupMetadata.id.replace("@g.us", "")
-				: "";
-			const sid = author.replace("@c.us", "");
-			if (
-				message.fromMe ||
-				message.isMedia ||
-				message.type === "image" ||
-				message.type === "sticker" ||
-				message.type === "ptt"
-			)
-				return;
-
-			if (afkdB.has(groupId) && afkdB.has(`${groupId}.${sid}`)) {
-				let { status, reason, delay } = await afkdB.get(
-					`${groupId}.${sid}`
-				);
-				if (status === "afk") {
-					await client.reply(
-						from,
-						`Por el momento ya estas en akf, espera _~${(
-							delay / 60
-						).toFixed(2)} minuto(s)_ para intentar de nuevo`,
-						id
-					);
-				} else if (status === "none") {
-					afkdB.set(`${groupId}.${sid}`, {
-						status: "afk",
-						reason: razon,
-						delay: s,
-					});
-					await client.reply(
-						from,
-						`Se ha establecido afk correctamente \n_Razon: ${razon}_ \n_Tiempo: ${time} minutos_`,
-						id
-					);
-					while (count < s) {
-						afkdB.set(`${groupId}.${sid}`, {
-							status: "afk",
-							reason: razon,
-							delay: s - count,
-						});
-						count++;
-						await sleep(1 * 1000);
-					}
-					if (count === s) {
-						afkdB.set(`${groupId}.${sid}`, {
-							status: "none",
-							reason: "none",
-							delay: 0,
-						});
-					}
-				}
-			} else {
-				afkdB.set(`${groupId}.${sid}`, {
-					status: "afk",
-					reason: razon,
-					delay: s,
-				});
-				await client.reply(
-					from,
-					`Se ha establecido afk correctamente \n_Razon: ${razon}_ \n_Tiempo: ${time} minutos_`,
-					id
-				);
-				while (count < s) {
-					afkdB.set(`${groupId}.${sid}`, {
-						status: "afk",
-						reason: razon,
-						delay: s - count,
-					});
-					count++;
-					await sleep(1 * 1000);
-				}
-				if (count === s) {
-					afkdB.set(`${groupId}.${sid}`, {
-						status: "none",
-						reason: "none",
-						delay: 0,
-					});
-				}
-			}
+			dba.set(`${groupId}.${userId}`, {
+				status: "afk",
+				reason: arg,
+			});
+			await client.reply(
+				from,
+				`Se ha establecido tu periodo de inactividad.\nRazon: _${arg}_.\nTerminara cuando vuelvas a enviar un mensaje.`,
+				id
+			);
 		}
-	} catch (e) {
-		console.error(
-			`Error en ${this.config.name}
-Hora: ${new Date().getHours()}:${new Date().getMinutes()}:${new Date().getSeconds()}:`,
-			e.toString()
-		);
-		await client.reply(from, `Ocurrio un error`, id);
 	}
 	await client.simulateTyping(from, false);
 };
 
 module.exports.config = {
-	name: "afk",
-	alias: "af",
-	desc: "Establece tiempo en el que no estes disponible",
+	name: `afk`,
+	alias: `af`,
+	type: `misc`,
+	description: `Establece un periodo en el que no estes disponible, usa ${prefix}afk (razon de inactividad), recuerda que no es necesario escribir los parentesis, el periodo termina despues de enviar un mensaje.`,
+	fulldesc: `Usa este comando para establecer tu inactividad dentro de un grupo, puedes usar ${prefix}afk (razon) o su alias ${prefix}af (razon), cada que otro participante del grupo te mecione, recibira una respuesta con la razon de tu inactividad, termina despues de enviar un mensaje. \nComando solo disponible en grupos.`,
 };

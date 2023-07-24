@@ -1,63 +1,54 @@
-module.exports.run = async (client, message, args, config) => {
-	const { id, from, mentionedJidList, quotedMsg, author, isGroupMsg, chat } =
-		message;
-	const groupId = isGroupMsg ? chat.groupMetadata.id : "";
-	let adm = await client.getGroupAdmins(groupId);
-	let selfadm = await client.iAmAdmin();
-	try {
-		if (!isGroupMsg)
-			return client.reply(
+const { prefix } = require("../config.json");
+
+module.exports.run = async (client, message) => {
+	const { id, from, mentionedJidList, sender, isGroupMsg } = message;
+	const groupId = isGroupMsg ? from : "";
+	const groupAdmins = isGroupMsg ? await client.getGroupAdmins(groupId) : "";
+	const isGroupAdmins = isGroupMsg ? groupAdmins.includes(sender.id) : false;
+	let selfAdmin = await client.iAmAdmin();
+	if (!isGroupMsg)
+		return client.reply(from, "Comando solo disponible en grupos.", id);
+	if (selfAdmin.indexOf(groupId) === -1)
+		return client.reply(
+			from,
+			"Comando solo disponible si soy administrador del grupo.",
+			id
+		);
+	if (!isGroupAdmins)
+		return client.reply(
+			from,
+			"Comando solo disponible para administradores del grupo.",
+			id
+		);
+	if (mentionedJidList.length == 0) {
+		await client.reply(
+			from,
+			`Debes mecionar a un usuario: _${prefix}demote @nose_.`,
+			id
+		);
+	} else {
+		if (adm.indexOf(mentionedJidList[0]) === -1) {
+			await client.demoteParticipant(groupId, mentionedJidList[0]);
+			await client.sendReplyWithMentions(
 				from,
-				"Comando solo disponible para grupos",
-				id
-			);
-		if (selfadm.indexOf(groupId) == -1)
-			return client.reply(
-				from,
-				"Para usar este comando debo ser administrador del grupo",
-				id
-			);
-		if (adm.indexOf(author) == -1)
-			return client.reply(
-				from,
-				"Para usar este comando debes ser administrador",
-				id
-			);
-		if (mentionedJidList.length == 0) {
-			await client.reply(
-				from,
-				`Debes mecionar a un usuario: _${config.prefix}remove @nose_`,
+				`El participante @${mentionedJidList[0]} fue degradado de administrador.`,
 				id
 			);
 		} else {
-			if (adm.indexOf(mentionedJidList[0]) != -1) {
-				await client.demoteParticipant(groupId, mentionedJidList[0]);
-				await client.sendReplyWithMentions(
-					from,
-					`El participante @${mentionedJidList[0]} ha sido degradado de administrador`,
-					id
-				);
-			} else {
-				await client.reply(
-					from,
-					`El participante no es administrador`,
-					id
-				);
-			}
+			await client.reply(
+				from,
+				`El participante no es administrador.`,
+				id
+			);
 		}
-	} catch (e) {
-		console.error(
-			`Error en ${this.config.name}
-Hora: ${new Date().getHours()}:${new Date().getMinutes()}:${new Date().getSeconds()}:`,
-			e.toString()
-		);
-		await client.reply(from, `Ocurrio un error`, id);
 	}
 	await client.simulateTyping(from, false);
 };
 
 module.exports.config = {
 	name: "demote",
-	alias: "dt",
-	desc: "Degrada algun participante de administrador",
+	alias: "dm",
+	type: "adm",
+	description: "Degrada de administrador de grupo a un participante.",
+	fulldesc: `Este comando es util para llevar la administracion de grupos, escribiendo el prefijo (${prefix}) mientras etiquetas al participante del grupo que quieras degradar de administrador.\nEste comando solo se puede usar en grupos.`,
 };
