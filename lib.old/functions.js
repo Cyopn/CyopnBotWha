@@ -1,6 +1,6 @@
 const axios = require("axios");
 const fs = require("fs");
-const { createCanvas, loadImage } = require("canvas");
+//const { createCanvas, loadImage } = require("canvas");
 //const imgSize = require('image-size')
 //const Jimp = require('jimp')
 //const fetch = require("node-fetch")
