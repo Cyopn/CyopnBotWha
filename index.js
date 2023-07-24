@@ -27,7 +27,6 @@ const start = async (client = new Client()) => {
 
 create({
 	sessionId: "Cyopn",
-	headless: true,
 	qrTimeout: 0,
 	authTimeout: 0,
 	cacheEnabled: false,

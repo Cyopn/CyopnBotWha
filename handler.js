@@ -34,26 +34,26 @@ module.exports = async (client, message) => {
 		if (mentionedJidList && mentionedJidList[0]) {
 			const r = await getAfk(
 				from.replace("@g.us", ""),
-				mentionedJidList[0].replace("@c.us", "")
+				mentionedJidList[0].replace("@c.us", ""),
 			);
 			if (r !== undefined)
 				return await client.reply(
 					from,
 					`El miembro que haz mencionado no esta disponible por el momento, intenta mas tarde.\nRazon: _${r}_`,
-					id
+					id,
 				);
 		}
 		await evalLevel(client, message);
 		if (
 			await solveAfk(
 				from.replace("@g.us", ""),
-				author.replace("@c.us", "")
+				author.replace("@c.us", ""),
 			)
 		)
 			await client.reply(
 				from,
 				`A partir de ahora ha terminado tu periodo de inactividad.`,
-				id
+				id,
 			);
 	}
 	let q = quotedMsg
