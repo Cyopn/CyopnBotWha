@@ -4,7 +4,7 @@ const fs = require("fs");
 //const imgSize = require('image-size')
 //const Jimp = require('jimp')
 //const fetch = require("node-fetch")
-const fetch = import("node-fetch");
+//const fetch = import("node-fetch");
 //const data = require("form-data")
 const path = require("path");
 const fsPromises = require("fs/promises");
@@ -182,13 +182,11 @@ const createSt = async (client, message) => {
  * */
 const uploadImage = async (buffer) => {
 	let form = new data();
-	form.append("file", buffer, "tmp.png");
-	console.log(form);
+	form.append("file", buffer, "tmp.webp");
 	let res = await fetch("https://telegra.ph/upload", {
 		method: "POST",
 		body: form,
 	});
-
 	let img = await res.json();
 	if (img.error) throw img.error;
 	return "https://telegra.ph" + img[0].src;

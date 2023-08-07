@@ -1,4 +1,4 @@
-const request = require("request");
+//const request = require("request");
 
 module.exports.run = async (client, message, args, config) => {
 	const { from, id } = message;

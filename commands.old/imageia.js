@@ -1,5 +1,5 @@
-const { Configuration, OpenAIApi } = require("openai");
-const translate = require("translate-google");
+//const { Configuration, OpenAIApi } = require("openai");
+//const translate = require("translate-google");
 
 module.exports.run = async (client, message, args, config) => {
 	const { from, id } = message;

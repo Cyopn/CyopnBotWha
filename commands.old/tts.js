@@ -9,7 +9,7 @@ module.exports.run = async (client, message, args, config) => {
 				`Escribe *${prefix}tts [idioma] [texto]*, usa ${prefix}idioma para ver los idiomas disponibles \nAsegurate escribirlos bien!`
 			);
 		const arg = args.shift();
-		const ttsGB = require("node-gtts")(arg);
+		//const ttsGB = require("node-gtts")(arg);
 		const dataText = args.join(" ");
 		if (!dataText)
 			return client.reply(
@@ -25,7 +25,7 @@ module.exports.run = async (client, message, args, config) => {
 		let a = er.split(" ").pop();
 		if (er.includes("Error: Language not supported:")) {
 			const ar = "es";
-			const ttsG = require("node-gtts")(ar);
+			//const ttsG = require("node-gtts")(ar);
 			const dataTex = arg;
 			ttsG.save("./media/audio/tts.mp3", dataTex, function () {
 				client.sendFile(

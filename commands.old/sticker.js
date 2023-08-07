@@ -1,4 +1,4 @@
-const { decryptMedia } = require("@open-wa/wa-decrypt");
+//const { decryptMedia } = require("@open-wa/wa-decrypt");
 
 module.exports.run = async (client, message, args, config) => {
 	const { type, id, from, isMedia, quotedMsg, mimetype } = message;
