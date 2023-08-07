@@ -1,5 +1,4 @@
 import { Boom } from "@hapi/boom";
-import {} from "@adiwajshing/keyed-db";
 import makeWASocket, {
 	DisconnectReason,
 	fetchLatestBaileysVersion,
