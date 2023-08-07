@@ -13,7 +13,7 @@ _Uso: ${prefix}[Comando] [Texto/Enlace/Otros]_
 Se deben sustituir los parentesis segun corresponda
 _Ejemplo: ${prefix}attp Hola_
 
-*Comandos*:`;
+*Comandos disponibles*:`;
 	const arg = args[0].join(" ");
 	if (!arg) {
 		command.forEach((name) => {

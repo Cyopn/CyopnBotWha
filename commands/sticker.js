@@ -47,7 +47,6 @@ module.exports.config = {
 	name: "sticker",
 	alias: "s",
 	type: "misc",
-	description:
-		"Envia un sticker a partir de una imagen/video/gif, ya sea enviada o respondiendo a alguna ya enviada.",
+	description: `Envia un sticker a partir de una imagen/video/gif, ya sea enviada o respondiendo a alguna ya enviada.`,
 	fulldesc: `Este comando funciona para crear stickers (pegatinas), puedes enviar una imagen, video o gif escribiendo el prefijo (${prefix}) junto al nombre del comando (sticker) o su alias (s) antes de enviarla, otra manera de usarlo es respondiendo a una imagen, video o gif ya enviado, de igual modo escribiendo el prefijo (${prefix}) junto al nombre del comando (sticker) o su alias (s).\nEste comando lo puedes usar en grupos y mensajes directos.`,
 };

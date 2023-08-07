@@ -1,4 +1,5 @@
 import { Boom } from "@hapi/boom";
+import {} from "@adiwajshing/keyed-db";
 import makeWASocket, {
 	DisconnectReason,
 	fetchLatestBaileysVersion,
@@ -6,7 +7,7 @@ import makeWASocket, {
 	useMultiFileAuthState,
 } from "@whiskeysockets/baileys";
 import MAIN_LOGGER from "@whiskeysockets/baileys/lib/Utils/logger";
-const fs = require("fs");
+import fs from "fs";
 let command: String[] = [];
 let alias: String[] = [];
 import config from "./config.json";
@@ -26,9 +27,7 @@ fs.readdir("./commands/", (err: Error, files: String[]) => {
 });
 
 const startSock = async () => {
-	const { state, saveCreds } = await useMultiFileAuthState(
-		"auth_info",
-	);
+	const { state, saveCreds } = await useMultiFileAuthState("auth_info");
 	const { version } = await fetchLatestBaileysVersion();
 
 	const sock = makeWASocket({
@@ -109,7 +108,10 @@ const startSock = async () => {
 									console.log(e);
 								}
 							}
-							//sock.sendMessage(msg.key.remoteJid, { text: "" });
+							/* sock.sendMessage(msg.key.remoteJid, {
+								caption: "",
+								image: { url: `` },
+							}); */
 						}
 					}
 				}
