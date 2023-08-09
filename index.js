@@ -1,20 +1,20 @@
-import { Boom } from "@hapi/boom";
-import makeWASocket, {
+const { Boom } = require("@hapi/boom");
+const {
 	DisconnectReason,
 	fetchLatestBaileysVersion,
 	makeCacheableSignalKeyStore,
 	useMultiFileAuthState,
-} from "@whiskeysockets/baileys";
-import MAIN_LOGGER from "@whiskeysockets/baileys/lib/Utils/logger";
-import fs from "fs";
-let command: String[] = [];
-let alias: String[] = [];
-import config from "./config.json";
-
+	makeWASocket,
+} = require("@whiskeysockets/baileys");
+const MAIN_LOGGER = require("@whiskeysockets/baileys/lib/Utils/logger").default;
+const fs = require("fs");
+let command = [];
+let alias = [];
+const config = require("./config.json");
 const logger = MAIN_LOGGER.child({});
 logger.level = "silent";
 
-fs.readdir("./commands/", (err: Error, files: String[]) => {
+fs.readdir("./commands/", (err, files) => {
 	if (err) return console.error(err);
 	let jsfile = files.filter((f) => f.split(".").pop() === "js");
 	if (jsfile.length <= 0) return console.log("No se encontro ningun comando");
@@ -46,7 +46,7 @@ const startSock = async () => {
 			const { connection, lastDisconnect } = update;
 			if (connection === "close") {
 				if (
-					(lastDisconnect?.error as Boom)?.output?.statusCode !==
+					Boom(lastDisconnect?.error)?.output?.statusCode !==
 					DisconnectReason.loggedOut
 				) {
 					console.log("Reconectando");
