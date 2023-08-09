@@ -8,12 +8,18 @@ const {
 } = require("@whiskeysockets/baileys");
 const MAIN_LOGGER = require("@whiskeysockets/baileys/lib/Utils/logger").default;
 const fs = require("fs");
+const express = require("express");
 let command = [];
 let alias = [];
 const config = require("./config.json");
 const logger = MAIN_LOGGER.child({});
 logger.level = "silent";
-
+// Hosting
+/* const app = express();
+const port = 3000;
+app.get("/", (req, res) => res.send("nose"));
+app.listen(port, () => console.log(`Oyente: http://localhost:${port}`)); */
+// Hosting
 fs.readdir("./commands/", (err, files) => {
 	if (err) return console.error(err);
 	let jsfile = files.filter((f) => f.split(".").pop() === "js");
