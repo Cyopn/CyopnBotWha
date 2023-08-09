@@ -62,5 +62,5 @@ module.exports.config = {
 	alias: `igdl`,
 	type: `misc`,
 	description: `Envia la mutimedia de alguna publicacion de Instagram.`,
-	fulldesc: `Comando para descargar videos de Instagram, escribe ${prefix}igdownload (enlace), o con su alias ${prefix}igdl (enlace), recuerda que no es necesario escribir los parentesis, tambien puedes responder a un enlace ya enviado usando ${prefix}igdownload, o su alias (${prefix})igdl respondiendo al enlace. \nEste comando puede usarse en mensajes directos y/o grupos.`,
+	fulldesc: `Comando para descargar videos de Instagram, escribe ${prefix}igdownload (enlace), o con su alias ${prefix}igdl (enlace), recuerda que no es necesario escribir los parentesis, tambien puedes responder a un enlace ya enviado, usando ${prefix}igdownload, o su alias (${prefix})igdl respondiendo al enlace. \nEste comando puede usarse en mensajes directos y/o grupos.`,
 };
