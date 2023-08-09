@@ -39,7 +39,11 @@ module.exports.run = async (sock, msg) => {
 			buffer = Buffer.concat([buffer, chunk]);
 		}
 		let s = await sticker(buffer);
-		sock.sendMessage(msg.key.remoteJid, { sticker: s }, { quoted: msg });
+		await sock
+			.sendMessage(msg.key.remoteJid, { sticker: s }, { quoted: msg })
+			.catch((e) => {
+				console.log(e);
+			});
 	}
 };
 

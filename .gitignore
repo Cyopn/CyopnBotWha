@@ -2,7 +2,7 @@ config.json
 node_modules
 package-lock.json
 media/audio/tts.mp3
-media/images/imgRs.png
+media/images/w.jpg
 media/temp/output.json
 commands/test.js
 test.*

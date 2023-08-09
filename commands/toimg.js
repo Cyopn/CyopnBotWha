@@ -21,16 +21,16 @@ module.exports.run = async (sock, msg, args) => {
 		buffer = Buffer.concat([buffer, chunk]);
 	}
 
-	await fs.writeFile("./media/images/w.jpg", buffer);
-	await sock.sendMessage(
-		msg.key.remoteJid,
-		{
-			caption: "w",
-			image: { url: "./media/images/w.jpg" },
-		},
-		{ quoted: msg },
-	);
-	await fs.unlink("./media/images/w.jpg");
+	await fs.writeFile("./media/images/w.jpg", buffer).then(() => {
+		sock.sendMessage(
+			msg.key.remoteJid,
+			{
+				caption: "w",
+				image: { url: "./media/images/w.jpg" },
+			},
+			{ quoted: msg },
+		).catch((e) => {});
+	});
 
 	/* if (s.isAnimated) {
 		await fs.writeFile("./w.gif", buffer);

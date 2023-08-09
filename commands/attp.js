@@ -3,7 +3,7 @@ const { sticker } = require("../lib/functions");
 const axios = require("axios").default;
 
 module.exports.run = async (sock, msg, args) => {
-	const arg = args[1] === undefined ? args[0].join("") : args[1].join("");
+	const arg = args[1] === undefined ? args[0].join(" ") : args[1].join(" ");
 	if (!arg)
 		return sock.sendMessage(
 			msg.key.remoteJid,

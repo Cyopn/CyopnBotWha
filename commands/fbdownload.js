@@ -1,5 +1,5 @@
 const { prefix } = require("../config.json");
-const { savefrom } = require("@bochilteam/scraper");
+const { facebookdlv2 } = require("@bochilteam/scraper");
 
 module.exports.run = async (sock, msg, args) => {
 	const arg = args[1] === undefined ? args[0].join("") : args[1].join("");
@@ -18,23 +18,29 @@ module.exports.run = async (sock, msg, args) => {
 			`El enlace proporcionado no es valido.`,
 			id,
 		);
-	try {
-		const r = await savefrom(arg);
-
-		sock.sendMessage(
+	const r = await facebookdlv2(arg).catch((e) => {});
+	if (r === undefined) {
+		await sock.sendMessage(
 			msg.key.remoteJid,
-			{ video: { url: r[0].hd.url }, caption: "w" },
+			{
+				text: `El enlace proporcionado no es valido.`,
+			},
 			{ quoted: msg },
 		);
-	} catch (e) {
-		if (e.toString().contains("Error: Cannot find data"))
-			return sock.sendMessage(
-				msg.key.remoteJid,
-				{
-					text: `El enlace proporcionado no es valido.`,
-				},
-				{ quoted: msg },
-			);
+	} else {
+		/*
+		Filtro para la primera opcion (facebookdl) 
+		const ma = r.result.filter(
+			(rs) =>
+				rs.ext === "mp4" &&
+				!rs.url.includes("youtube4kdownloader") &&
+				rs.isVideo,
+		); */
+		await sock.sendMessage(
+			msg.key.remoteJid,
+			{ video: { url: r.result[0].url }, caption: "w" },
+			{ quoted: msg },
+		);
 	}
 };
 

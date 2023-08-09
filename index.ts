@@ -50,6 +50,7 @@ const startSock = async () => {
 					(lastDisconnect?.error as Boom)?.output?.statusCode !==
 					DisconnectReason.loggedOut
 				) {
+					console.log("Reconectando");
 					startSock();
 				}
 			}

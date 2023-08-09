@@ -2,7 +2,7 @@
     "name": "cyopn-bot",
     "version": "1.2.1",
     "description": "Un bot de WhatsApp facil e intuitivo de usar",
-    "main": "index.js",
+    "main": "index.ts",
     "directories": {
         "lib": "lib"
     },
@@ -21,7 +21,7 @@
         "ytdl-core": "^4.11.5"
     },
     "scripts": {
-        "start": "node index.js"
+        "start": "ts-node index.ts"
     },
     "repository": {
         "type": "git",

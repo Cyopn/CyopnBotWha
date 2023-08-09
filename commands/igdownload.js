@@ -47,7 +47,7 @@ module.exports.run = async (sock, msg, args) => {
 			}
 		});
 	} else {
-		sock.sendMessage(
+		await sock.sendMessage(
 			msg.key.remoteJid,
 			{
 				text: `El servicio no esta disponible, Intenta mas tarde.`,
