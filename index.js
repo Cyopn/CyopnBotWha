@@ -8,17 +8,21 @@ const {
 } = require("@whiskeysockets/baileys");
 const MAIN_LOGGER = require("@whiskeysockets/baileys/lib/Utils/logger").default;
 const fs = require("fs");
-const express = require("express");
 let command = [];
 let alias = [];
 const config = require("./config.json");
 const logger = MAIN_LOGGER.child({});
 logger.level = "silent";
 // Hosting
-/* const app = express();
-const port = 3000;
-app.get("/", (req, res) => res.send("nose"));
-app.listen(port, () => console.log(`Oyente: http://localhost:${port}`)); */
+/* const keep = () => {
+	const http = require("http");
+	http.createServer(function (req, res) {
+		
+		res.write("w");
+		res.end();
+	}).listen(8080);
+};
+keep(); */
 // Hosting
 fs.readdir("./commands/", (err, files) => {
 	if (err) return console.error(err);
@@ -52,7 +56,7 @@ const startSock = async () => {
 			const { connection, lastDisconnect } = update;
 			if (connection === "close") {
 				if (
-					Boom(lastDisconnect?.error)?.output?.statusCode !==
+					new Boom(lastDisconnect?.error)?.output?.statusCode !==
 					DisconnectReason.loggedOut
 				) {
 					console.log("Reconectando");
