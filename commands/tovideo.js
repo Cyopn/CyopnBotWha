@@ -1,6 +1,6 @@
 const { prefix } = require("../config.json");
 const { downloadContentFromMessage } = require("@whiskeysockets/baileys");
-const { toPng } = require("../lib/functions");
+const { toMp4 } = require("../lib/functions");
 
 module.exports.run = async (sock, msg, args) => {
 	const s =
@@ -21,23 +21,22 @@ module.exports.run = async (sock, msg, args) => {
 		buffer = Buffer.concat([buffer, chunk]);
 	}
 	try {
-		const r = await toPng(buffer);
+		const r = await toMp4(buffer);
 		await sock.sendMessage(
 			msg.key.remoteJid,
 			{
 				caption: "w",
-				image: { url: r },
+				video: { url: r },
 			},
 			{ quoted: msg },
 		);
-	} catch (e) {
-	}
+	} catch (e) {}
 };
 
 module.exports.config = {
-	name: "toimg",
-	alias: "ti",
+	name: "tovideo",
+	alias: "tv",
 	type: `misc`,
-	description: "Convierte a imagen un sticker ya enviado, respondiendo a el.",
-	fulldesc: `Comando para convertir sticker a imagen respondiendo a uno ya enviado, escribiendo el prefijo (${prefix}) junto al nombre del comando (toimg) o su alias (ti).\nEste comando lo puedes usar en grupos y mensajes directos.`,
+	description: "Convierte a video un sticker animado ya enviado, respondiendo a el.",
+	fulldesc: `Comando para convertir sticker animado a video respondiendo a uno ya enviado, escribiendo el prefijo (${prefix}) junto al nombre del comando (tovideo) o su alias (tv).\nEste comando lo puedes usar en grupos y mensajes directos.`,
 };
