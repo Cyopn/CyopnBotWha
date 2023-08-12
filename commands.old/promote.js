@@ -12,33 +12,33 @@ module.exports.run = async (client, message) => {
 		return client.reply(
 			from,
 			"Comando solo disponible si soy administrador del grupo.",
-			id
+			id,
 		);
 	if (!isGroupAdmins)
 		return client.reply(
 			from,
 			"Comando solo disponible para administradores del grupo.",
-			id
+			id,
 		);
 	if (mentionedJidList.length == 0) {
 		await client.reply(
 			from,
 			`Debes mecionar a un usuario: _${prefix}promote @nose_.`,
-			id
+			id,
 		);
 	} else {
 		if (adm.indexOf(mentionedJidList[0]) != -1) {
 			await client.reply(
 				from,
 				`El participante ya es administrador.`,
-				id
+				id,
 			);
 		} else {
 			await client.promoteParticipant(groupId, mentionedJidList[0]);
 			await client.sendReplyWithMentions(
 				from,
 				`El participante @${mentionedJidList[0]} ahora es administrador.`,
-				id
+				id,
 			);
 		}
 	}
@@ -50,5 +50,5 @@ module.exports.config = {
 	alias: "pr",
 	type: "adm",
 	description: "Promueve a un participante a administrador de grupo.",
-	fulldesc: `Este comando es util para llevar la administracion de grupos, escribiendo el prefijo (${prefix}) mientras etiquetas al participante del grupo que quieras hacer administrador.\nEste comando solo se puede usar en grupos.`,
+	fulldesc: `Este comando es util para llevar la administracion de grupos, escribiendo el prefijo ${prefix} mientras etiquetas al participante del grupo que quieras hacer administrador.\nEste comando solo se puede usar en grupos.`,
 };

@@ -12,7 +12,7 @@ module.exports.run = async (sock, msg, args) => {
 			{ quoted: msg },
 		);
 	const r = await twitterdl(arg).catch((e) => {});
-    if (r === undefined) {
+	if (r === undefined) {
 		await sock.sendMessage(
 			msg.key.remoteJid,
 			{
@@ -34,5 +34,5 @@ module.exports.config = {
 	alias: `tw`,
 	type: `misc`,
 	description: `Envia el video de alguna publicacion de Twitter.`,
-	fulldesc: `Comando para descargar videos de Twitter, escribe ${prefix}twitter (enlace), o con su alias ${prefix}tw (enlace), recuerda que no es necesario escribir los parentesis, tambien puedes responder a un enlace ya enviado, usando ${prefix}twitter, o su alias (${prefix})tw respondiendo al enlace. \nEste comando puede usarse en mensajes directos y/o grupos.`,
+	fulldesc: `Comando para descargar videos de Twitter, escribe ${prefix}twitter (enlace), o con su alias ${prefix}tw (enlace), recuerda que no es necesario escribir los parentesis, tambien puedes responder a un enlace ya enviado, usando ${prefix}twitter, o su alias ${prefix}tw respondiendo al enlace. \nEste comando puede usarse en mensajes directos y/o grupos.`,
 };

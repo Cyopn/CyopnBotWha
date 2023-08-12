@@ -30,8 +30,7 @@ module.exports.run = async (sock, msg, args) => {
 			},
 			{ quoted: msg },
 		);
-	} catch (e) {
-	}
+	} catch (e) {}
 };
 
 module.exports.config = {
@@ -39,5 +38,5 @@ module.exports.config = {
 	alias: "ti",
 	type: `misc`,
 	description: "Convierte a imagen un sticker ya enviado, respondiendo a el.",
-	fulldesc: `Comando para convertir sticker a imagen respondiendo a uno ya enviado, escribiendo el prefijo (${prefix}) junto al nombre del comando (toimg) o su alias (ti).\nEste comando lo puedes usar en grupos y mensajes directos.`,
+	fulldesc: `Comando para convertir sticker a imagen respondiendo a uno ya enviado, escribiendo el prefijo ${prefix} junto al nombre del comando (toimg) o su alias (ti).\nEste comando lo puedes usar en grupos y mensajes directos.`,
 };

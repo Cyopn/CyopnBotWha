@@ -37,6 +37,7 @@ module.exports.config = {
 	name: "tovideo",
 	alias: "tv",
 	type: `misc`,
-	description: "Convierte a video un sticker animado ya enviado, respondiendo a el.",
-	fulldesc: `Comando para convertir sticker animado a video respondiendo a uno ya enviado, escribiendo el prefijo (${prefix}) junto al nombre del comando (tovideo) o su alias (tv).\nEste comando lo puedes usar en grupos y mensajes directos.`,
+	description:
+		"Convierte a video un sticker animado ya enviado, respondiendo a el.",
+	fulldesc: `Comando para convertir sticker animado a video respondiendo a uno ya enviado, escribiendo el prefijo ${prefix} junto al nombre del comando (tovideo) o su alias (tv).\nEste comando lo puedes usar en grupos y mensajes directos.`,
 };
