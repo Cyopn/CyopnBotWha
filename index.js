@@ -128,7 +128,6 @@ const startSock = async () => {
 			}
 		}
 	});
-
 	return sock;
 };
 
