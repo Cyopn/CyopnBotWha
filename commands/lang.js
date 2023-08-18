@@ -1,7 +1,7 @@
 const { prefix } = require("../config.json");
 
 module.exports.run = async (sock, msg, args) => {
-	const t = `   Afrikáans (Sudáfrica)	af-ZA
+	const t = `   Afrikáans (Sudáfrica)	*af-ZA*
     Albanés (Albania)   *sq-AL*
     Amárico (Etiopía)	*am-ET*
     Árabe (Argelia) *ar-DZ*

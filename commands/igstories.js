@@ -1,4 +1,4 @@
-const { prefix } = require("../config.json");
+const { prefix, owner } = require("../config.json");
 const { instagramStory } = require("@bochilteam/scraper");
 
 module.exports.run = async (sock, msg, args) => {
@@ -21,21 +21,34 @@ module.exports.run = async (sock, msg, args) => {
 			{ quoted: msg },
 		);
 	} else {
-		r.results.forEach((rs) => {
-			if (rs.isVideo) {
-				sock.sendMessage(
-					msg.key.remoteJid,
-					{ video: { url: rs.url }, caption: "w" },
-					{ quoted: msg },
-				);
-			} else {
-				sock.sendMessage(
-					msg.key.remoteJid,
-					{ image: { url: rs.url }, caption: "w" },
-					{ quoted: msg },
-				);
-			}
-		});
+		try {
+			r.results.forEach((rs) => {
+				if (rs.isVideo) {
+					sock.sendMessage(
+						msg.key.remoteJid,
+						{ video: { url: rs.url }, caption: "w" },
+						{ quoted: msg },
+					);
+				} else {
+					sock.sendMessage(
+						msg.key.remoteJid,
+						{ image: { url: rs.url }, caption: "w" },
+						{ quoted: msg },
+					);
+				}
+			});
+		} catch (e) {
+			await sock.sendMessage(`${owner}@s.whatsapp.net`, {
+				text: String(e),
+			});
+			await sock.sendMessage(
+				msg.key.remoteJid,
+				{
+					text: "Ocurrio un error inesperado.",
+				},
+				{ quoted: msg },
+			);
+		}
 	}
 };
 

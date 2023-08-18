@@ -1,4 +1,4 @@
-const { prefix } = require("../config.json");
+const { prefix, owner } = require("../config.json");
 const { facebookdlv2 } = require("@bochilteam/scraper");
 
 module.exports.run = async (sock, msg, args) => {
@@ -13,10 +13,12 @@ module.exports.run = async (sock, msg, args) => {
 		);
 	const isUrl = arg.match(/www.facebook.com|fb.watch/g);
 	if (!isUrl)
-		return await client.reply(
-			from,
-			`El enlace proporcionado no es valido.`,
-			id,
+		return await sock.sendMessage(
+			msg.key.remoteJid,
+			{
+				text: `El enlace proporcionado no es valido.`,
+			},
+			{ quoted: msg },
 		);
 	const r = await facebookdlv2(arg).catch((e) => {});
 	if (r === undefined) {
@@ -36,11 +38,24 @@ module.exports.run = async (sock, msg, args) => {
 				!rs.url.includes("youtube4kdownloader") &&
 				rs.isVideo,
 		); */
-		await sock.sendMessage(
-			msg.key.remoteJid,
-			{ video: { url: r.result[0].url }, caption: "w" },
-			{ quoted: msg },
-		);
+		try {
+			await sock.sendMessage(
+				msg.key.remoteJid,
+				{ video: { url: r.result[0].url }, caption: "w" },
+				{ quoted: msg },
+			);
+		} catch (e) {
+			await sock.sendMessage(`${owner}@s.whatsapp.net`, {
+				text: String(e),
+			});
+			await sock.sendMessage(
+				msg.key.remoteJid,
+				{
+					text: "Ocurrio un error inesperado.",
+				},
+				{ quoted: msg },
+			);
+		}
 	}
 };
 

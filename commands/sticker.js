@@ -1,4 +1,4 @@
-const { prefix } = require("../config.json");
+const { prefix, owner } = require("../config.json");
 const { sticker } = require("../lib/functions");
 const { downloadContentFromMessage } = require("@whiskeysockets/baileys");
 
@@ -33,17 +33,61 @@ module.exports.run = async (sock, msg) => {
 			{ quoted: msg },
 		);
 	} else {
-		const w = await downloadContentFromMessage(m, type);
-		let buffer = Buffer.from([]);
-		for await (const chunk of w) {
-			buffer = Buffer.concat([buffer, chunk]);
-		}
-		let s = await sticker(buffer);
-		await sock
-			.sendMessage(msg.key.remoteJid, { sticker: s }, { quoted: msg })
-			.catch((e) => {
-				console.log(e);
+		try {
+			const w = await downloadContentFromMessage(m, type).catch((e) => {
+				sock.sendMessage(`${owner}@s.whatsapp.net`, {
+					text: String(e),
+				});
+				sock.sendMessage(
+					msg.key.remoteJid,
+					{
+						text: "Ocurrio un error inesperado.",
+					},
+					{ quoted: msg },
+				);
 			});
+			let buffer = Buffer.from([]);
+			for await (const chunk of w) {
+				buffer = Buffer.concat([buffer, chunk]);
+			}
+			let s = await sticker(buffer).catch((e) => {
+				sock.sendMessage(`${owner}@s.whatsapp.net`, {
+					text: String(e),
+				});
+				sock.sendMessage(
+					msg.key.remoteJid,
+					{
+						text: "Ocurrio un error inesperado.",
+					},
+					{ quoted: msg },
+				);
+			});
+			await sock
+				.sendMessage(msg.key.remoteJid, { sticker: s }, { quoted: msg })
+				.catch((e) => {
+					sock.sendMessage(`${owner}@s.whatsapp.net`, {
+						text: String(e),
+					});
+					sock.sendMessage(
+						msg.key.remoteJid,
+						{
+							text: "Ocurrio un error inesperado.",
+						},
+						{ quoted: msg },
+					);
+				});
+		} catch (e) {
+			await sock.sendMessage(`${owner}@s.whatsapp.net`, {
+				text: String(e),
+			});
+			await sock.sendMessage(
+				msg.key.remoteJid,
+				{
+					text: "Ocurrio un error inesperado.",
+				},
+				{ quoted: msg },
+			);
+		}
 	}
 };
 

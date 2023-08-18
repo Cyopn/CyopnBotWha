@@ -1,4 +1,4 @@
-const { prefix } = require("../config.json");
+const { prefix, owner } = require("../config.json");
 const { downloadContentFromMessage } = require("@whiskeysockets/baileys");
 const { toPng } = require("../lib/functions");
 
@@ -14,13 +14,12 @@ module.exports.run = async (sock, msg, args) => {
 			},
 			{ quoted: msg },
 		);
-
-	const w = await downloadContentFromMessage(s, "sticker");
-	let buffer = Buffer.from([]);
-	for await (const chunk of w) {
-		buffer = Buffer.concat([buffer, chunk]);
-	}
 	try {
+		const w = await downloadContentFromMessage(s, "sticker");
+		let buffer = Buffer.from([]);
+		for await (const chunk of w) {
+			buffer = Buffer.concat([buffer, chunk]);
+		}
 		const r = await toPng(buffer);
 		await sock.sendMessage(
 			msg.key.remoteJid,
@@ -30,7 +29,18 @@ module.exports.run = async (sock, msg, args) => {
 			},
 			{ quoted: msg },
 		);
-	} catch (e) {}
+	} catch (e) {
+		await sock.sendMessage(`${owner}@s.whatsapp.net`, {
+			text: String(e),
+		});
+		await sock.sendMessage(
+			msg.key.remoteJid,
+			{
+				text: "Ocurrio un error inesperado.",
+			},
+			{ quoted: msg },
+		);
+	}
 };
 
 module.exports.config = {

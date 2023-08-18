@@ -10,7 +10,7 @@ const MAIN_LOGGER = require("@whiskeysockets/baileys/lib/Utils/logger").default;
 const fs = require("fs");
 let command = [];
 let alias = [];
-const config = require("./config.json");
+const { prefix, owner } = require("./config.json");
 const logger = MAIN_LOGGER.child({});
 logger.level = "silent";
 // Hosting
@@ -98,9 +98,9 @@ const startSock = async () => {
 							: quotedM?.videoMessage?.caption
 							? quotedM?.videoMessage?.caption.trim().split(" ")
 							: undefined;
-						if (message.startsWith(config.prefix)) {
+						if (message.startsWith(prefix)) {
 							const arg = message
-								.slice(config.prefix.length)
+								.slice(prefix.length)
 								.trim()
 								.split(" ");
 							const cmd = arg.shift().toLowerCase();
@@ -115,7 +115,19 @@ const startSock = async () => {
 								try {
 									commFile.run(sock, msg, args);
 								} catch (e) {
-									console.log(e);
+									await sock.sendMessage(
+										`${owner}@s.whatsapp.net`,
+										{
+											text: String(e),
+										},
+									);
+									await sock.sendMessage(
+										msg.key.remoteJid,
+										{
+											text: "Ocurrio un error inesperado.",
+										},
+										{ quoted: msg },
+									);
 								}
 							}
 							/* sock.sendMessage(msg.key.remoteJid, {

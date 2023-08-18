@@ -1,4 +1,4 @@
-const { prefix } = require("../config.json");
+const { prefix, owner } = require("../config.json");
 const ig = require("instagram-url-dl");
 
 module.exports.run = async (sock, msg, args) => {
@@ -22,35 +22,48 @@ module.exports.run = async (sock, msg, args) => {
 			},
 			{ quoted: msg },
 		);
-	const r = await ig(arg);
 
-	if (r.status) {
-		r.data.forEach((i) => {
-			if (i.type === "image") {
-				sock.sendMessage(
-					msg.key.remoteJid,
-					{
-						caption: "w",
-						image: { url: i.url },
-					},
-					{ quoted: msg },
-				);
-			} else if (i.type === "video") {
-				sock.sendMessage(
-					msg.key.remoteJid,
-					{
-						caption: "w",
-						video: { url: i.url },
-					},
-					{ quoted: msg },
-				);
-			}
+	try {
+		const r = await ig(arg);
+		if (r.status) {
+			r.data.forEach((i) => {
+				if (i.type === "image") {
+					sock.sendMessage(
+						msg.key.remoteJid,
+						{
+							caption: "w",
+							image: { url: i.url },
+						},
+						{ quoted: msg },
+					);
+				} else if (i.type === "video") {
+					sock.sendMessage(
+						msg.key.remoteJid,
+						{
+							caption: "w",
+							video: { url: i.url },
+						},
+						{ quoted: msg },
+					);
+				}
+			});
+		} else {
+			await sock.sendMessage(
+				msg.key.remoteJid,
+				{
+					text: `El servicio no esta disponible, Intenta mas tarde.`,
+				},
+				{ quoted: msg },
+			);
+		}
+	} catch (e) {
+		await sock.sendMessage(`${owner}@s.whatsapp.net`, {
+			text: String(e),
 		});
-	} else {
 		await sock.sendMessage(
 			msg.key.remoteJid,
 			{
-				text: `El servicio no esta disponible, Intenta mas tarde.`,
+				text: "Ocurrio un error inesperado.",
 			},
 			{ quoted: msg },
 		);

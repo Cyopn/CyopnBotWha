@@ -1,4 +1,4 @@
-const { prefix } = require("../config.json");
+const { prefix, owner } = require("../config.json");
 const { sticker } = require("../lib/functions");
 const axios = require("axios").default;
 
@@ -12,14 +12,27 @@ module.exports.run = async (sock, msg, args) => {
 			},
 			{ quoted: msg },
 		);
-	const r = await axios.get(
-		`https://api.helv.io/attp?text=${encodeURIComponent(
-			arg,
-		)}&format=base64`,
-	);
-	const buffer = new Buffer.from(r.data, "base64");
-	let s = await sticker(buffer);
-	sock.sendMessage(msg.key.remoteJid, { sticker: s }, { quoted: msg });
+	try {
+		const r = await axios.get(
+			`https://api.helv.io/attp?text=${encodeURIComponent(
+				arg,
+			)}&format=base64`,
+		);
+		const buffer = new Buffer.from(r.data, "base64");
+		let s = await sticker(buffer);
+		sock.sendMessage(msg.key.remoteJid, { sticker: s }, { quoted: msg });
+	} catch (e) {
+		await sock.sendMessage(`${owner}@s.whatsapp.net`, {
+			text: String(e),
+		});
+		await sock.sendMessage(
+			msg.key.remoteJid,
+			{
+				text: "Ocurrio un error inesperado.",
+			},
+			{ quoted: msg },
+		);
+	}
 };
 
 module.exports.config = {

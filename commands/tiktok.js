@@ -1,4 +1,4 @@
-const { prefix /*zenKey*/ } = require("../config.json");
+const { prefix /*zenKey*/, owner } = require("../config.json");
 //const axios = require("axios");
 const { tiktokdl } = require("@bochilteam/scraper");
 
@@ -27,11 +27,24 @@ module.exports.run = async (sock, msg, args) => {
 			{ quoted: msg },
 		);
 	} else {
-		await sock.sendMessage(
-			msg.key.remoteJid,
-			{ video: { url: r.video.no_watermark_hd }, caption: "w" },
-			{ quoted: msg },
-		);
+		try {
+			await sock.sendMessage(
+				msg.key.remoteJid,
+				{ video: { url: r.video.no_watermark_hd }, caption: "w" },
+				{ quoted: msg },
+			);
+		} catch (e) {
+			await sock.sendMessage(`${owner}@s.whatsapp.net`, {
+				text: String(e),
+			});
+			await sock.sendMessage(
+				msg.key.remoteJid,
+				{
+					text: "Ocurrio un error inesperado.",
+				},
+				{ quoted: msg },
+			);
+		}
 	}
 };
 

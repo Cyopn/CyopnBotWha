@@ -1,34 +1,47 @@
-const { prefix, zenKey } = require("../config.json");
+const { prefix, zenKey, owner } = require("../config.json");
 const { get } = require("axios").default;
 module.exports.run = async (sock, msg, args) => {
 	const arg = args[1] === undefined ? args[0].join("") : args[1].join("");
-	const r = await get(
-		`https://api.zahwazein.xyz/downloader/ttslide?apikey=${zenKey}&url=${arg}`,
-	);
+	try {
+		const r = await get(
+			`https://api.zahwazein.xyz/downloader/ttslide?apikey=${zenKey}&url=${arg}`,
+		);
 
-	if (r.data.status === "OK") {
-		if (r.data.result.length > 0) {
-			r.data.result.forEach((rs) => {
-				sock.sendMessage(
+		if (r.data.status === "OK") {
+			if (r.data.result.length > 0) {
+				r.data.result.forEach((rs) => {
+					sock.sendMessage(
+						msg.key.remoteJid,
+						{ image: { url: rs }, caption: "w" },
+						{ quoted: msg },
+					);
+				});
+			} else {
+				await sock.sendMessage(
 					msg.key.remoteJid,
-					{ image: { url: rs }, caption: "w" },
+					{
+						text: `El enlace no es valido o no no contiene imagenes.`,
+					},
 					{ quoted: msg },
 				);
-			});
+			}
 		} else {
 			await sock.sendMessage(
 				msg.key.remoteJid,
 				{
-					text: `El enlace no es valido o no no contiene imagenes.`,
+					text: `El servicio no esta disponible, Intenta mas tarde.`,
 				},
 				{ quoted: msg },
 			);
 		}
-	} else {
+	} catch (e) {
+		await sock.sendMessage(`${owner}@s.whatsapp.net`, {
+			text: String(e),
+		});
 		await sock.sendMessage(
 			msg.key.remoteJid,
 			{
-				text: `El servicio no esta disponible, Intenta mas tarde.`,
+				text: "Ocurrio un error inesperado.",
 			},
 			{ quoted: msg },
 		);
