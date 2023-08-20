@@ -2,7 +2,10 @@ const { prefix, owner } = require("../config.json");
 const { instagramStory } = require("@bochilteam/scraper");
 
 module.exports.run = async (sock, msg, args) => {
-	const arg = args[1] === undefined ? args[0].join("") : args[1].join("");
+	const arg =
+		args[1] === undefined && args[0].join("").length === 0
+			? args[0].join("")
+			: args[1].join("");
 	if (!arg)
 		return sock.sendMessage(
 			msg.key.remoteJid,
@@ -39,7 +42,9 @@ module.exports.run = async (sock, msg, args) => {
 			});
 		} catch (e) {
 			await sock.sendMessage(`${owner}@s.whatsapp.net`, {
-				text: String(e),
+				text: `Error en ${this.config.name} - ${
+					msg.key.remoteJid
+				}\n${String(e)}`,
 			});
 			await sock.sendMessage(
 				msg.key.remoteJid,

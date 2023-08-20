@@ -36,7 +36,9 @@ module.exports.run = async (sock, msg) => {
 		try {
 			const w = await downloadContentFromMessage(m, type).catch((e) => {
 				sock.sendMessage(`${owner}@s.whatsapp.net`, {
-					text: String(e),
+					text: `Error en ${this.config.name} - ${
+						msg.key.remoteJid
+					}\n${String(e)}`,
 				});
 				sock.sendMessage(
 					msg.key.remoteJid,
@@ -52,7 +54,9 @@ module.exports.run = async (sock, msg) => {
 			}
 			let s = await sticker(buffer).catch((e) => {
 				sock.sendMessage(`${owner}@s.whatsapp.net`, {
-					text: String(e),
+					text: `Error en ${this.config.name0000} - ${
+						msg.key.remoteJid
+					}\n${String(e)}`,
 				});
 				sock.sendMessage(
 					msg.key.remoteJid,
@@ -78,7 +82,9 @@ module.exports.run = async (sock, msg) => {
 				});
 		} catch (e) {
 			await sock.sendMessage(`${owner}@s.whatsapp.net`, {
-				text: String(e),
+				text: `Error en ${this.config.name} - ${
+					msg.key.remoteJid
+				}\n${String(e)}`,
 			});
 			await sock.sendMessage(
 				msg.key.remoteJid,

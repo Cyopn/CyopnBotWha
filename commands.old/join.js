@@ -2,7 +2,10 @@ const { prefix } = require("../config.json");
 
 module.exports.run = async (client, message, args) => {
 	const { id, from } = message;
-	const arg = args[1] === undefined ? args[0].join("") : args[1].join("");
+	const arg =
+		args[1] === undefined && args[0].join("").length === 0
+			? args[0].join("")
+			: args[1].join("");
 	let as;
 	if (!arg)
 		return await client.reply(
