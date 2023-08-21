@@ -10,7 +10,8 @@ const MAIN_LOGGER = require("@whiskeysockets/baileys/lib/Utils/logger").default;
 const fs = require("fs");
 let command = [];
 let alias = [];
-const { prefix, owner } = require("./config.json");
+require("dotenv").config();
+const { prefix, owner } = process.env;
 const logger = MAIN_LOGGER.child({});
 logger.level = "silent";
 // Hosting
