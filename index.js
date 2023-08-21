@@ -71,7 +71,9 @@ const startSock = async () => {
 
 		if (events["groups.upsert"]) {
 			const [metadata] = events["groups.upsert"];
-			await sock.sendMessage(metadata.id, { text: `Gracias por invitarme.\nUsa !help para ver los comandos disponibles.\nCualquier duda o sugerencia sera respondida:\nWhatsapp: wa.me/+5215633592644\nInstagram: https://www.instagram.com/cyopn_/` });
+			await sock.sendMessage(metadata.id, {
+				text: `Gracias por invitarme.\nUsa !help para ver los comandos disponibles.\nCualquier duda o sugerencia sera respondida:\nWhatsapp: wa.me/+5215633592644\nInstagram: https://www.instagram.com/cyopn_/`,
+			});
 		}
 
 		if (events["messages.upsert"]) {
@@ -103,7 +105,7 @@ const startSock = async () => {
 							: quotedM?.videoMessage?.caption
 							? quotedM?.videoMessage?.caption.trim().split(" ")
 							: undefined;
-						if (message.startsWith(prefix)) {
+						if (message.startsWith(prefix) && message.length > 1) {
 							const arg = message
 								.slice(prefix.length)
 								.trim()
