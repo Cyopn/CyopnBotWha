@@ -5,7 +5,7 @@ const axios = require("axios").default;
 
 module.exports.run = async (sock, msg, args) => {
 	const arg =
-		args[1] === undefined && args[0].join(" ").length === 0
+		args[1] === undefined && args[0].join(" ").length > 0
 			? args[0].join(" ")
 			: args[1].join(" ");
 	if (!arg)

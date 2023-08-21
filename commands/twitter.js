@@ -4,9 +4,9 @@ const { twitterdl } = require("@bochilteam/scraper");
 
 module.exports.run = async (sock, msg, args) => {
 	const arg =
-		args[1] === undefined && args[0].join("").length === 0
-			? args[0].join("")
-			: args[1].join("");
+		args[1] === undefined && args[0].join(" ").length > 0
+			? args[0].join(" ")
+			: args[1].join(" ");
 	if (!arg)
 		return sock.sendMessage(
 			msg.key.remoteJid,
