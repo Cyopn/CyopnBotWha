@@ -1,4 +1,5 @@
-const { prefix, owner } = require("../config.json");
+require("dotenv").config();
+const { prefix, owner } = process.env;
 const { twitterdl } = require("@bochilteam/scraper");
 
 module.exports.run = async (sock, msg, args) => {

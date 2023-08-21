@@ -10,3 +10,4 @@ path.js
 output.json
 database
 auth_info
+.env

@@ -1,4 +1,5 @@
-const { prefix } = require("../config.json");
+require("dotenv").config();
+const { prefix, owner } = process.env;
 
 module.exports.run = async (sock, msg, args) => {
 	const t = `   Afrikáans (Sudáfrica)	*af-ZA*

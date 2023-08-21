@@ -1,4 +1,5 @@
-const { prefix, owner } = require("../config.json");
+require("dotenv").config();
+const { prefix, owner } = process.env;
 const ig = require("instagram-url-dl");
 
 module.exports.run = async (sock, msg, args) => {
@@ -6,9 +7,7 @@ module.exports.run = async (sock, msg, args) => {
 		args[1] === undefined && args[0].join("").length === 0
 			? args[0].join("")
 			: args[1].join("");
-	const isUrl = arg.match(
-		/(?:https?:\/\/)?(?:www.)?instagram.com\/?([a-zA-Z0-9\.\_\-]+)?\/([p]+)?([reel]+)?([tv]+)?([stories]+)?\/([a-zA-Z0-9\-\_\.]+)\/?([0-9]+)?/gm,
-	);
+
 	if (!arg)
 		return sock.sendMessage(
 			msg.key.remoteJid,
@@ -17,7 +16,10 @@ module.exports.run = async (sock, msg, args) => {
 			},
 			{ quoted: msg },
 		);
-	if (!isUrl)
+	const isurl = arg.match(
+		/(?:https?:\/\/)?(?:www.)?instagram.com\/?([a-zA-Z0-9\.\_\-]+)?\/([p]+)?([reel]+)?([tv]+)?([stories]+)?\/([a-zA-Z0-9\-\_\.]+)\/?([0-9]+)?/gm,
+	);
+	if (!isurl)
 		return sock.sendMessage(
 			msg.key.remoteJid,
 			{

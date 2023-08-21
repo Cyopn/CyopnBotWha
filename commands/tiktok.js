@@ -1,4 +1,5 @@
-const { prefix /*zenKey*/, owner } = require("../config.json");
+require("dotenv").config();
+const { prefix, /*zenKey,*/ owner } = process.env;
 //const axios = require("axios");
 const { tiktokdl } = require("@bochilteam/scraper");
 

@@ -1,4 +1,5 @@
-const { prefix, owner } = require("../config.json");
+require("dotenv").config();
+const { prefix, owner } = process.env;
 const { sticker } = require("../lib/functions");
 const axios = require("axios").default;
 

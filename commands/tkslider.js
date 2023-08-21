@@ -1,4 +1,5 @@
-const { prefix, zenKey, owner } = require("../config.json");
+require("dotenv").config();
+const { prefix, zenKey, owner } = process.env;
 const { get } = require("axios").default;
 module.exports.run = async (sock, msg, args) => {
 	const arg =

@@ -1,4 +1,5 @@
-const { prefix } = require("../config.json");
+require("dotenv").config();
+const { prefix, owner } = process.env;
 const { getCommands } = require("../lib/functions");
 
 module.exports.run = async (sock, msg, args) => {
@@ -8,9 +9,9 @@ module.exports.run = async (sock, msg, args) => {
 _yo_ : https://instagram.com/Cyopn_
 
 *Informacion*
-Escribe ${prefix} seguido de cualquiera de los comandos, recuerda que puedes usar el nombre del comando o su alias
+Escribe ${prefix} seguido de cualquiera de los comandos, recuerda que puedes usar el nombre del comando o su alias.
 _Uso: ${prefix}[Comando] [Texto/Enlace/Otros]_
-Se deben sustituir los parentesis segun corresponda
+Se deben sustituir los parentesis segun corresponda.
 _Ejemplo: ${prefix}attp Hola_
 
 *Comandos disponibles*:`;

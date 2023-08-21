@@ -1,4 +1,5 @@
-const { prefix, owner } = require("../config.json");
+require("dotenv").config();
+const { prefix, owner } = process.env;
 const { facebookdlv2 } = require("@bochilteam/scraper");
 
 module.exports.run = async (sock, msg, args) => {
@@ -14,8 +15,8 @@ module.exports.run = async (sock, msg, args) => {
 			},
 			{ quoted: msg },
 		);
-	const isUrl = arg.match(/www.facebook.com|fb.watch/g);
-	if (!isUrl)
+	const isurl = arg.match(/www.facebook.com|fb.watch/g);
+	if (!isurl)
 		return await sock.sendMessage(
 			msg.key.remoteJid,
 			{

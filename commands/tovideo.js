@@ -1,4 +1,5 @@
-const { prefix, owner } = require("../config.json");
+require("dotenv").config();
+const { prefix, owner } = process.env;
 const { downloadContentFromMessage } = require("@whiskeysockets/baileys");
 const { toMp4 } = require("../lib/functions");
 
