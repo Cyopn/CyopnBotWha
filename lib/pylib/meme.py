@@ -1,9 +1,11 @@
 import praw
-import json
 from urllib.parse import unquote
-
-rd = praw.Reddit(client_id="x2ALPDrIZKg_kTtjb-xpLQ",
-                 client_secret="lsoUWZ3jxaihG57P6hizWBbexFZ7hg",
+import json
+import os
+from dotenv import load_dotenv
+load_dotenv()
+rd = praw.Reddit(client_id=os.getenv("c_id"),
+                 client_secret=os.getenv("c_st"),
                  user_agent='CyopnBot by u/Cyopn',
                  check_for_async=False)
 
@@ -17,7 +19,7 @@ d = {
     "url": str(r2.url)
 }
 
-with open("./media/temp/praw.json", "w") as w:
+with open("./temp/praw.json", "w") as w:
     json.dump(d, w)
-
-print(True)
+    
+print("ok")
