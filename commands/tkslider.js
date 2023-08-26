@@ -3,8 +3,10 @@ const { prefix, zenKey, owner } = process.env;
 const { get } = require("axios").default;
 module.exports.run = async (sock, msg, args) => {
 	const arg =
-		args[1] === undefined && args[0].join(" ").length > 0
+		args[1] === undefined && args[0].join(" ").length >= 1
 			? args[0].join(" ")
+			: args[1] === undefined
+			? ""
 			: args[1].join(" ");
 	try {
 		const r = await get(
