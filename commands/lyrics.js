@@ -1,6 +1,6 @@
 require("dotenv").config();
 const { prefix, owner } = process.env;
-const { Client } = require("genius-lyrics");
+const { lyricsv2 } = require("@bochilteam/scraper");
 
 module.exports.run = async (sock, msg, args) => {
 	const arg =
@@ -18,13 +18,11 @@ module.exports.run = async (sock, msg, args) => {
 			{ quoted: msg },
 		);
 	try {
-		const client = new Client();
-		const [sr] = await client.songs.search(arg);
-		const rs = await sr.lyrics();
+		const r = await lyricsv2(arg);
 		await sock.sendMessage(
 			msg.key.remoteJid,
 			{
-				text: `${sr.fullTitle}\n${rs}`,
+				text: r.lyrics,
 			},
 			{ quoted: msg },
 		);

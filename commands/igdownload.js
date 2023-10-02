@@ -1,6 +1,6 @@
 require("dotenv").config();
 const { prefix, owner } = process.env;
-const ig = require("instagram-url-dl");
+const idl = require("i-downloader");
 
 module.exports.run = async (sock, msg, args) => {
 	const arg =
@@ -31,10 +31,10 @@ module.exports.run = async (sock, msg, args) => {
 		);
 
 	try {
-		const r = await ig(arg);
+		const r = await idl(arg);
 		if (r.status) {
-			r.data.forEach((i) => {
-				if (i.type === "image") {
+			for await (i of r.data) {
+				if (i.url.includes("jpg")) {
 					sock.sendMessage(
 						msg.key.remoteJid,
 						{
@@ -43,7 +43,7 @@ module.exports.run = async (sock, msg, args) => {
 						},
 						{ quoted: msg },
 					);
-				} else if (i.type === "video") {
+				} else {
 					sock.sendMessage(
 						msg.key.remoteJid,
 						{
@@ -53,7 +53,7 @@ module.exports.run = async (sock, msg, args) => {
 						{ quoted: msg },
 					);
 				}
-			});
+			}
 		} else {
 			await sock.sendMessage(
 				msg.key.remoteJid,

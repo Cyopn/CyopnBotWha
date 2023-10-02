@@ -49,6 +49,6 @@ module.exports.config = {
 	name: `meme`,
 	alias: `m`,
 	type: `misc`,
-	description: `Envia un chistorete digital publicado en reddit.com/r/ChingaTuMadreNoko/_ \n_¡Conviertete en colaborador!`,
+	description: `Envia un chistorete digital publicado en reddit.com/r/ChingaTuMadreNoko/ ¡Conviertete en colaborador!`,
 	fulldesc: `Nada que agregar.`,
 };

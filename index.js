@@ -79,7 +79,7 @@ const startSock = async () => {
 
 		if (events["messages.upsert"]) {
 			const upsert = events["messages.upsert"];
-			if (upsert.type === "notify") {
+			if (upsert.type === "append" || upsert.type === "notify") {
 				for (const msg of upsert.messages) {
 					if (!msg.key.fromMe) {
 						const message = msg.message?.extendedTextMessage?.text
@@ -126,7 +126,9 @@ const startSock = async () => {
 									await sock.sendMessage(
 										`${owner}@s.whatsapp.net`,
 										{
-											text: String(e),
+											text: `Error al ejecutar ${commFil} - ${
+												msg.key.remoteJid
+											}\n ${String(e)}`,
 										},
 									);
 									await sock.sendMessage(

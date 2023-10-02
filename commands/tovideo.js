@@ -11,7 +11,7 @@ module.exports.run = async (sock, msg, args) => {
 		return sock.sendMessage(
 			msg.key.remoteJid,
 			{
-				text: `Usa ${prefix}toimg respondiendo un sticker.`,
+				text: `Usa ${prefix}tovideo respondiendo un sticker.`,
 			},
 			{ quoted: msg },
 		);
