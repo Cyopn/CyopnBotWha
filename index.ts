@@ -1,13 +1,14 @@
-const { Boom } = require("@hapi/boom");
-const {
+import { Boom } from "@hapi/boom";
+
+import makeWASocket, {
 	DisconnectReason,
 	fetchLatestBaileysVersion,
 	makeCacheableSignalKeyStore,
 	useMultiFileAuthState,
-	makeWASocket,
-} = require("@whiskeysockets/baileys");
+} from "@whiskeysockets/baileys";
 const MAIN_LOGGER = require("@whiskeysockets/baileys/lib/Utils/logger").default;
-const fs = require("fs");
+import fs from "fs";
+import * as http from "http";
 let command = [];
 let alias = [];
 require("dotenv").config();
@@ -15,15 +16,17 @@ const { prefix, owner } = process.env;
 const logger = MAIN_LOGGER.child({});
 logger.level = "silent";
 // Hosting
-/* const keep = () => {
-	const http = require("http");
-	http.createServer(function (req, res) {
-		
-		res.write("w");
-		res.end();
-	}).listen(8080);
-};
-keep(); */
+const server = http.createServer((_req, res) => {
+	res.statusCode = 200;
+	res.setHeader("Content-Type", "text/plain");
+	res.end("w");
+});
+const port = 3000;
+//const hostname = "0.0.0.0"; // En replit
+const hostname = "localhost"; // En local
+server.listen(port, hostname, () => {
+	console.log(`Servidor corriendo en http://${hostname}:${port}/`);
+});
 // Hosting
 fs.readdir("./commands/", (err, files) => {
 	if (err) return console.error(err);
@@ -57,7 +60,7 @@ const startSock = async () => {
 			const { connection, lastDisconnect } = update;
 			if (connection === "close") {
 				if (
-					new Boom(lastDisconnect?.error)?.output?.statusCode !==
+					(lastDisconnect?.error as Boom)?.output?.statusCode !==
 					DisconnectReason.loggedOut
 				) {
 					console.log("Reconectando");
