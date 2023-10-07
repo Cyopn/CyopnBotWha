@@ -1,34 +1,23 @@
 require("dotenv").config();
 const { prefix, owner } = process.env;
-const ex = require("child_process").execSync;
 const fs = require("fs");
+const axios = require("axios");
 
 module.exports.run = async (sock, msg, args) => {
 	try {
-		const rs = ex(`python ./lib/pylib/meme.py`, { encoding: "utf8" });
-		if (String(rs).includes("ok")) {
-			const data = fs.readFileSync("./temp/praw.json");
-			const { title, author, url } = JSON.parse(data);
-			if (url.includes("jpg") || url.includes("png")) {
-				await sock.sendMessage(
-					msg.key.remoteJid,
-					{
-						image: { url: url },
-						caption: `${title}\nPublicado por u/${author}`,
-					},
-					{ quoted: msg },
-				);
-			} else {
-				await sock.sendMessage(
-					msg.key.remoteJid,
-					{
-						video: { url: rs.url },
-						caption: `${title}\nPublicado por u/${author}`,
-					},
-					{ quoted: msg },
-				);
-			}
-		}
+		const response = await axios.get(
+			`https://www.reddit.com/r/chingatumadrenoko.json`,
+		);
+		const posts = response.data.data.children;
+		const random = Math.floor(Math.random() * posts.length);
+		await sock.sendMessage(
+			msg.key.remoteJid,
+			{
+				caption: "w",
+				image: { url: posts[random].data.url },
+			},
+			{ quoted: msg },
+		);
 	} catch (e) {
 		await sock.sendMessage(`${owner}@s.whatsapp.net`, {
 			text: `Error en ${this.config.name} - ${
