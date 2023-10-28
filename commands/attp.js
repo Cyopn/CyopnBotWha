@@ -1,41 +1,55 @@
+require("dotenv").config();
+const { prefix, owner } = process.env;
+const { sticker } = require("../lib/functions");
 const axios = require("axios").default;
 
-module.exports.run = async (client, message, args, config) => {
-	const { id, from } = message;
-	let arg = args.join(" ");
+module.exports.run = async (sock, msg, args) => {
+	const arg =
+		args[1] === undefined && args[0].join(" ").length >= 1
+			? args[0].join(" ")
+			: args[1] === undefined
+			? ""
+			: args[1].join(" ");
+	if (!arg)
+		return sock.sendMessage(
+			msg.key.remoteJid,
+			{
+				text: `Es necesario proporcionar un texto, escribe ${prefix}attp (texto), recuerda que no es necesario escribir los parentesis, si tienes dudas sobre este comando escribe ${prefix}help attp.`,
+			},
+			{ quoted: msg },
+		);
 	try {
-		if (!arg)
-			return await client.reply(
-				from,
-				`Envia tu consulta con el comando *${config.prefix}attp [texto]*, ejemplo : ${config.prefix}attp hola`,
-				id
-			);
-		await client.reply(from, `Espera un poco`, id);
-		let response = await axios.get(
+		const r = await axios.get(
 			`https://api.helv.io/attp?text=${encodeURIComponent(
-				arg
-			)}&format=base64`
+				arg,
+			)}&format=base64`,
 		);
-
-		client.sendImageAsSticker(from, response.data, {
-			author: "ig: @Cyopn_",
-			pack: "CyopnBot",
-			keepScale: true,
-		});
+		const buffer = new Buffer.from(r.data, "base64");
+		let s = await sticker(buffer);
+		sock.sendMessage(msg.key.remoteJid, { sticker: s }, { quoted: msg });
 	} catch (e) {
-		console.error(
-			`Error en ${this.config.name}
-Hora: ${new Date().getHours()}:${new Date().getMinutes()}:${new Date().getSeconds()}:`,
-			e.toString()
+		const sub = msg.key.remoteJid.includes("g.us")
+			? await sock.groupMetadata(msg.key.remoteJid)
+			: {
+					subject: msg.key.remoteJid.replace("@s.whatsapp.net", ""),
+			  };
+		await sock.sendMessage(`${owner}@s.whatsapp.net`, {
+			text: `Error en ${this.config.name} - ${sub.subject}\n${String(e)}`,
+		});
+		await sock.sendMessage(
+			msg.key.remoteJid,
+			{
+				text: "Ocurrio un error inesperado.",
+			},
+			{ quoted: msg },
 		);
-		client.reply(from, `Ocurrio un error`, id);
-		await client.reply(from, `Ocurrio un error`, id);
 	}
-	await client.simulateTyping(from, false);
 };
 
 module.exports.config = {
-	name: "attp",
-	alias: "ap",
-	desc: "Crea un sticker a partir de un texto",
+	name: `attp`,
+	alias: `ap`,
+	type: `misc`,
+	description: `Crea un sticker segun el texto proporcionado, algunos emojis no son soportados.`,
+	fulldesc: `Comando para crear stickers (pegatinas), algunos emojis no son soportados, usa este comando escribiendo ${prefix}attp (texto), o con su alias ${prefix}ap (texto), recuerda que no es necesario escribir los parentesis. \nEste comando puede usarse en mensajes directos y/o grupos.`,
 };

@@ -2,18 +2,13 @@ config.json
 node_modules
 package-lock.json
 media/audio/tts.mp3
-media/images/imgRs.png
+media/images/w.jpg
 media/temp/output.json
-Cyopn.data.json
-database/dataTest.json
-**.data.json
-**.node-persist**
 commands/test.js
+commandsold
 test.*
-backup.json
 path.js
-.wwebjs_auth
 output.json
-# managed
-**_IGNORE_**
-# end managed
+database
+auth_info
+.env

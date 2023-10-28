@@ -1,151 +1,115 @@
-const { decryptMedia } = require("@open-wa/wa-decrypt");
+require("dotenv").config();
+const { prefix, owner } = process.env;
+const { sticker } = require("../lib/functions");
+const { downloadContentFromMessage } = require("@whiskeysockets/baileys");
 
-module.exports.run = async (client, message, args, config) => {
-	const { type, id, from, isMedia, quotedMsg, mimetype } = message;
+module.exports.run = async (sock, msg) => {
+	const type =
+		msg.message.imageMessage ||
+		msg.message?.extendedTextMessage?.contextInfo?.quotedMessage
+			?.imageMessage
+			? "image"
+			: msg.message?.videoMessage ||
+			  msg.message?.extendedTextMessage?.contextInfo?.quotedMessage
+					?.videoMessage
+			? "video"
+			: undefined;
+	const m = msg.message?.imageMessage
+		? msg.message?.imageMessage
+		: msg.message?.extendedTextMessage?.contextInfo?.quotedMessage
+				?.imageMessage
+		? msg.message?.extendedTextMessage?.contextInfo?.quotedMessage
+				?.imageMessage
+		: msg.message?.videoMessage
+		? msg.message?.videoMessage
+		: msg.message?.extendedTextMessage?.contextInfo?.quotedMessage
+				?.videoMessage;
 
-	try {
-		if (isMedia && type === "image") {
-			const mediaData = await decryptMedia(message);
-			const imageBase64 = `data:${
-				message.mimetype
-			};base64,${mediaData.toString("base64")}`;
-			client.sendImageAsSticker(from, imageBase64, {
-				author: "ig: @Cyopn_",
-				pack: "CyopnBot",
-				keepScale: true,
-			});
-		} else if (quotedMsg && quotedMsg.type === "image") {
-			const mediaData = await decryptMedia(quotedMsg);
-			const imageBase64 = `data:${
-				quotedMsg.mimetype
-			};base64,${mediaData.toString("base64")}`;
-			client.sendImageAsSticker(from, imageBase64, {
-				author: "ig: @Cyopn_",
-				pack: "CyopnBot",
-				keepScale: true,
-			});
-		} else if (isMedia && mimetype === "video/mp4") {
-			if (
-				message.duration <= 10 ||
-				(mimetype === "image/gif" && message.duration <= 10)
-			) {
-				await client.reply(from, `Espera un poco`, id);
-				const mediaData = await decryptMedia(message);
-				await client
-					.sendMp4AsSticker(
-						from,
-						`data:${message.mimetype};base64,${mediaData.toString(
-							"base64"
-						)}`,
-						{
-							crop: false,
-						},
-						{
-							author: "ig: @Cyopn_",
-							pack: "CyopnBot",
-						}
-					)
-					.catch((e) => {
-						console.log(e.toString());
-						if (
-							e
-								.toString()
-								.includes(
-									"STICKER_TOO_LARGE: maxContentLength size of 1500000 exceeded"
-								) ||
-							e.toString().includes("Error: Evaluation failed: a")
-						)
-							return client.reply(
-								from,
-								"Es imposible crear el sticker, el archivo es demasiado pesado",
-								id
-							);
-					});
-			} else {
-				await client.reply(
-					from,
-					"El video debe durar menos de 10 segundos",
-					id
-				);
-			}
-		} else if (quotedMsg && quotedMsg.mimetype === "video/mp4") {
-			if (
-				quotedMsg.duration <= 10 ||
-				(quotedMsg.mimetype === "image/gif" && quotedMsg.duration <= 10)
-			) {
-				await client.reply(from, `Espera un poco`, id);
-				const mediaData = await decryptMedia(quotedMsg);
-
-				await client
-					.sendMp4AsSticker(
-						from,
-						`data:${quotedMsg.mimetype};base64,${mediaData.toString(
-							"base64"
-						)}`,
-						{ crop: false },
-						{
-							author: "ig: @Cyopn_",
-							pack: "CyopnBot",
-						}
-					)
-					.catch((e) => {
-						console.log(e.toString());
-						if (
-							e
-								.toString()
-								.includes(
-									"STICKER_TOO_LARGE: maxContentLength size of 1500000 exceeded"
-								) ||
-							e.toString().includes("Error: Evaluation failed: a")
-						)
-							return client.reply(
-								from,
-								"Es imposible crear el sticker, el archivo es demasiado pesado",
-								id
-							);
-					});
-			} else {
-				await client.reply(
-					from,
-					"El video debe durar menos de 10 segundos",
-					id
-				);
-			}
-		} else {
-			await client.reply(
-				from,
-				`Envia una imagen/video/gif con el comando *${config.prefix}sticker*, o bien, responde a una imagen ya enviada`,
-				id
-			);
-		}
-	} catch (e) {
-		console.error(
-			`Error en ${this.config.name}
-Hora: ${new Date().getHours()}:${new Date().getMinutes()}:${new Date().getSeconds()}:`,
-			e.toString()
+	if (m === undefined || m === null || type === undefined || type === null) {
+		sock.sendMessage(
+			msg.key.remoteJid,
+			{
+				text: `Envia una imagen/video/gif con el comando *${prefix}sticker*, o bien, responde a alguno ya enviado.`,
+			},
+			{ quoted: msg },
 		);
-		if (
-			e
-				.toString()
-				.includes(
-					"TypeError [ERR_INVALID_ARG_TYPE]: The first argument must be of type string or an instance of Buffer, ArrayBuffer, or Array or an Array-like Object. Received undefined"
-				)
-		) {
-			await client.reply(
-				from,
-				`Ocurrio un error
-Probablemente el mensaje fue enviada en visualizacion unica`,
-				id
+	} else {
+		try {
+			const w = await downloadContentFromMessage(m, type).catch((e) => {
+				sock.sendMessage(`${owner}@s.whatsapp.net`, {
+					text: `Error en ${this.config.name} - ${
+						msg.key.remoteJid
+					}\n${String(e)}`,
+				});
+				sock.sendMessage(
+					msg.key.remoteJid,
+					{
+						text: "Ocurrio un error inesperado.",
+					},
+					{ quoted: msg },
+				);
+			});
+			let buffer = Buffer.from([]);
+			for await (const chunk of w) {
+				buffer = Buffer.concat([buffer, chunk]);
+			}
+			let s = await sticker(buffer).catch((e) => {
+				sock.sendMessage(`${owner}@s.whatsapp.net`, {
+					text: `Error en ${this.config.name0000} - ${
+						msg.key.remoteJid
+					}\n${String(e)}`,
+				});
+				sock.sendMessage(
+					msg.key.remoteJid,
+					{
+						text: "Ocurrio un error inesperado.",
+					},
+					{ quoted: msg },
+				);
+			});
+			await sock
+				.sendMessage(msg.key.remoteJid, { sticker: s }, { quoted: msg })
+				.catch((e) => {
+					sock.sendMessage(`${owner}@s.whatsapp.net`, {
+						text: String(e),
+					});
+					sock.sendMessage(
+						msg.key.remoteJid,
+						{
+							text: "Ocurrio un error inesperado.",
+						},
+						{ quoted: msg },
+					);
+				});
+		} catch (e) {
+			const sub = msg.key.remoteJid.includes("g.us")
+				? await sock.groupMetadata(msg.key.remoteJid)
+				: {
+						subject: msg.key.remoteJid.replace(
+							"@s.whatsapp.net",
+							"",
+						),
+				  };
+			await sock.sendMessage(`${owner}@s.whatsapp.net`, {
+				text: `Error en ${this.config.name} - ${sub.subject}\n${String(
+					e,
+				)}`,
+			});
+			await sock.sendMessage(
+				msg.key.remoteJid,
+				{
+					text: "Ocurrio un error inesperado.",
+				},
+				{ quoted: msg },
 			);
-		} else {
-			await client.reply(from, `Ocurrio un error`, id);
 		}
 	}
-	await client.simulateTyping(from, false);
 };
 
 module.exports.config = {
 	name: "sticker",
 	alias: "s",
-	desc: "Crea stickers",
+	type: "misc",
+	description: `Envia un sticker a partir de una imagen/video/gif, ya sea enviada o respondiendo a alguna ya enviada.`,
+	fulldesc: `Este comando funciona para crear stickers (pegatinas), puedes enviar una imagen, video o gif escribiendo el prefijo ${prefix} junto al nombre del comando (sticker) o su alias (s) antes de enviarla, otra manera de usarlo es respondiendo a una imagen, video o gif ya enviado, de igual modo escribiendo el prefijo ${prefix} junto al nombre del comando (sticker) o su alias (s).\nEste comando lo puedes usar en grupos y mensajes directos.`,
 };

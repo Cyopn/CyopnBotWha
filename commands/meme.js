@@ -1,34 +1,46 @@
-const ex = require("child_process").execSync;
-const { loadJson } = require("../lib/functions");
+require("dotenv").config();
+const { prefix, owner } = process.env;
+const fs = require("fs");
+const axios = require("axios");
 
-module.exports.run = async (client, message) => {
-	const { id, from } = message;
+module.exports.run = async (sock, msg, args) => {
 	try {
-		const rs = ex(`python ./lib/python/meme.py`, { encoding: "utf8" });
-
-		loadJson().then((a) => {
-			client.sendFileFromUrl(
-				from,
-				a.url,
-				"yo.jpg",
-				`${a.title}
-Publicado por u/${a.author}`,
-				id
-			);
-		});
-	} catch (e) {
-		console.error(
-			`Error en ${this.config.name}
-Hora: ${new Date().getHours()}:${new Date().getMinutes()}:${new Date().getSeconds()}:`,
-			e.toString()
+		const response = await axios.get(
+			`https://www.reddit.com/r/chingatumadrenoko.json`,
 		);
-		await client.reply(from, `Ocurrio un error`, id);
+		const posts = response.data.data.children;
+		const random = Math.floor(Math.random() * posts.length);
+		await sock.sendMessage(
+			msg.key.remoteJid,
+			{
+				caption: `${posts[random].data.title}\nPublicado por u/${posts[random].data.author}`,
+				image: { url: posts[random].data.url },
+			},
+			{ quoted: msg },
+		);
+	} catch (e) {
+		const sub = msg.key.remoteJid.includes("g.us")
+			? await sock.groupMetadata(msg.key.remoteJid)
+			: {
+					subject: msg.key.remoteJid.replace("@s.whatsapp.net", ""),
+			  };
+		await sock.sendMessage(`${owner}@s.whatsapp.net`, {
+			text: `Error en ${this.config.name} - ${sub.subject}\n${String(e)}`,
+		});
+		await sock.sendMessage(
+			msg.key.remoteJid,
+			{
+				text: "Ocurrio un error inesperado.",
+			},
+			{ quoted: msg },
+		);
 	}
-	await client.simulateTyping(from, false);
 };
 
 module.exports.config = {
-	name: "meme",
-	alias: "m",
-	desc: "Momazos en r/ChingaTuMadreNoko",
+	name: `meme`,
+	alias: `m`,
+	type: `misc`,
+	description: `Envia un chistorete digital publicado en reddit.com/r/ChingaTuMadreNoko/ ¡Conviertete en colaborador!`,
+	fulldesc: `Nada que agregar.`,
 };

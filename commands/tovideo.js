@@ -1,7 +1,7 @@
 require("dotenv").config();
 const { prefix, owner } = process.env;
 const { downloadContentFromMessage } = require("@whiskeysockets/baileys");
-const { toPng } = require("../lib/functions");
+const { toMp4 } = require("../lib/functions");
 
 module.exports.run = async (sock, msg, args) => {
 	const s =
@@ -11,7 +11,7 @@ module.exports.run = async (sock, msg, args) => {
 		return sock.sendMessage(
 			msg.key.remoteJid,
 			{
-				text: `Usa ${prefix}toimg respondiendo un sticker.`,
+				text: `Usa ${prefix}tovideo respondiendo un sticker.`,
 			},
 			{ quoted: msg },
 		);
@@ -21,12 +21,12 @@ module.exports.run = async (sock, msg, args) => {
 		for await (const chunk of w) {
 			buffer = Buffer.concat([buffer, chunk]);
 		}
-		const r = await toPng(buffer);
+		const r = await toMp4(buffer);
 		await sock.sendMessage(
 			msg.key.remoteJid,
 			{
 				caption: "w",
-				image: { url: r },
+				video: { url: r },
 			},
 			{ quoted: msg },
 		);
@@ -50,9 +50,10 @@ module.exports.run = async (sock, msg, args) => {
 };
 
 module.exports.config = {
-	name: "toimg",
-	alias: "ti",
+	name: "tovideo",
+	alias: "tv",
 	type: `misc`,
-	description: "Convierte a imagen un sticker ya enviado, respondiendo a el.",
-	fulldesc: `Comando para convertir sticker a imagen respondiendo a uno ya enviado, escribiendo el prefijo ${prefix} junto al nombre del comando (toimg) o su alias (ti).\nEste comando lo puedes usar en grupos y mensajes directos.`,
+	description:
+		"Convierte a video un sticker animado ya enviado, respondiendo a el.",
+	fulldesc: `Comando para convertir sticker animado a video respondiendo a uno ya enviado, escribiendo el prefijo ${prefix} junto al nombre del comando (tovideo) o su alias (tv).\nEste comando lo puedes usar en grupos y mensajes directos.`,
 };

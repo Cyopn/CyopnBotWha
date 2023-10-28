@@ -1,69 +1,84 @@
-const fbdown = require("fbdown");
-module.exports.run = async (client, message, args, config) => {
-	const { id, from } = message;
-	const { prefix } = config;
+require("dotenv").config();
+const { prefix, owner } = process.env;
+const { facebookdlv2 } = require("@bochilteam/scraper");
 
-	await client.reply(from, `Espera un poco`, id);
-	if (!args.join("")) {
-		await client.reply(from, `Usa *${prefix}fbdl [enlace]*`, id);
+module.exports.run = async (sock, msg, args) => {
+	const arg =
+		args[1] === undefined && args[0].join("").length >= 1
+			? args[0].join("")
+			: args[1] === undefined
+			? ""
+			: args[1].join("");
+	if (!arg)
+		return sock.sendMessage(
+			msg.key.remoteJid,
+			{
+				text: `Debes proporcionar un enlace, escribe ${prefix}fbdownload (enlace), recuerda que no es necesario escribir los parentesis.`,
+			},
+			{ quoted: msg },
+		);
+	const isurl = arg.match(/www.facebook.com|fb.watch/g);
+	if (!isurl)
+		return await sock.sendMessage(
+			msg.key.remoteJid,
+			{
+				text: `El enlace proporcionado no es valido.`,
+			},
+			{ quoted: msg },
+		);
+	const r = await facebookdlv2(arg).catch((e) => {});
+	if (r === undefined) {
+		await sock.sendMessage(
+			msg.key.remoteJid,
+			{
+				text: `El enlace proporcionado no es valido o el contenido no esta disponible.`,
+			},
+			{ quoted: msg },
+		);
 	} else {
-		const arg = args[0];
-		const isUrl = arg.match(/www.facebook.com|fb.watch/g);
-		if (isUrl) {
-			const res = await fbdown(arg);
-			if (res.url === undefined)
-				return client.reply(from, `El enlace no es valido`, id);
-			if (res.url[0] != undefined) {
-				await client
-					.sendFile(from, res.url[0].url, "nose", `w`, id)
-					.catch((e) => {
-						if (
-							e
-								.toString()
-								.includes(
-									"Error: Evaluation failed: Error: MediaFileTooLarge:"
-								)
-						) {
-							client
-								.sendFile(from, res.url[1].url, "nose", `w`, id)
-								.catch((e) => {
-									console.error(
-										`Error en ${this.config.name}
-Hora: ${new Date().getHours()}:${new Date().getMinutes()}:${new Date().getSeconds()}:`,
-										e.toString()
-									);
-									client.reply(
-										from,
-										`Es imposible enviar el video`,
-										id
-									);
-								});
-						} else {
-							console.error(
-								`Error en ${this.config.name}
-Hora: ${new Date().getHours()}:${new Date().getMinutes()}:${new Date().getSeconds()}:`,
-								e.toString()
-							);
-							client.reply(
-								from,
-								`Es imposible enviar el video`,
-								id
-							);
-						}
-					});
-			} else {
-				client.reply(from, `EL video fue eliminado o es privado`, id);
-			}
-		} else {
-			await client.reply(from, `El enlace no es valido`, id);
+		/*
+		Filtro para la primera opcion (facebookdl) 
+		const ma = r.result.filter(
+			(rs) =>
+				rs.ext === "mp4" &&
+				!rs.url.includes("youtube4kdownloader") &&
+				rs.isVideo,
+		); */
+		try {
+			await sock.sendMessage(
+				msg.key.remoteJid,
+				{ video: { url: r.result[0].url }, caption: "w" },
+				{ quoted: msg },
+			);
+		} catch (e) {
+			const sub = msg.key.remoteJid.includes("g.us")
+				? await sock.groupMetadata(msg.key.remoteJid)
+				: {
+						subject: msg.key.remoteJid.replace(
+							"@s.whatsapp.net",
+							"",
+						),
+				  };
+			await sock.sendMessage(`${owner}@s.whatsapp.net`, {
+				text: `Error en ${this.config.name} - ${sub.subject}\n${String(
+					e,
+				)}`,
+			});
+			await sock.sendMessage(
+				msg.key.remoteJid,
+				{
+					text: "Ocurrio un error inesperado.",
+				},
+				{ quoted: msg },
+			);
 		}
 	}
-
-	await client.simulateTyping(from, false);
 };
 
 module.exports.config = {
-	name: "fbdownload",
-	alias: "fbdl",
-	desc: "Obtién multimedia de una publicacion de facebook",
+	name: `fbdownload`,
+	alias: `fbdl`,
+	type: `misc`,
+	description: `Envia el video de alguna publicacion de Facebook.`,
+	fulldesc: `Comando para descargar videos de Facebook, escribe ${prefix}fbdownload (enlace), o con su alias ${prefix}fbdl (enlace), recuerda que no es necesario escribir los parentesis, tambien puedes responder a un enlace ya enviado, usando ${prefix}fbdownload, o su alias ${prefix}fbdl respondiendo al enlace. \nEste comando puede usarse en mensajes directos y/o grupos.`,
 };

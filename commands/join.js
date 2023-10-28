@@ -1,55 +1,90 @@
-const sleep = require("ko-sleep");
-module.exports.run = async (client, message, args, config) => {
-	const { id, from } = message;
-	const arg = args.join("");
-	const isUrl = arg.match(
-		/(http(s)?:\/\/.)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/g
+require("dotenv").config();
+const { prefix, owner } = process.env;
+
+module.exports.run = async (sock, msg, args) => {
+	const arg =
+		args[1] === undefined && args[0].join(" ").length >= 1
+			? args[0].join(" ")
+			: args[1] === undefined
+			? ""
+			: args[1].join(" ");
+	if (!arg)
+		return sock.sendMessage(
+			msg.key.remoteJid,
+			{
+				text: `Debes proporcionar un enlace, escribe ${prefix}join (enlace), recuerda que no es necesario escribir los parentesis.`,
+			},
+			{ quoted: msg },
+		);
+	const isurl = arg.match(
+		/^(https?:\/\/)?chat\.whatsapp\.com\/(?:invite\/)?([a-zA-Z0-9_-]{22})$/,
 	);
+	if (!isurl)
+		return await sock.sendMessage(
+			msg.key.remoteJid,
+			{
+				text: "El enlace proporcionado no es valido.",
+			},
+			{ quoted: msg },
+		);
 	try {
-		if (!arg) {
-			await client.reply(
-				from,
-				`Envia el comando ${config.prefix}join [invitacion]`,
-				id
+		await sock.sendMessage(
+			msg.key.remoteJid,
+			{
+				text: "Entrando...",
+			},
+			{ quoted: msg },
+		);
+		const metadata = await sock.groupAcceptInvite(
+			arg.replace("https://chat.whatsapp.com/", ""),
+		);
+		if (metadata === undefined) {
+			await sock.sendMessage(
+				msg.key.remoteJid,
+				{
+					text: "Se ha enviado la solicitud para unirse.",
+				},
+				{ quoted: msg },
 			);
-		} else {
-			if (!isUrl) {
-				await client.reply(
-					from,
-					`Envia un enlace de invitacion valido`,
-					id
-				);
-			} else {
-				await client
-					.joinGroupViaLink(arg, { returnChatObj: true })
-					.then((a) => {
-						as = a;
-					});
-				await sleep(2 * 1000);
-				client.sendText(
-					as.id,
-					`Gracias por la invitacion
-Puedes escribir ${config.prefix}help para ver los comandos
-Para resolver tus dudas sobre el desarrollo del bot, puedes contactarme aqui:
-WhatsApp: wa.me/525633592644
-Discord: Cyopn#7302
-Instagram: https://instagram.com/Cyopn_`
-				);
-			}
 		}
 	} catch (e) {
-		console.error(
-			`Error en ${this.config.name}
-Hora: ${new Date().getHours()}:${new Date().getMinutes()}:${new Date().getSeconds()}:`,
-			e.toString()
-		);
-		await client.reply(from, ` Ocurrio un error `, id);
+		if (String(e).includes("not-authorized")) {
+			await sock.sendMessage(
+				msg.key.remoteJid,
+				{
+					text: "Imposible unirse, al parecer he sido elimindo recientemente.",
+				},
+				{ quoted: msg },
+			);
+		} else {
+			const sub = msg.key.remoteJid.includes("g.us")
+				? await sock.groupMetadata(msg.key.remoteJid)
+				: {
+						subject: msg.key.remoteJid.replace(
+							"@s.whatsapp.net",
+							"",
+						),
+				  };
+			await sock.sendMessage(`${owner}@s.whatsapp.net`, {
+				text: `Error en ${this.config.name} - ${sub.subject}\n${String(
+					e,
+				)}`,
+			});
+			await sock.sendMessage(
+				msg.key.remoteJid,
+				{
+					text: "Ocurrio un error inesperado.",
+				},
+				{ quoted: msg },
+			);
+		}
 	}
-	await client.simulateTyping(from, false);
 };
 
 module.exports.config = {
-	name: "join",
-	alias: "j",
-	desc: "Añade el bot a un grupo con solo un comando",
+	name: `join`,
+	alias: `j`,
+	type: `misc`,
+	description: `Agregame a un grupo solo con el enlace de invitacion del grupo.`,
+	fulldesc: `Comando para agregarme a un grupo con su enlace de invitacion, escribe ${prefix}join (enlace), o con su alias ${prefix}join (enlace), recuerda que no es necesario escribir los parentesis, tambien puedes responder a un enlace ya enviado, usando ${prefix}join, o su alias ${prefix}j respondiendo al enlace. \nEste comando puede usarse en mensajes directos y/o grupos.`,
 };

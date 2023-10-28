@@ -1,256 +1,178 @@
-const yts = require("youtube-sr").default;
+require("dotenv").config();
+const { prefix, owner } = process.env;
 const { ytSolver } = require("../lib/functions");
 const yt = require("yt-converter");
+const yts = require("youtube-sr").default;
 const fs = require("fs");
 
-module.exports.run = async (client, message, args, config) => {
-	const { id, from } = message;
-	const arg = args.join("");
-	const isUrl = arg.match(
-		/^((?:https?:)?\/\/)?((?:www|m)\.)?((?:youtube(-nocookie)?\.com|youtu.be))(\/(?:[\w\-]+\?v=|embed\/|v\/)?)([\w\-]+)(\S+)?$/gim
+module.exports.run = async (sock, msg, args) => {
+	let arg = args[1] === undefined ? args[0].join("") : args[1].join("");
+	if (!arg)
+		return sock.sendMessage(
+			msg.key.remoteJid,
+			{
+				text: `Debes proporcionar un enlace, escribe ${prefix}play (enlace o busqueda), recuerda que no es necesario escribir los parentesis.`,
+			},
+			{ quoted: msg },
+		);
+	const isurl = arg.match(
+		/^((?:https?:)?\/\/)?((?:www|m)\.)?((?:youtube(-nocookie)?\.com|youtu.be))(\/(?:[\w\-]+\?v=|embed\/|v\/)?)([\w\-]+)(\S+)?$/gim,
 	);
-
 	try {
-		if (!arg)
-			return await client.reply(
-				from,
-				`Envia el comando *${config.prefix}play [consulta/url]*`,
-				id
-			);
-		await client.reply(from, `Espera un momento`, id);
-		if (isUrl) {
-			await ytSolver(args.join("")).then((r) => {
-				if (r.status === 200) {
-					client.sendFileFromUrl(
-						from,
-						`${r.thumb}`,
-						`a.jpg`,
-						`Inicia la descarga de *${r.title}*\nCanal/Autor: ${r.author}\nDuracion: ${r.time} minutos`,
-						id
-					);
-					const tl = r.title.toString();
-					yt.convertAudio(
-						{
-							url: args.join(""),
-							itag: 140,
-							directoryDownload: "./media/audio",
-							title: `${tl}`,
-						},
-						function () {},
-						function () {
-							fs.readdir("./media/audio/", (err, files) => {
-								if (err) return console.error(err);
-								let file = files.filter(
-									(f) => f.split(".").pop() === "mp3"
-								);
-								file.forEach((f) => {
-									res = f;
-								});
-								client
-									.sendFileFromUrl(
-										from,
-										`./media/audio/${res}`,
-										`${res}.mp3`,
-										`w`,
-										id
-									)
-									.catch((e) => {
-										console.error(
-											`Error en play
-Hora: ${new Date().getHours()}:${new Date().getMinutes()}:${new Date().getSeconds()}:
-`,
-											e.toString()
-										);
-										client.reply(
-											from,
-											`Es imposible enviar el audio, el achivo es demasiado largo`,
-											id
-										);
-									});
-								fs.unlink(`./media/audio/${res}`, function (e) {
-									if (e) console.log(e);
-								});
-							});
-						}
-					);
-				} else {
-					console.error(
-						`Error en ${this.config.name}
-Hora: ${new Date().getHours()}:${new Date().getMinutes()}:${new Date().getSeconds()}:`,
-						e.toString()
-					);
-					client.reply(from, `Ocurrio un error`, id);
-				}
-			});
-		} else {
-			//Buscador
-			if (false) {
-			} else {
-				const rs = await yts.search(args.join(" "), { limit: 5 });
-				a = 1;
-				txt = "Resultados";
-				rs.forEach((r) => {
-					txt += `
-${a}-. Titulo: ${r.title}
-Duracion: ${r.durationFormatted}
-Autor/Canal: ${r.channel.name}
-`;
-					a += 1;
-				});
-
-				await client.reply(
-					from,
-					(txt +=
-						"\nResponde este mensaje con la opcion (numero) a descargar\nEl tiempo de espera es de solo un minuto"),
-					id
-				);
-				const filter = (m) =>
-					m.author === message.author &&
-					(m.quotedMsg ? m.quotedMsg.body : "").includes(
-						"Responde este mensaje"
-					);
-				client
-					.awaitMessages(from, filter, {
-						max: 1,
-						time: 60000,
-						errors: ["time", "max"],
-					})
-					.then((c) => {
-						const ob = Object.fromEntries(c);
-						let k;
-						for (const o in ob) {
-							k = o;
-						}
-						const d = ob[k];
-						let rss = parseInt(d.body);
-						if (Number.isInteger(rss)) {
-							if (rss > 5) {
-								client.reply(
-									from,
-									`El numero excede al de las opciones
-Intenta de nuevo`,
-									id
-								);
-							} else {
-								ytSolver(rs[rss - 1].url).then((r) => {
-									if (r.status === 200) {
-										client.sendFileFromUrl(
-											from,
-											`${r.thumb}`,
-											`a.jpg`,
-											`Inicia la descarga de *${r.title}*\nCanal/Autor: ${r.author}\nDuracion: ${r.time} minutos`,
-											id
-										);
-										const tl = r.title.toString();
-										yt.convertAudio(
-											{
-												url: rs[rss - 1].url,
-												itag: 140,
-												directoryDownload:
-													"./media/audio",
-												title: `${tl}`,
-											},
-											function () {},
-											function () {
-												fs.readdir(
-													"./media/audio/",
-													(err, files) => {
-														if (err)
-															return console.error(
-																err
-															);
-														let file = files.filter(
-															(f) =>
-																f
-																	.split(".")
-																	.pop() ===
-																"mp3"
-														);
-														file.forEach((f) => {
-															res = f;
-														});
-														client
-															.sendFileFromUrl(
-																from,
-																`./media/audio/${res}`,
-																`${res}.mp3`,
-																`w`,
-																id
-															)
-															.catch((e) => {
-																console.error(
-																	`Error en play
-Hora: ${new Date().getHours()}:${new Date().getMinutes()}:${new Date().getSeconds()}: ${tl}
-`,
-																	e.toString()
-																);
-																client.reply(
-																	from,
-																	`Es imposible enviar el audio, el archivo es demasiado pesadoo`,
-																	id
-																);
-															});
-														fs.unlink(
-															`./media/audio/${res}`,
-															function (e) {
-																if (e)
-																	console.log(
-																		e
-																	);
-															}
-														);
-													}
-												);
-											}
-										);
-									} else {
-										console.error(
-											`Error en play
-Hora: ${new Date().getHours()}:${new Date().getMinutes()}:${new Date().getSeconds()}: `,
-											r.error
-										);
-										client.reply(
-											from,
-											`Ocurrio un error`,
-											id
-										);
-									}
-								});
-							}
-						} else {
-							client.reply(
-								from,
-								`No se admiten caracteres
-Intenta de nuevo`,
-								id
-							);
-						}
+		/* if (fs.existsSync("./temp/thumb.jpg")) {
+			fs.unlinkSync("./temp/thumb.jpg");
+		} */
+		if (isurl) {
+			const { status, title, author, error, time, thumb } =
+				await ytSolver(arg);
+			if (status === 200) {
+				/* await axios
+					.get(thumb, { responseType: "arraybuffer" })
+					.then((r) => {
+						console.log(r.data);
+						fs.writeFileSync("./temp/thumb.jpg", r.data);
+						sock.sendMessage(
+							msg.key.remoteJid,
+							{
+								caption: `Inicia la descarga de *${title}*\nCanal/Autor: ${author}\nDuracion: ${time} minutos`,
+								image: { url: r.data },
+							},
+							{ quoted: msg },
+						);
 					})
 					.catch((e) => {
-						if (e.size == 0) {
-							client.reply(
-								from,
-								`El tiempo se ha agotado
-Intenta de nuevo`,
-								id
-							);
-						}
-					});
+						console.log(e);
+					}); */
+				await sock.sendMessage(
+					msg.key.remoteJid,
+					{
+						text: `Inicia la descarga de *${title}*\nCanal/Autor: ${author}\nDuracion: ${time} minutos`,
+					},
+					{ quoted: msg },
+				);
+				yt.convertAudio(
+					{
+						url: arg,
+						itag: 140,
+						directoryDownload: "./temp/",
+						title: title,
+					},
+					(t) => {},
+					async () => {
+						const [w] = fs
+							.readdirSync("./temp/")
+							.filter((f) => f.split(".").pop() === "mp3");
+						await sock.sendMessage(
+							msg.key.remoteJid,
+							{
+								audio: {
+									url: `./temp/${w}`,
+								},
+								mimetype: "audio/mpeg",
+							},
+							{ quoted: msg },
+						);
+						fs.unlinkSync(`./temp/${w}`);
+					},
+				);
+			} else {
+				await sock.sendMessage(
+					msg.key.remoteJid,
+					{
+						text: `El enlace no es valido.`,
+					},
+					{ quoted: msg },
+				);
+			}
+		} else {
+			arg = args[1] === undefined ? args[0].join(" ") : args[1].join(" ");
+			const [rs] = await yts.search(arg, { limit: 1 });
+			const { status, title, author, error, time, thumb } =
+				await ytSolver(rs.url);
+			if (status === 200) {
+				/* await axios
+					.get(thumb, { responseType: "arraybuffer" })
+					.then(async (r) => {
+						fs.writeFileSync("./temp/thumb.jpg", r.data);
+						await sock.sendMessage(
+							msg.key.remoteJid,
+							{
+								caption: `Inicia la descarga de *${title}*\nCanal/Autor: ${author}\nDuracion: ${time} minutos`,
+								image: { url: "./temp/thumb.jpg" },
+							},
+							{ quoted: msg },
+						);
+
+						fs.unlinkSync("./temp/thumb.jpg");
+					})
+					.catch((e) => {
+						console.log(e);
+					}); */
+				await sock.sendMessage(
+					msg.key.remoteJid,
+					{
+						text: `Inicia la descarga de *${title}*\nCanal/Autor: ${author}\nDuracion: ${time} minutos`,
+					},
+					{ quoted: msg },
+				);
+				yt.convertAudio(
+					{
+						url: rs.url,
+						itag: 140,
+						directoryDownload: "./temp/",
+						title: title,
+					},
+					(t) => {},
+					async () => {
+						const [w] = fs
+							.readdirSync("./temp/")
+							.filter((f) => f.split(".").pop() === "mp3");
+						await sock.sendMessage(
+							msg.key.remoteJid,
+							{
+								audio: {
+									url: `./temp/${w}`,
+								},
+								mimetype: "audio/mpeg",
+							},
+							{ quoted: msg },
+						);
+						fs.unlinkSync(`./temp/${w}`);
+					},
+				);
+			} else {
+				await sock.sendMessage(
+					msg.key.remoteJid,
+					{
+						text: `No se encontro nada.`,
+					},
+					{ quoted: msg },
+				);
 			}
 		}
 	} catch (e) {
-		console.error(
-			`Error en ${this.config.name}
-Hora: ${new Date().getHours()}:${new Date().getMinutes()}:${new Date().getSeconds()}:`,
-			e.toString()
+		const sub = msg.key.remoteJid.includes("g.us")
+			? await sock.groupMetadata(msg.key.remoteJid)
+			: {
+					subject: msg.key.remoteJid.replace("@s.whatsapp.net", ""),
+			  };
+		await sock.sendMessage(`${owner}@s.whatsapp.net`, {
+			text: `Error en ${this.config.name} - ${sub.subject}\n${String(e)}`,
+		});
+		await sock.sendMessage(
+			msg.key.remoteJid,
+			{
+				text: "Ocurrio un error inesperado.",
+			},
+			{ quoted: msg },
 		);
-		await client.reply(from, `Ocurrio un error`, id);
 	}
-	await client.simulateTyping(from, false);
 };
 
 module.exports.config = {
-	name: "play",
-	alias: "p",
-	desc: "Descarga una cancion",
+	name: `play`,
+	alias: `p`,
+	type: `misc`,
+	description: `Descarga en forma de audio un video de youtube, ya sea con el enlace o una busqueda.`,
+	fulldesc: `Comando para descargar (en forma de audio) algun video de youtube, usa este comando escribiendo ${prefix}play (enlace o busqueda) o su alias, ${prefix}p (enlace o busqueda), recuerda que no es necesario escribir los corchetes. \nEste comando puede usarse en mensajes directos y/o grupos.`,
 };
