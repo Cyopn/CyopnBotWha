@@ -34,10 +34,18 @@ module.exports.run = async (sock, msg, args) => {
 				{ quoted: msg },
 			);
 		} catch (e) {
+			const sub = msg.key.remoteJid.includes("g.us")
+				? await sock.groupMetadata(msg.key.remoteJid)
+				: {
+						subject: msg.key.remoteJid.replace(
+							"@s.whatsapp.net",
+							"",
+						),
+				  };
 			await sock.sendMessage(`${owner}@s.whatsapp.net`, {
-				text: `Error en ${this.config.name} - ${
-					msg.key.remoteJid
-				}\n${String(e)}`,
+				text: `Error en ${this.config.name} - ${sub.subject}\n${String(
+					e,
+				)}`,
 			});
 			await sock.sendMessage(
 				msg.key.remoteJid,
@@ -53,7 +61,7 @@ module.exports.run = async (sock, msg, args) => {
 module.exports.config = {
 	name: `twitter`,
 	alias: `tw`,
-	type: `misc`,
+	type: `ign`,
 	description: `Envia el video de alguna publicacion de Twitter.`,
 	fulldesc: `Comando para descargar videos de Twitter, escribe ${prefix}twitter (enlace), o con su alias ${prefix}tw (enlace), recuerda que no es necesario escribir los parentesis, tambien puedes responder a un enlace ya enviado, usando ${prefix}twitter, o su alias ${prefix}tw respondiendo al enlace. \nEste comando puede usarse en mensajes directos y/o grupos.`,
 };

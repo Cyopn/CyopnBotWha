@@ -9,7 +9,6 @@ module.exports.run = async (sock, msg, args) => {
 			: args[1] === undefined
 			? ""
 			: args[1];
-	console.log(arg);
 	if (arg.length <= 0)
 		return sock.sendMessage(
 			msg.key.remoteJid,
@@ -29,6 +28,7 @@ module.exports.run = async (sock, msg, args) => {
 				msg.key.remoteJid,
 				{
 					audio: { url: r },
+					mimetype: "audio/mpeg",
 				},
 				{ quoted: msg },
 			)
@@ -61,6 +61,7 @@ module.exports.run = async (sock, msg, args) => {
 						msg.key.remoteJid,
 						{
 							audio: { url: r },
+							mimetype: "audio/mpeg",
 						},
 						{ quoted: msg },
 					).catch((e) => {
@@ -81,6 +82,6 @@ module.exports.config = {
 	name: `tts`,
 	alias: `tts`,
 	type: `ign`,
-	description: `*No funcional* Crea un audio segun el texto proporcionado y en un idioma preferido (español por defecto), usa ${prefix}lang para ver los idiomas permitidos.`,
-	fulldesc: `Comando para enviar audios en algun idioma preferido, usa este comando escribiendo ${prefix}[idioma (español por defecto)] [texto], recuerda que no es necesario escribir los corchetes, en caso de no escibir el idioma sera enviado en español. \nEste comando puede usarse en mensajes directos y/o grupos.`,
+	description: `Crea un audio segun el texto proporcionado y en un idioma preferido (español por defecto), usa ${prefix}lang para ver los idiomas permitidos.`,
+	fulldesc: `Comando para enviar audios en algun idioma preferido, usa este comando escribiendo ${prefix}tts [idioma (español por defecto)] [texto], recuerda que no es necesario escribir los corchetes, en caso de no escibir el idioma sera enviado en español. \nEste comando puede usarse en mensajes directos y/o grupos.`,
 };

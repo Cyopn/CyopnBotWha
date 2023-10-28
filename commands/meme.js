@@ -13,16 +13,19 @@ module.exports.run = async (sock, msg, args) => {
 		await sock.sendMessage(
 			msg.key.remoteJid,
 			{
-				caption: "w",
+				caption: `${posts[random].data.title}\nPublicado por u/${posts[random].data.author}`,
 				image: { url: posts[random].data.url },
 			},
 			{ quoted: msg },
 		);
 	} catch (e) {
+		const sub = msg.key.remoteJid.includes("g.us")
+			? await sock.groupMetadata(msg.key.remoteJid)
+			: {
+					subject: msg.key.remoteJid.replace("@s.whatsapp.net", ""),
+			  };
 		await sock.sendMessage(`${owner}@s.whatsapp.net`, {
-			text: `Error en ${this.config.name} - ${
-				msg.key.remoteJid
-			}\n${String(e)}`,
+			text: `Error en ${this.config.name} - ${sub.subject}\n${String(e)}`,
 		});
 		await sock.sendMessage(
 			msg.key.remoteJid,
