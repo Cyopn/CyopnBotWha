@@ -4,7 +4,3 @@ prefix=
 zenKey=
 #Numero del propietario (Codigo de pais + Numero)
 owner=5215633592644
-#Identificador de cliente (se obtiene en https://www.reddit.com/prefs/apps)
-c_id=
-#Llave secreta de cliente (se obtiene en https://www.reddit.com/prefs/apps)
-c_st=
