@@ -5,6 +5,7 @@ media/audio/tts.mp3
 media/images/w.jpg
 media/temp/output.json
 commands/test.js
+commandsold
 test.*
 path.js
 output.json
