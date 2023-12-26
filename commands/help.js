@@ -20,7 +20,7 @@ _Ejemplo: ${prefix}attp Hola_
 	if (!arg) {
 		command.forEach((name) => {
 			const sr = command.indexOf(name);
-			if (type[sr] === "ign" || type[sr] === "adim") return;
+			if (type[sr] === "ign" || type[sr] === "admin") return;
 			txt += `\n*${name}* (alias: ${alias[sr]})\n_${desc[sr]}_
 `;
 		});
