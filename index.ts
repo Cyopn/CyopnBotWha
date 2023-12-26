@@ -12,7 +12,7 @@ import * as http from "http";
 let command = [];
 let alias = [];
 require("dotenv").config();
-const { prefix, owner } = process.env;
+const { prefix, owner, channel } = process.env;
 const logger = MAIN_LOGGER.child({});
 logger.level = "silent";
 // Hosting
@@ -76,7 +76,12 @@ const startSock = async () => {
 		if (events["groups.upsert"]) {
 			const [metadata] = events["groups.upsert"];
 			await sock.sendMessage(metadata.id, {
-				text: `Gracias por invitarme.\nUsa !help para ver los comandos disponibles.\nCualquier duda o sugerencia sera respondida:\nWhatsapp: wa.me/+5215633592644\nInstagram: https://www.instagram.com/cyopn_/`,
+				text: `Gracias por invitarme.
+Usa !help para ver los comandos disponibles.
+Cualquier duda o sugerencia sera respondida:
+Whatsapp: wa.me/+5215633592644\nInstagram: https://www.instagram.com/cyopn_/
+*Nota importante*: El administrador del bot/numero tendra acceso a este chat.
+Sigue el canal de informacion para estar al dia de las novedades y actualizaciones: ${channel}`,
 			});
 		}
 
@@ -143,10 +148,6 @@ const startSock = async () => {
 									);
 								}
 							}
-							/* sock.sendMessage(msg.key.remoteJid, {
-								caption: "",
-								image: { url: `` },
-							}); */
 						}
 					}
 				}

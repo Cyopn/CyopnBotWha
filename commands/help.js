@@ -1,5 +1,5 @@
 require("dotenv").config();
-const { prefix, owner } = process.env;
+const { prefix, owner, channel } = process.env;
 const { getCommands } = require("../lib/functions");
 
 module.exports.run = async (sock, msg, args) => {
@@ -7,11 +7,12 @@ module.exports.run = async (sock, msg, args) => {
 	let txt = `*CyopnBot* 
 *Prefijo*: [  ${prefix}  ] 
 _yo_ : https://instagram.com/Cyopn_
+Sigue el canal de informacion para estar al dia de las novedades y actualizaciones: ${channel}
 
 *Informacion*
 Escribe ${prefix} seguido de cualquiera de los comandos, recuerda que puedes usar el nombre del comando o su alias.
 _Uso: ${prefix}[Comando] [Texto/Enlace/Otros]_
-Se deben sustituir los parentesis segun corresponda.
+Se deben sustituir los parentesis/corchetes segun corresponda.
 _Ejemplo: ${prefix}attp Hola_
 
 *Comandos disponibles*:`;
@@ -19,7 +20,7 @@ _Ejemplo: ${prefix}attp Hola_
 	if (!arg) {
 		command.forEach((name) => {
 			const sr = command.indexOf(name);
-			if (type[sr] === "ign" || type[sr] === "adm") return;
+			if (type[sr] === "ign" || type[sr] === "adim") return;
 			txt += `\n*${name}* (alias: ${alias[sr]})\n_${desc[sr]}_
 `;
 		});
@@ -49,7 +50,7 @@ Descripcion: ${fulldesc[cmd]}`;
 			txt = "";
 		} else {
 			switch (arg) {
-				case "adm":
+				case "admin":
 					command.forEach((name) => {
 						const sr = command.indexOf(name);
 						if (
@@ -72,13 +73,6 @@ Descripcion: ${fulldesc[cmd]}`;
 					txt = "";
 					break;
 				default:
-					sock.sendMessage(
-						msg.key.remoteJid,
-						{
-							text: txt,
-						},
-						{ quoted: msg },
-					);
 					sock.sendMessage(
 						msg.key.remoteJid,
 						{
