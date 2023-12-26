@@ -65,7 +65,7 @@ module.exports.run = async (sock, msg, args) => {
 			const isAdmin = (
 				await sock.groupMetadata(msg.key.remoteJid)
 			).participants.some((r) => r.id === u && r.admin != null);
-			if (!isAdmin) {
+			if (isAdmin) {
 				lu.push(u);
 			} else {
 				sock.sendMessage(
@@ -74,7 +74,7 @@ module.exports.run = async (sock, msg, args) => {
 						text: `El usuario @${u.replace(
 							"@s.whatsapp.net",
 							"",
-						)} ya es administrador.`,
+						)} no es administrador.`,
 						mentions: [`${u}`],
 					},
 					{ quoted: msg },
@@ -84,13 +84,13 @@ module.exports.run = async (sock, msg, args) => {
 		const response = await sock.groupParticipantsUpdate(
 			msg.key.remoteJid,
 			lu,
-			"promote",
+			"demote",
 		);
 		if (response.length > 0 && response[0].status == 200) {
 			sock.sendMessage(
 				msg.key.remoteJid,
 				{
-					text: `Se ha(n) promovido a administrador(es) exitosamente:
+					text: `Se ha(n) degradado a usuario(s) exitosamente:
 ${lu.map((e) => `@${e.replace("@s.whatsapp.net", "")}`).join("\n")}`,
 					mentions: lu,
 				},
