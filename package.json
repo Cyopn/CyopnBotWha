@@ -21,11 +21,12 @@
         "ko-sleep": "^1.1.4",
         "megadb": "^3.4.0",
         "node-fetch": "^3.3.2",
+        "openai": "^4.19.0",
         "qrcode-terminal": "^0.12.0",
         "wa-sticker-formatter": "^4.4.4",
         "youtube-sr": "^4.3.4",
         "yt-converter": "^1.3.2",
-        "ytdl-core": "^4.11.5"
+        "ytdl-core": "^4.10.0"
     },
     "scripts": {
         "start": "tsx index.ts",
