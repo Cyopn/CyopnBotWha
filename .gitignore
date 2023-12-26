@@ -12,3 +12,4 @@ output.json
 database
 auth_info
 .env
+secrets.json
