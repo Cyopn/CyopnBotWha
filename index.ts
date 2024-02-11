@@ -8,26 +8,33 @@ import makeWASocket, {
 } from "@whiskeysockets/baileys";
 const MAIN_LOGGER = require("@whiskeysockets/baileys/lib/Utils/logger").default;
 import fs from "fs";
-import * as http from "http";
 let command = [];
 let alias = [];
 require("dotenv").config();
 const { prefix, owner, channel } = process.env;
 const logger = MAIN_LOGGER.child({});
 logger.level = "silent";
-// Hosting
-const server = http.createServer((_req, res) => {
-	res.statusCode = 200;
-	res.setHeader("Content-Type", "text/plain");
-	res.end("w");
-});
+//Hosting
+const express = require("express");
+const bodyParser = require("body-parser");
+const app = express();
 const port = 3000;
-//const hostname = "0.0.0.0"; // En replit
-const hostname = "localhost"; // En local
-server.listen(port, hostname, () => {
-	console.log(`Servidor corriendo en http://${hostname}:${port}/`);
+
+app.use(bodyParser.json());
+app.use(
+	bodyParser.urlencoded({
+		extended: true,
+	}),
+);
+
+app.get("/", (request, response) => {
+	response.json({ info: "En linea" });
 });
-// Hosting
+
+app.listen(port, () => {
+	console.log(`Aplicacion corriendo en el puerto ${port}.`);
+});
+//Hosting
 fs.readdir("./commands/", (err, files) => {
 	if (err) return console.error(err);
 	let jsfile = files.filter((f) => f.split(".").pop() === "js");
@@ -38,7 +45,6 @@ fs.readdir("./commands/", (err, files) => {
 		alias.push(pull.config.alias);
 	});
 });
-
 const startSock = async () => {
 	const { state, saveCreds } = await useMultiFileAuthState("auth_info");
 	const { version } = await fetchLatestBaileysVersion();
@@ -53,7 +59,6 @@ const startSock = async () => {
 		},
 	});
 	console.log("Cliente listo");
-
 	sock.ev.process(async (events) => {
 		if (events["connection.update"]) {
 			const update = events["connection.update"];
@@ -68,11 +73,9 @@ const startSock = async () => {
 				}
 			}
 		}
-
 		if (events["creds.update"]) {
 			await saveCreds();
 		}
-
 		if (events["groups.upsert"]) {
 			const [metadata] = events["groups.upsert"];
 			await sock.sendMessage(metadata.id, {
@@ -84,7 +87,6 @@ Whatsapp: wa.me/+5215633592644\nInstagram: https://www.instagram.com/cyopn_/
 Sigue el canal de informacion para estar al dia de las novedades y actualizaciones: ${channel}`,
 			});
 		}
-
 		if (events["messages.upsert"]) {
 			const upsert = events["messages.upsert"];
 			if (upsert.type === "append" || upsert.type === "notify") {
