@@ -1,8 +1,8 @@
 #Prefijo
 prefix=
-#Llave api (se obtiene en https://api.zahwazein.xyz/)
-zenKey=
 #Numero del propietario (Codigo de pais + Numero)
 owner=5215633592644
 #Canal de anuncios
 channel=https://whatsapp.com/channel/0029VaBECw9LdQefGF8o8d1L
+#Telegram token (se obtiene en https://core.telegram.org/bots#6-botfather)
+token=
