@@ -118,5 +118,5 @@ module.exports.config = {
 	alias: `dm`,
 	type: `admin`,
 	description: `Degreda a miembro a uno o mas administradores del grupo, es necesario mencionar o etiquetar algun miembro del grupo.`,
-	fulldesc: `Comando para degredar a miembro a uno o mas administradores del grupo, es necesario mencionar o etiquetar algun miembro del grupo, , escribe ${prefix}demote (miembro(s)), recuerda que no es necesario escribir los parentesis.\nComnado disponible solo para grupos.`,
+	fulldesc: `Comando para degredar a miembro a uno o mas administradores del grupo, es necesario mencionar o etiquetar algun miembro del grupo, escribe ${prefix}demote (miembro(s)), recuerda que no es necesario escribir los parentesis.\nComanado disponible solo para grupos.`,
 };
