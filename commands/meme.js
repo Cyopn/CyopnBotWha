@@ -1,6 +1,5 @@
 require("dotenv").config();
 const { prefix, owner } = process.env;
-const fs = require("fs");
 const axios = require("axios");
 
 module.exports.run = async (sock, msg, args) => {
