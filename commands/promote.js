@@ -23,7 +23,9 @@ module.exports.run = async (sock, msg, args) => {
 	);
 	const isAdmin = (
 		await sock.groupMetadata(msg.key.remoteJid)
-	).participants.some((e) => e.id === msg.key.participant);
+	).participants.some(
+		(e) => e.id === msg.key.participant && e.admin !== null,
+	);
 	if (!isAdmin)
 		return sock.sendMessage(
 			msg.key.remoteJid,
@@ -59,24 +61,34 @@ module.exports.run = async (sock, msg, args) => {
 					},
 					{ quoted: msg },
 				);
-			u = u.replace("@", "").concat("@s.whatsapp.net");
-			const isAdmin = (
-				await sock.groupMetadata(msg.key.remoteJid)
-			).participants.some((r) => r.id === u && r.admin != null);
-			if (!isAdmin) {
-				lu.push(u);
-			} else {
-				sock.sendMessage(
+			if (u.includes(sock.user.id.slice(0, sock.user.id.indexOf(":")))) {
+				await sock.sendMessage(
 					msg.key.remoteJid,
 					{
-						text: `El usuario @${u.replace(
-							"@s.whatsapp.net",
-							"",
-						)} ya es administrador.`,
-						mentions: [`${u}`],
+						text: `No puedo promoverme a mi mismo.`,
 					},
 					{ quoted: msg },
 				);
+			} else {
+				u = u.replace("@", "").concat("@s.whatsapp.net");
+				const isAdmin = (
+					await sock.groupMetadata(msg.key.remoteJid)
+				).participants.some((r) => r.id === u && r.admin != null);
+				if (!isAdmin) {
+					lu.push(u);
+				} else {
+					sock.sendMessage(
+						msg.key.remoteJid,
+						{
+							text: `El usuario @${u.replace(
+								"@s.whatsapp.net",
+								"",
+							)} ya es administrador.`,
+							mentions: [`${u}`],
+						},
+						{ quoted: msg },
+					);
+				}
 			}
 		}
 		const response = await sock.groupParticipantsUpdate(
@@ -96,10 +108,13 @@ ${lu.map((e) => `@${e.replace("@s.whatsapp.net", "")}`).join("\n")}`,
 			);
 		}
 	} catch (e) {
+		const sub = msg.key.remoteJid.includes("g.us")
+			? await sock.groupMetadata(msg.key.remoteJid)
+			: {
+					subject: msg.key.remoteJid.replace("@s.whatsapp.net", ""),
+			  };
 		await sock.sendMessage(`${owner}@s.whatsapp.net`, {
-			text: `Error en ${this.config.name} - ${
-				msg.key.remoteJid
-			}\n${String(e)}`,
+			text: `Error en ${this.config.name} - ${sub.subject}\n${String(e)}`,
 		});
 		await sock.sendMessage(
 			msg.key.remoteJid,
