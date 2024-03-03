@@ -25,7 +25,9 @@ module.exports.run = async (sock, msg, args) => {
 
 		const isAdmin = (
 			await sock.groupMetadata(msg.key.remoteJid)
-		).participants.some((e) => e.id === msg.key.participant);
+		).participants.some(
+			(e) => e.id === msg.key.participant && e.admin !== null,
+		);
 
 		const isClose = (await sock.groupMetadata(msg.key.remoteJid)).announce;
 
