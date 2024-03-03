@@ -3,15 +3,27 @@ const { prefix, owner } = process.env;
 const { sticker } = require("../lib/functions");
 const { downloadContentFromMessage } = require("@whiskeysockets/baileys");
 
-module.exports.run = async (sock, msg) => {
+module.exports.run = async (sock, msg, args) => {
 	const type =
 		msg.message.imageMessage ||
 		msg.message?.extendedTextMessage?.contextInfo?.quotedMessage
-			?.imageMessage
+			?.imageMessage ||
+		msg.message?.viewOnceMessage?.message?.imageMessage ||
+		msg.message?.viewOnceMessageV2?.message?.imageMessage ||
+		msg.message?.extendedTextMessage?.contextInfo?.quotedMessage
+			.viewOnceMessage?.message?.imageMessage ||
+		msg.message?.extendedTextMessage?.contextInfo?.quotedMessage
+			.viewOnceMessageV2?.message?.imageMessage
 			? "image"
 			: msg.message?.videoMessage ||
 			  msg.message?.extendedTextMessage?.contextInfo?.quotedMessage
-					?.videoMessage
+					?.videoMessage ||
+			  msg.message?.viewOnceMessage?.message?.videoMessage ||
+			  msg.message?.viewOnceMessageV2?.message?.videoMessage ||
+			  msg.message?.extendedTextMessage?.contextInfo?.quotedMessage
+					.viewOnceMessage?.message?.videoMessage ||
+			  msg.message?.extendedTextMessage?.contextInfo?.quotedMessage
+					.viewOnceMessageV2?.message?.videoMessage
 			? "video"
 			: undefined;
 	const m = msg.message?.imageMessage
@@ -23,9 +35,36 @@ module.exports.run = async (sock, msg) => {
 		: msg.message?.videoMessage
 		? msg.message?.videoMessage
 		: msg.message?.extendedTextMessage?.contextInfo?.quotedMessage
-				?.videoMessage;
-
+				?.videoMessage
+		? msg.message?.extendedTextMessage?.contextInfo?.quotedMessage
+				?.videoMessage
+		: msg.message?.viewOnceMessage?.message?.imageMessage
+		? msg.message?.viewOnceMessage?.message?.imageMessage
+		: msg.message?.viewOnceMessage?.message?.videoMessage
+		? msg.message?.viewOnceMessage?.message?.videoMessage
+		: msg.message?.viewOnceMessageV2?.message?.imageMessage
+		? msg.message?.viewOnceMessageV2?.message?.imageMessage
+		: msg.message?.viewOnceMessageV2?.message?.videoMessage
+		? msg.message?.viewOnceMessageV2?.message?.videoMessage
+		: msg.message?.extendedTextMessage?.contextInfo?.quotedMessage
+				.viewOnceMessage?.message?.imageMessage
+		? msg.message?.extendedTextMessage?.contextInfo?.quotedMessage
+				.viewOnceMessage?.message?.imageMessage
+		: msg.message?.extendedTextMessage?.contextInfo?.quotedMessage
+				.viewOnceMessage?.message?.videoMessage
+		? msg.message?.extendedTextMessage?.contextInfo?.quotedMessage
+				.viewOnceMessage?.message?.videoMessage
+		: msg.message?.extendedTextMessage?.contextInfo?.quotedMessage
+				.viewOnceMessageV2?.message?.imageMessage
+		? msg.message?.extendedTextMessage?.contextInfo?.quotedMessage
+				.viewOnceMessageV2?.message?.imageMessage
+		: msg.message?.extendedTextMessage?.contextInfo?.quotedMessage
+				.viewOnceMessageV2?.message?.videoMessage
+		? msg.message?.extendedTextMessage?.contextInfo?.quotedMessage
+				.viewOnceMessageV2?.message?.videoMessage
+		: undefined;
 	if (m === undefined || m === null || type === undefined || type === null) {
+		console.log(`${m} - ${type} - ${args[0]} - ${args[1]}`);
 		sock.sendMessage(
 			msg.key.remoteJid,
 			{

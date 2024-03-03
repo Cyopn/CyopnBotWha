@@ -92,7 +92,23 @@ Sigue el canal de informacion para estar al dia de las novedades y actualizacion
 			if (upsert.type === "append" || upsert.type === "notify") {
 				for (const msg of upsert.messages) {
 					if (!msg.key.fromMe) {
-						const message = msg.message?.extendedTextMessage?.text
+						const message = msg.message?.viewOnceMessage?.message
+							?.imageMessage?.caption
+							? msg.message?.viewOnceMessage?.message
+									?.imageMessage?.caption
+							: msg.message?.viewOnceMessage?.message
+									?.videoMessage?.caption
+							? msg.message?.viewOnceMessage?.message
+									?.videoMessage?.caption
+							: msg.message?.viewOnceMessageV2?.message
+									?.imageMessage?.caption
+							? msg.message?.viewOnceMessageV2?.message
+									?.imageMessage?.caption
+							: msg.message?.viewOnceMessageV2?.message
+									?.videoMessage?.caption
+							? msg.message?.viewOnceMessageV2?.message
+									?.videoMessage?.caption
+							: msg.message?.extendedTextMessage?.text
 							? msg.message?.extendedTextMessage?.text.trim()
 							: msg.message?.conversation
 							? msg.message?.conversation
@@ -101,11 +117,31 @@ Sigue el canal de informacion para estar al dia de las novedades y actualizacion
 							: msg.message?.videoMessage?.caption
 							? msg.message?.videoMessage?.caption
 							: "";
-
 						const quotedM =
 							msg.message?.extendedTextMessage?.contextInfo
 								?.quotedMessage;
-						const quotedMessage = quotedM?.extendedTextMessage?.text
+
+						const quotedMessage = quotedM?.viewOnceMessage?.message
+							?.imageMessage?.caption
+							? quotedM?.viewOnceMessage?.message?.imageMessage?.caption
+									.trim()
+									.split(" ")
+							: quotedM?.viewOnceMessage?.message?.videoMessage
+									?.caption
+							? quotedM?.viewOnceMessage?.message?.videoMessage?.caption
+									.trim()
+									.split(" ")
+							: quotedM?.viewOnceMessageV2?.message?.imageMessage
+									?.caption
+							? quotedM?.viewOnceMessageV2?.message?.imageMessage?.caption
+									.trim()
+									.split(" ")
+							: quotedM?.viewOnceMessageV2?.message?.videoMessage
+									?.caption
+							? quotedM?.viewOnceMessageV2?.message?.videoMessage?.caption
+									.trim()
+									.split(" ")
+							: quotedM?.extendedTextMessage?.text
 							? quotedM?.extendedTextMessage?.text
 									.trim()
 									.split(" ")
