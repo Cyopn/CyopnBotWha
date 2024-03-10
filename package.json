@@ -16,7 +16,6 @@
         "express": "^4.18.2",
         "formdata-node": "^5.0.1",
         "google-tts-api": "^2.0.2",
-        "i-downloader": "^0.0.1",
         "jsdom": "^22.1.0",
         "ko-sleep": "^1.1.4",
         "megadb": "^3.4.0",

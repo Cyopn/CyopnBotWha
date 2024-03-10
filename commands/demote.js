@@ -132,7 +132,7 @@ ${lu.map((e) => `@${e.replace("@s.whatsapp.net", "")}`).join("\n")}`,
 module.exports.config = {
 	name: `demote`,
 	alias: `dm`,
-	type: `admin`,
+	type: `misc`,
 	description: `Degreda a miembro a uno o mas administradores del grupo, es necesario mencionar o etiquetar algun miembro del grupo.`,
 	fulldesc: `Comando para degredar a miembro a uno o mas administradores del grupo, es necesario mencionar o etiquetar algun miembro del grupo, escribe ${prefix}demote (miembro(s)), recuerda que no es necesario escribir los parentesis.\nComanado disponible solo para grupos.`,
 };
