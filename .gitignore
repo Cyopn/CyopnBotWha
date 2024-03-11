@@ -13,3 +13,4 @@ database
 auth_info
 .env
 secrets.json
+info.txt
