@@ -1,6 +1,6 @@
 require("dotenv").config();
 const { prefix, owner } = process.env;
-const idl = require("i-downloader");
+const axios = require("axios").default;
 
 module.exports.run = async (sock, msg, args) => {
 	const arg =
@@ -31,9 +31,12 @@ module.exports.run = async (sock, msg, args) => {
 		);
 
 	try {
-		const r = await idl(arg);
-		if (r.status) {
-			for await (i of r.data) {
+		const result = await axios.get(
+			`https://aemt.me/download/igdl?url=${encodeURI(arg)}`,
+		);
+
+		if (result.status) {
+			for await (i of result.data.result) {
 				if (i.url.includes("jpg")) {
 					sock.sendMessage(
 						msg.key.remoteJid,
