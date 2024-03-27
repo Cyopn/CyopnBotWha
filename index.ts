@@ -8,7 +8,7 @@ import makeWASocket, {
 } from "@whiskeysockets/baileys";
 const MAIN_LOGGER = require("@whiskeysockets/baileys/lib/Utils/logger").default;
 import fs from "fs";
-const { solveAfk, getAfk } = require("./lib/functions.js");
+const { solveAfk, getAfk, evalLevel } = require("./lib/functions.js");
 let command = [];
 let alias = [];
 require("dotenv").config();
@@ -160,6 +160,7 @@ Sigue el canal de informacion para estar al dia de las novedades y actualizacion
 								? participant.split("@")[0]
 								: remoteJid.split("@")[0];
 						if (msg.key.remoteJid.includes("g.us")) {
+							await evalLevel(sock,msg, message);
 							const mentionMsg = message.split(" ");
 							for (let i = 0; i < mentionMsg.length; i++) {
 								if (mentionMsg[i].includes("@")) {
@@ -180,7 +181,7 @@ Sigue el canal de informacion para estar al dia de las novedades y actualizacion
 												},
 												{ quoted: msg },
 											);
-										}    
+										}
 									}
 								}
 							}
