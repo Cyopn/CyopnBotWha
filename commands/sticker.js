@@ -64,7 +64,6 @@ module.exports.run = async (sock, msg, args) => {
 				?.viewOnceMessageV2?.message?.videoMessage
 		: undefined;
 	if (m === undefined || m === null || type === undefined || type === null) {
-		console.log(`${m} - ${type} - ${args[0]} - ${args[1]}`);
 		sock.sendMessage(
 			msg.key.remoteJid,
 			{
