@@ -18,6 +18,16 @@ module.exports.run = async (sock, msg, args) => {
 			{ quoted: msg },
 		);
 	try {
+		if (
+			/^(niñ|bebe|baby|pene|vagina|desnud|boy|girl|dick|ass|sex|teta|pezon|porn|futan|penis|bob|breast|trans|cock|lesbian|nipple|pussy|erotic|boob|orgasm|seductive|nsfw|milf|mature|tit|culo)/i.test(
+				arg.toLocaleLowerCase(),
+			)
+		)
+			return await sock.sendMessage(
+				msg.key.remoteJid,
+				{ text: "No puedo generar imagenes con contenido explicito." },
+				{ quoted: msg },
+			);
 		const response = await axios.get(
 			`https://aemt.me/ai/text2img?text=${encodeURI(arg)}`,
 			{
