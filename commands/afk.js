@@ -94,5 +94,5 @@ module.exports.config = {
 	alias: `af`,
 	type: `misc`,
 	description: `Establece tu estado de inactividad.`,
-	fulldesc: ``,
+	fulldesc: `Comando para establecer tu estado de inactividad, puedes establecer una razon para que los demas sepan porque estas inactivo.`,
 };
