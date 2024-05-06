@@ -29,7 +29,7 @@ module.exports.run = async (sock, msg, args) => {
 	} else {
 		try {
 			r.results.forEach((rs) => {
-				if (rs.isVideo) {
+				if (rs.isVideo || rs.url.includes(".mp4")) {
 					sock.sendMessage(
 						msg.key.remoteJid,
 						{ video: { url: rs.url }, caption: "w" },
