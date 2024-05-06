@@ -40,10 +40,10 @@ module.exports.run = async (sock, msg, args) => {
 						: "";
 				}
 
-				yt.convertAudio(
+				yt.convertVideo(
 					{
 						url: arg,
-						itag: 140,
+						itag: 136,
 						directoryDownload: "./temp/",
 						title: ttl,
 					},
@@ -52,14 +52,13 @@ module.exports.run = async (sock, msg, args) => {
 						await sock.sendMessage(
 							msg.key.remoteJid,
 							{
-								audio: {
-									url: `./temp/${ttl}.mp3`,
+								video: {
+									url: `./temp/${ttl}.mp4`,
 								},
-								mimetype: "audio/mpeg",
 							},
 							{ quoted: msg },
 						);
-						fs.unlinkSync(`./temp/${ttl}.mp3`);
+						fs.unlinkSync(`./temp/${ttl}.mp4`);
 					},
 				);
 			} else {
@@ -93,10 +92,10 @@ module.exports.run = async (sock, msg, args) => {
 						: "";
 				}
 
-				yt.convertAudio(
+				yt.convertVideo(
 					{
 						url: rs.url,
-						itag: 140,
+						itag: 136,
 						directoryDownload: "./temp/",
 						title: ttl,
 					},
@@ -105,14 +104,13 @@ module.exports.run = async (sock, msg, args) => {
 						await sock.sendMessage(
 							msg.key.remoteJid,
 							{
-								audio: {
-									url: `./temp/${ttl}.mp3`,
+								video: {
+									url: `./temp/${ttl}.mp4`,
 								},
-								mimetype: "audio/mpeg",
 							},
 							{ quoted: msg },
 						);
-						fs.unlinkSync(`./temp/${ttl}.mp3`);
+						fs.unlinkSync(`./temp/${ttl}.mp4`);
 					},
 				);
 			} else {
@@ -145,9 +143,9 @@ module.exports.run = async (sock, msg, args) => {
 };
 
 module.exports.config = {
-	name: `play`,
-	alias: `p`,
+	name: "videodl",
+	alias: "vd",
 	type: `misc`,
-	description: `Descarga en forma de audio un video de youtube, ya sea con el enlace o una busqueda.`,
-	fulldesc: `Comando para descargar (en forma de audio) algun video de youtube, usa este comando escribiendo ${prefix}play (enlace o busqueda) o su alias, ${prefix}p (enlace o busqueda), recuerda que no es necesario escribir los corchetes. \nEste comando puede usarse en mensajes directos y/o grupos.`,
+	description: ``,
+	fulldesc: ``,
 };
