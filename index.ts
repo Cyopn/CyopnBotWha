@@ -153,7 +153,7 @@ Sigue el canal de informacion para estar al dia de las novedades y actualizacion
 							: quotedM?.videoMessage?.caption
 							? quotedM?.videoMessage?.caption.trim().split(" ")
 							: undefined;
-						const { remoteJid, participant } = msg.key;
+						/* const { remoteJid, participant } = msg.key;
 						const gid = remoteJid.split("@")[0];
 						const uid =
 							participant !== undefined
@@ -185,7 +185,7 @@ Sigue el canal de informacion para estar al dia de las novedades y actualizacion
 									}
 								}
 							}
-						}
+						} */
 						if (message.startsWith(prefix) && message.length > 1) {
 							const arg = message
 								.slice(prefix.length)
@@ -200,7 +200,7 @@ Sigue el canal de informacion para estar al dia de las novedades y actualizacion
 							if (cm >= 0) {
 								const commFil = command[cm];
 								const commFile = require(`./commands/${commFil}`);
-								if (commFile.config.name.includes("afk")) {
+								/* if (commFile.config.name.includes("afk")) {
 									if (msg.key.remoteJid.includes("g.us")) {
 										if (await solveAfk(gid, uid, "dep")) {
 											await sock.sendMessage(
@@ -212,7 +212,7 @@ Sigue el canal de informacion para estar al dia de las novedades y actualizacion
 											);
 										}
 									}
-								}
+								} */
 								try {
 									commFile.run(sock, msg, args);
 								} catch (e) {
@@ -234,7 +234,7 @@ Sigue el canal de informacion para estar al dia de las novedades y actualizacion
 								}
 							}
 						} else {
-							if (msg.key.remoteJid.includes("g.us")) {
+							/* if (msg.key.remoteJid.includes("g.us")) {
 								if (await solveAfk(gid, uid, "none")) {
 									await sock.sendMessage(
 										msg.key.remoteJid,
@@ -244,7 +244,7 @@ Sigue el canal de informacion para estar al dia de las novedades y actualizacion
 										{ quoted: msg },
 									);
 								}
-							}
+							} */
 						}
 					}
 				}
