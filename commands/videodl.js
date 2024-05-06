@@ -146,6 +146,6 @@ module.exports.config = {
 	name: "videodl",
 	alias: "vd",
 	type: `misc`,
-	description: ``,
-	fulldesc: ``,
+	description: `Descarga videos de youtube.`,
+	fulldesc: `Con este comando puedes descargar videos de youtube, solo necesitas proporcionar un enlace o una busqueda.`,
 };
