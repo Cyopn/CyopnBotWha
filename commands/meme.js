@@ -9,14 +9,27 @@ module.exports.run = async (sock, msg, args) => {
 		);
 		const posts = response.data.data.children;
 		const random = Math.floor(Math.random() * posts.length);
-		await sock.sendMessage(
-			msg.key.remoteJid,
-			{
-				caption: `${posts[random].data.title}\nPublicado por u/${posts[random].data.author}`,
-				image: { url: posts[random].data.url },
-			},
-			{ quoted: msg },
-		);
+		const post = posts[random].data;
+
+		if (post.is_video) {
+			await sock.sendMessage(
+				msg.key.remoteJid,
+				{
+					caption: `${post.title}\nPublicado por u/${post.author}`,
+					video: { url: post.media.reddit_video.fallback_url },
+				},
+				{ quoted: msg },
+			);
+		} else {
+			await sock.sendMessage(
+				msg.key.remoteJid,
+				{
+					caption: `${post.title}\nPublicado por u/${post.author}`,
+					image: { url: post.url },
+				},
+				{ quoted: msg },
+			);
+		}
 	} catch (e) {
 		const sub = msg.key.remoteJid.includes("g.us")
 			? await sock.groupMetadata(msg.key.remoteJid)

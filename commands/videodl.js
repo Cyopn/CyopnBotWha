@@ -11,7 +11,7 @@ module.exports.run = async (sock, msg, args) => {
 		return sock.sendMessage(
 			msg.key.remoteJid,
 			{
-				text: `Debes proporcionar un enlace, escribe ${prefix}play (enlace o busqueda), recuerda que no es necesario escribir los parentesis.`,
+				text: `Debes proporcionar un enlace, escribe ${prefix}videodl (enlace o busqueda), recuerda que no es necesario escribir los parentesis.`,
 			},
 			{ quoted: msg },
 		);

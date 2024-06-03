@@ -13,7 +13,7 @@ module.exports.run = async (sock, msg, args) => {
 			`https://aemt.me/download/tiktokslide?url=${encodeURI(arg)}`,
 		);
 		if (response.data.status) {
-			if (response.data.result.code === -1) {
+			if (response.data.result.totalSlide < 1) {
 				await sock.sendMessage(
 					msg.key.remoteJid,
 					{
@@ -22,13 +22,23 @@ module.exports.run = async (sock, msg, args) => {
 					{ quoted: msg },
 				);
 			} else {
-				response.data.result.data.images.forEach((rs) => {
+				response.data.result.images.forEach((rs) => {
 					sock.sendMessage(
 						msg.key.remoteJid,
 						{ image: { url: rs }, caption: "w" },
 						{ quoted: msg },
 					);
 				});
+				await sock.sendMessage(
+					msg.key.remoteJid,
+					{
+						audio: {
+							url: response.data.result.audio,
+						},
+						mimetype: "audio/mpeg",
+					},
+					{ quoted: msg },
+				);
 			}
 		} else {
 			await sock.sendMessage(
