@@ -29,7 +29,7 @@ module.exports.run = async (sock, msg, args) => {
 				{ quoted: msg },
 			);
 		const response = await axios.get(
-			`https://aemt.me/ai/text2img?text=${encodeURI(arg)}`,
+			`https://aemt.me/v6/text2img?text=${encodeURI(arg)}`,
 			{
 				responseType: "arraybuffer",
 			},
