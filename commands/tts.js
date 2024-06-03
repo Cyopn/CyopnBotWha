@@ -17,6 +17,7 @@ module.exports.run = async (sock, msg, args) => {
 			},
 			{ quoted: msg },
 		);
+	if (arg.length >=200) return sock.sendMessage(msg.key.remoteJid, { text: `El texto es demasiado largo, por favor intenta con un texto mas corto.` }, { quoted: msg }); 
 	if (arg.length === 1) {
 		const r = g.getAudioUrl(arg.join(" "), {
 			lang: "es",
@@ -81,7 +82,7 @@ module.exports.run = async (sock, msg, args) => {
 module.exports.config = {
 	name: `tts`,
 	alias: `tts`,
-	type: `ign`,
+	type: `misc`,
 	description: `Crea un audio segun el texto proporcionado y en un idioma preferido (español por defecto), usa ${prefix}lang para ver los idiomas permitidos.`,
 	fulldesc: `Comando para enviar audios en algun idioma preferido, usa este comando escribiendo ${prefix}tts [idioma (español por defecto)] [texto], recuerda que no es necesario escribir los corchetes, en caso de no escibir el idioma sera enviado en español. \nEste comando puede usarse en mensajes directos y/o grupos.`,
 };

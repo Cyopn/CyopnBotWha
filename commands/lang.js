@@ -155,9 +155,9 @@ module.exports.run = async (sock, msg, args) => {
 };
 
 module.exports.config = {
-	name: `lang`,
-	alias: `la`,
-	type: `ign`,
+    name: `lang`,
+    alias: `la`,
+    type:  `misc`,
 	description: `Muestra los idiomas disponibles para el comando ${prefix}tts, debe ser escrito correctamente (respetando mayusculas y minusculas).`,
 	fulldesc: `Comando para mostrar los idiomas compatibles para el comando ${prefix}tts. \nEste comando puede usarse en mensajes directos y/o grupos.`,
 };
