@@ -7,7 +7,7 @@ media/temp/output.json
 commands/test.js
 commandsold
 test.*
-path.js
+template.js
 output.json
 database
 auth_info
