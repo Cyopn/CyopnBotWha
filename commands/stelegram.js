@@ -48,24 +48,42 @@ module.exports.run = async (sock, msg, args) => {
 					`https://api.telegram.org/file/bot${token}/${file.data.result.file_path}`,
 					{ responseType: "arraybuffer" },
 				);
-				const url = await tgsConverter(st.data);
-				const buffer = await axios.get(url, {
-					responseType: "arraybuffer",
-				});
-				const result = await sticker(buffer.data).catch((e) => {
-					sock.sendMessage(`${owner}@s.whatsapp.net`, {
-						text: `Error en ${this.config.name0000} - ${
-							msg.key.remoteJid
-						}\n${String(e)}`,
+				let result;
+				if (file.data.result.file_path.endsWith(".tgs")) {
+					const url = await tgsConverter(st.data);
+					const buffer = await axios.get(url, {
+						responseType: "arraybuffer",
 					});
-					sock.sendMessage(
-						msg.key.remoteJid,
-						{
-							text: "Ocurrio un error inesperado.",
-						},
-						{ quoted: msg },
-					);
-				});
+					result = await sticker(buffer.data).catch((e) => {
+						sock.sendMessage(`${owner}@s.whatsapp.net`, {
+							text: `Error en ${this.config.name0000} - ${
+								msg.key.remoteJid
+							}\n${String(e)}`,
+						});
+						sock.sendMessage(
+							msg.key.remoteJid,
+							{
+								text: "Ocurrio un error inesperado.",
+							},
+							{ quoted: msg },
+						);
+					});
+				} else {
+					result = await sticker(st.data).catch((e) => {
+						sock.sendMessage(`${owner}@s.whatsapp.net`, {
+							text: `Error en ${this.config.name0000} - ${
+								msg.key.remoteJid
+							}\n${String(e)}`,
+						});
+						sock.sendMessage(
+							msg.key.remoteJid,
+							{
+								text: "Ocurrio un error inesperado.",
+							},
+							{ quoted: msg },
+						);
+					});
+				}
 				await sock
 					.sendMessage(
 						msg.key.remoteJid,
