@@ -1,0 +1,10 @@
+config:
+  target: "ws://localhost:8080"
+  phases:
+    - duration: 60
+      arrivalRate: 10
+scenarios:
+  - engine: "ws"
+    flow:
+      - send: { text: "play" }
+      - think: 1
