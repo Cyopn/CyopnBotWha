@@ -83,6 +83,6 @@ module.exports.config = {
 	name: `edchat`,
 	alias: `edc`,
 	type: `misc`,
-	description: `Cmabia el estado del chat a solo administradores o a todos los miembros del grupo.`,
+	description: `Cambia el estado del chat a solo administradores o a todos los miembros del grupo.`,
 	fulldesc: `Comnado para cambiar los ajustes del chat a solo administradores o a todos los miembros del grupo, escribe ${prefix}edchat.\nComando disponible solo para grupos.`,
 };

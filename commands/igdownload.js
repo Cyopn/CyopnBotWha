@@ -7,8 +7,8 @@ module.exports.run = async (sock, msg, args) => {
 		args[1] === undefined && args[0].join(" ").length >= 1
 			? args[0].join(" ")
 			: args[1] === undefined
-			? ""
-			: args[1].join(" ");
+				? ""
+				: args[1].join(" ");
 
 	if (!arg)
 		return sock.sendMessage(
@@ -31,47 +31,78 @@ module.exports.run = async (sock, msg, args) => {
 		);
 
 	try {
-		const result = await axios.get(
-			`https://aemt.me/download/igdl?url=${encodeURI(arg)}`,
+		const regExp = /\/p\/(.*?)\//;
+		const regExp2 = /\/reel\/(.*?)\//;
+		const shortcode = arg.match(regExp) === null ? arg.match(regExp2) : arg.match(regExp)
+		if (shortcode === null) return await sock.sendMessage(
+			msg.key.remoteJid,
+			{
+				text: "No se pudo encontrar el contenido.",
+			},
+			{ quoted: msg },
 		);
 
-		if (result.status) {
-			for await (i of result.data.result) {
-				if (i.url.includes("jpg")) {
-					sock.sendMessage(
+		const response = await axios.request({
+			method: 'GET',
+			url: 'https://instagram-scraper-2022.p.rapidapi.com/ig/post_info/',
+			params: {
+				shortcode: shortcode[1]
+			},
+			headers: {
+				'x-rapidapi-key': '38211cd4dcmsh34d9a30b672d1bfp1b3e3cjsna306af72a23a',
+				'x-rapidapi-host': 'instagram-scraper-2022.p.rapidapi.com'
+			}
+		});
+		if (!response.data.edge_sidecar_to_children) {
+			if (response.data.is_video) {
+				await sock.sendMessage(
+					msg.key.remoteJid,
+					{
+						caption: "w",
+						video: { url: response.data.video_url },
+					},
+					{ quoted: msg },
+				);
+			} else {
+				await sock.sendMessage(
+					msg.key.remoteJid,
+					{
+						caption: "w",
+						image: { url: response.data.display_url },
+					},
+					{ quoted: msg },
+				);
+			}
+		} else {
+			response.data.edge_sidecar_to_children.edges.forEach(async (edge) => {
+				if (edge.node.is_video) {
+					await sock.sendMessage(
 						msg.key.remoteJid,
 						{
 							caption: "w",
-							image: { url: i.url },
+							video: { url: edge.node.video_url },
 						},
 						{ quoted: msg },
 					);
 				} else {
-					sock.sendMessage(
+					await sock.sendMessage(
 						msg.key.remoteJid,
 						{
 							caption: "w",
-							video: { url: i.url },
+							image: { url: edge.node.display_url },
 						},
 						{ quoted: msg },
 					);
 				}
-			}
-		} else {
-			await sock.sendMessage(
-				msg.key.remoteJid,
-				{
-					text: `El servicio no esta disponible, Intenta mas tarde.`,
-				},
-				{ quoted: msg },
-			);
+			});
 		}
+
 	} catch (e) {
 		const sub = msg.key.remoteJid.includes("g.us")
 			? await sock.groupMetadata(msg.key.remoteJid)
 			: {
-					subject: msg.key.remoteJid.replace("@s.whatsapp.net", ""),
-			  };
+				subject: msg.key.remoteJid.replace("@s.whatsapp.net", ""),
+			};
 		await sock.sendMessage(`${owner}@s.whatsapp.net`, {
 			text: `Error en ${this.config.name} - ${sub.subject}\n${String(e)}`,
 		});
