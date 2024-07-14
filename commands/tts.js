@@ -1,8 +1,10 @@
 require("dotenv").config();
 const { prefix, owner } = process.env;
-const g = require("google-tts-api");
+const { createAudioFile } = require("simple-tts-mp3")
+const fs = require("fs");
 
 module.exports.run = async (sock, msg, args) => {
+	const lang = ["af", "sq", "de", "ar", "bn", "my", "bs", "bg", "km", "kn", "ca", "cs", "zh", "zh-TW", "si", "ko", "hr", "da", "sk", "es", "et", "fi", "fr", "el", "gu", "hi", "nl", "hu", "id", "en", "is", "it", "ja", "la", "lv", "ml", "ms", "mr", "ne", "no", "pl", "pt", "ro", "ru", "sr", "sw", "sv", "su", "tl", "th", "ta", "te", "tr", "uk", "ur", "vi"]
 	const arg =
 		args[1] === undefined && args[0].join(" ").length >= 1
 			? args[0]
@@ -17,67 +19,32 @@ module.exports.run = async (sock, msg, args) => {
 			},
 			{ quoted: msg },
 		);
-	if (arg.length >= 195) return sock.sendMessage(msg.key.remoteJid, { text: `El texto es demasiado largo, por favor intenta con un texto mas corto.` }, { quoted: msg });
-	if (arg.length === 1) {
-		const r = g.getAudioUrl(arg.join(" "), {
-			lang: "es",
-			slow: false,
-			host: "https://translate.google.com",
-		});
-		await sock
-			.sendMessage(
-				msg.key.remoteJid,
-				{
-					audio: { url: r },
-					mimetype: "audio/mpeg",
+	if (lang.indexOf(arg[0]) != -1) {
+		const file = await createAudioFile(arg.shift().join(" "), './temp/tts', lang.indexOf(arg[0]))
+		await sock.sendMessage(
+			msg.key.remoteJid,
+			{
+				audio: {
+					url: file,
 				},
-				{ quoted: msg },
-			)
-			.catch((e) => { });
+				mimetype: "audio/mpeg",
+			},
+			{ quoted: msg },
+		);
 	} else {
-		const l = arg.shift();
-		const t = arg.join(" ");
-		if (t.length >= 195) return sock.sendMessage(msg.key.remoteJid, { text: `El texto es demasiado largo, por favor intenta con un texto mas corto.` }, { quoted: msg });
-		const r = g.getAudioUrl(t, {
-			lang: l,
-			slow: false,
-			host: "https://translate.google.com",
-		});
-		await sock
-			.sendMessage(
-				msg.key.remoteJid,
-				{
-					audio: { url: r },
+		const file = await createAudioFile(arg.join(" "), './temp/tts', 'es')
+		await sock.sendMessage(
+			msg.key.remoteJid,
+			{
+				audio: {
+					url: file,
 				},
-				{ quoted: msg },
-			)
-			.catch((e) => {
-				console.log(e.code);
-				if (e.code === "ERR_BAD_REQUEST") {
-					const r = g.getAudioUrl(`${l} ${t}`, {
-						lang: "es",
-						slow: false,
-						host: "https://translate.google.com",
-					});
-					sock.sendMessage(
-						msg.key.remoteJid,
-						{
-							audio: { url: r },
-							mimetype: "audio/mpeg",
-						},
-						{ quoted: msg },
-					).catch((e) => {
-						sock.sendMessage(
-							msg.key.remoteJid,
-							{
-								text: `El servicio no esta disponible, Intenta mas tarde.`,
-							},
-							{ quoted: msg },
-						);
-					});
-				}
-			});
+				mimetype: "audio/mpeg",
+			},
+			{ quoted: msg },
+		);
 	}
+	fs.unlinkSync(`./temp/tts.mp3`);
 };
 
 module.exports.config = {
