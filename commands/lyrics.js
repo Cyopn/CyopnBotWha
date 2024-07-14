@@ -1,14 +1,14 @@
 require("dotenv").config();
 const { prefix, owner } = process.env;
-const { lyricsv2 } = require("@bochilteam/scraper");
+const { getLyrics } = require("../lib/functions");
 
 module.exports.run = async (sock, msg, args) => {
 	const arg =
 		args[1] === undefined && args[0].join(" ").length >= 1
 			? args[0].join(" ")
 			: args[1] === undefined
-			? ""
-			: args[1].join(" ");
+				? ""
+				: args[1].join(" ");
 	if (!arg)
 		return sock.sendMessage(
 			msg.key.remoteJid,
@@ -18,11 +18,11 @@ module.exports.run = async (sock, msg, args) => {
 			{ quoted: msg },
 		);
 	try {
-		const r = await lyricsv2(arg);
+		const r = await getLyrics(arg);
 		await sock.sendMessage(
 			msg.key.remoteJid,
 			{
-				text: r.lyrics,
+				text: `_*${r.title} - ${r.author}*_\n${r.lyrics}\nFuente: ${r.link}`,
 			},
 			{ quoted: msg },
 		);
@@ -30,8 +30,8 @@ module.exports.run = async (sock, msg, args) => {
 		const sub = msg.key.remoteJid.includes("g.us")
 			? await sock.groupMetadata(msg.key.remoteJid)
 			: {
-					subject: msg.key.remoteJid.replace("@s.whatsapp.net", ""),
-			  };
+				subject: msg.key.remoteJid.replace("@s.whatsapp.net", ""),
+			};
 		await sock.sendMessage(`${owner}@s.whatsapp.net`, {
 			text: `Error en ${this.config.name} - ${sub.subject}\n${String(e)}`,
 		});
