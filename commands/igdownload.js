@@ -1,6 +1,6 @@
 require("dotenv").config();
 const { prefix, owner } = process.env;
-const axios = require("axios").default;
+const ig = require("instagram-url-direct")
 
 module.exports.run = async (sock, msg, args) => {
 	const arg =
@@ -31,56 +31,15 @@ module.exports.run = async (sock, msg, args) => {
 		);
 
 	try {
-		const regExp = /\/p\/(.*?)\//;
-		const regExp2 = /\/reel\/(.*?)\//;
-		const shortcode = arg.match(regExp) === null ? arg.match(regExp2) : arg.match(regExp)
-		if (shortcode === null) return await sock.sendMessage(
-			msg.key.remoteJid,
-			{
-				text: "No se pudo encontrar el contenido.",
-			},
-			{ quoted: msg },
-		);
-
-		const response = await axios.request({
-			method: 'GET',
-			url: 'https://instagram-scraper-2022.p.rapidapi.com/ig/post_info/',
-			params: {
-				shortcode: shortcode[1]
-			},
-			headers: {
-				'x-rapidapi-key': '38211cd4dcmsh34d9a30b672d1bfp1b3e3cjsna306af72a23a',
-				'x-rapidapi-host': 'instagram-scraper-2022.p.rapidapi.com'
-			}
-		});
-		if (!response.data.edge_sidecar_to_children) {
-			if (response.data.is_video) {
-				await sock.sendMessage(
-					msg.key.remoteJid,
-					{
-						caption: "w",
-						video: { url: response.data.video_url },
-					},
-					{ quoted: msg },
-				);
-			} else {
-				await sock.sendMessage(
-					msg.key.remoteJid,
-					{
-						caption: "w",
-						image: { url: response.data.display_url },
-					},
-					{ quoted: msg },
-				);
-			}
-		} else {
-			response.data.edge_sidecar_to_children.edges.forEach(async (edge) => {
-				if (edge.node.is_video) {
+		const result = await ig(arg)
+		if (result.results_number > 0) {
+			result.url_list.forEach(async (rs) => {
+				if (rs.includes("jpg")) {
 					await sock.sendMessage(
 						msg.key.remoteJid,
 						{
 							caption: "w",
-							video: { url: edge.node.video_url },
+							image: { url: rs },
 						},
 						{ quoted: msg },
 					);
@@ -89,14 +48,21 @@ module.exports.run = async (sock, msg, args) => {
 						msg.key.remoteJid,
 						{
 							caption: "w",
-							image: { url: edge.node.display_url },
+							video: { url: rs },
 						},
 						{ quoted: msg },
 					);
 				}
-			});
+			})
+		} else {
+			await sock.sendMessage(
+				msg.key.remoteJid,
+				{
+					text: "No se encontro el contenido.",
+				},
+				{ quoted: msg },
+			);
 		}
-
 	} catch (e) {
 		const sub = msg.key.remoteJid.includes("g.us")
 			? await sock.groupMetadata(msg.key.remoteJid)

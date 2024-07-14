@@ -7,8 +7,8 @@ module.exports.run = async (sock, msg, args) => {
 		args[1] === undefined && args[0].join(" ").length >= 1
 			? args[0]
 			: args[1] === undefined
-			? ""
-			: args[1];
+				? ""
+				: args[1];
 	if (arg.length <= 0)
 		return sock.sendMessage(
 			msg.key.remoteJid,
@@ -17,7 +17,7 @@ module.exports.run = async (sock, msg, args) => {
 			},
 			{ quoted: msg },
 		);
-	if (arg.length >=200) return sock.sendMessage(msg.key.remoteJid, { text: `El texto es demasiado largo, por favor intenta con un texto mas corto.` }, { quoted: msg }); 
+	if (arg.length >= 195) return sock.sendMessage(msg.key.remoteJid, { text: `El texto es demasiado largo, por favor intenta con un texto mas corto.` }, { quoted: msg });
 	if (arg.length === 1) {
 		const r = g.getAudioUrl(arg.join(" "), {
 			lang: "es",
@@ -33,10 +33,11 @@ module.exports.run = async (sock, msg, args) => {
 				},
 				{ quoted: msg },
 			)
-			.catch((e) => {});
+			.catch((e) => { });
 	} else {
 		const l = arg.shift();
 		const t = arg.join(" ");
+		if (t.length >= 195) return sock.sendMessage(msg.key.remoteJid, { text: `El texto es demasiado largo, por favor intenta con un texto mas corto.` }, { quoted: msg });
 		const r = g.getAudioUrl(t, {
 			lang: l,
 			slow: false,

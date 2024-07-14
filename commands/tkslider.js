@@ -6,55 +6,46 @@ module.exports.run = async (sock, msg, args) => {
 		args[1] === undefined && args[0].join("").length >= 1
 			? args[0].join("")
 			: args[1] === undefined
-			? ""
-			: args[1].join("");
+				? ""
+				: args[1].join("");
 	try {
-		const response = await axios.get(
-			`https://aemt.me/download/tiktokslide?url=${encodeURI(arg)}`,
-		);
-		if (response.data.status) {
-			if (response.data.result.totalSlide < 1) {
-				await sock.sendMessage(
-					msg.key.remoteJid,
-					{
-						text: `El enlace no es valido o no no contiene imagenes.`,
-					},
-					{ quoted: msg },
-				);
-			} else {
-				response.data.result.images.forEach((rs) => {
-					sock.sendMessage(
-						msg.key.remoteJid,
-						{ image: { url: rs }, caption: "w" },
-						{ quoted: msg },
-					);
-				});
-				await sock.sendMessage(
-					msg.key.remoteJid,
-					{
-						audio: {
-							url: response.data.result.audio,
-						},
-						mimetype: "audio/mpeg",
-					},
-					{ quoted: msg },
-				);
+		const response = await axios.request({
+			method: 'GET',
+			url: 'https://tiktok-scraper7.p.rapidapi.com/',
+			params: {
+				url: arg,
+				hd: '1'
+			},
+			headers: {
+				'x-rapidapi-key': '38211cd4dcmsh34d9a30b672d1bfp1b3e3cjsna306af72a23a',
+				'x-rapidapi-host': 'tiktok-scraper7.p.rapidapi.com'
 			}
-		} else {
-			await sock.sendMessage(
-				msg.key.remoteJid,
-				{
-					text: `El servicio no esta disponible, Intenta mas tarde.`,
-				},
-				{ quoted: msg },
-			);
+		});
+		if (!response.data.data) return await sock.sendMessage(
+			msg.key.remoteJid,
+			{
+				text: "No se encontro el contenido.",
+			},
+			{ quoted: msg },
+		);
+		if (response.data.data.images) {
+			response.data.data.images.forEach(async (rs) => {
+				await sock.sendMessage(
+					msg.key.remoteJid,
+					{
+						caption: "w",
+						image: { url: rs },
+					},
+					{ quoted: msg },
+				);
+			})
 		}
 	} catch (e) {
 		const sub = msg.key.remoteJid.includes("g.us")
 			? await sock.groupMetadata(msg.key.remoteJid)
 			: {
-					subject: msg.key.remoteJid.replace("@s.whatsapp.net", ""),
-			  };
+				subject: msg.key.remoteJid.replace("@s.whatsapp.net", ""),
+			};
 		await sock.sendMessage(`${owner}@s.whatsapp.net`, {
 			text: `Error en ${this.config.name} - ${sub.subject}\n${String(e)}`,
 		});
