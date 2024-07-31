@@ -20,7 +20,16 @@ module.exports.run = async (sock, msg, args) => {
 			{ quoted: msg },
 		);
 	if (lang.indexOf(arg[0]) != -1) {
-		const file = await createAudioFile(arg.shift().join(" "), './temp/tts', lang.indexOf(arg[0]))
+		const ln = arg.shift()
+		if (arg.length <= 0)
+			return sock.sendMessage(
+				msg.key.remoteJid,
+				{
+					text: `Es necesario proporcionar un texto, escribe ${prefix}tts [idioma (español por defecto)] [texto], recuerda que no es necesario escribir los corchetes, si tienes dudas sobre este comando escribe ${prefix}help tts.`,
+				},
+				{ quoted: msg },
+			);
+		const file = await createAudioFile(arg.join(" "), './temp/tts', ln)
 		await sock.sendMessage(
 			msg.key.remoteJid,
 			{
