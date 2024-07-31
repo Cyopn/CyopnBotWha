@@ -2,14 +2,15 @@ require("dotenv").config();
 const { prefix, /*zenKey,*/ owner } = process.env;
 //const axios = require("axios");
 const { tiktokdl } = require("@bochilteam/scraper");
+const axios = require('axios').default;
 
 module.exports.run = async (sock, msg, args) => {
 	const arg =
 		args[1] === undefined && args[0].join(" ").length >= 1
 			? args[0].join(" ")
 			: args[1] === undefined
-			? ""
-			: args[1].join(" ");
+				? ""
+				: args[1].join(" ");
 	if (!arg)
 		return sock.sendMessage(
 			msg.key.remoteJid,
@@ -18,17 +19,21 @@ module.exports.run = async (sock, msg, args) => {
 			},
 			{ quoted: msg },
 		);
-	/*
-	Usando API Rest 
-	const r = await axios.get(
-		`https://api.zahwazein.xyz/downloader/musically?apikey=${zenKey}&url=${arg}`,
-	); */
-	const r = await tiktokdl(arg).catch((e) => {});
-	if (r === undefined) {
+	let formdata = new FormData();
+	formdata.append("url", arg);
+	let response = await axios.request({
+		url: "https://api.tikmate.app/api/lookup",
+		method: "POST",
+		headers: {
+			"Accept": "*/*",
+		},
+		data: formdata,
+	}).catch((e) => { return e.response.data });
+	if (response.success === false) {
 		await sock.sendMessage(
 			msg.key.remoteJid,
 			{
-				text: `El enlace proporcionado no es valido.`,
+				text: `No se pudo encontrar el contenido.`,
 			},
 			{ quoted: msg },
 		);
@@ -36,18 +41,18 @@ module.exports.run = async (sock, msg, args) => {
 		try {
 			await sock.sendMessage(
 				msg.key.remoteJid,
-				{ video: { url: r.video.no_watermark_hd }, caption: "w" },
+				{ video: { url: `https://tikmate.app/download/${response.data.token}/${response.data.id}.mp4?hd=1` }, caption: "w" },
 				{ quoted: msg },
 			);
 		} catch (e) {
 			const sub = msg.key.remoteJid.includes("g.us")
 				? await sock.groupMetadata(msg.key.remoteJid)
 				: {
-						subject: msg.key.remoteJid.replace(
-							"@s.whatsapp.net",
-							"",
-						),
-				  };
+					subject: msg.key.remoteJid.replace(
+						"@s.whatsapp.net",
+						"",
+					),
+				};
 			await sock.sendMessage(`${owner}@s.whatsapp.net`, {
 				text: `Error en ${this.config.name} - ${sub.subject}\n${String(
 					e,
@@ -62,6 +67,7 @@ module.exports.run = async (sock, msg, args) => {
 			);
 		}
 	}
+
 };
 
 module.exports.config = {
