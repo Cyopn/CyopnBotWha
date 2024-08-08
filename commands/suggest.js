@@ -16,8 +16,7 @@ module.exports.run = async (sock, msg, args) => {
 					: remoteJid.split("@")[0];
 			const date = new Date();
 			await db.set(
-				`${gid}.${uid}-${date.getDate()}/${
-					date.getUTCMonth() + 1
+				`${gid}.${uid}-${date.getDate()}/${date.getUTCMonth() + 1
 				}-${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`,
 				{
 					suggest: args[0].join(" "),
@@ -47,8 +46,8 @@ module.exports.run = async (sock, msg, args) => {
 		const sub = msg.key.remoteJid.includes("g.us")
 			? await sock.groupMetadata(msg.key.remoteJid)
 			: {
-					subject: msg.key.remoteJid.replace("@s.whatsapp.net", ""),
-			  };
+				subject: msg.key.remoteJid.replace("@s.whatsapp.net", ""),
+			};
 		await sock.sendMessage(`${owner}@s.whatsapp.net`, {
 			text: `Error en ${this.config.name} - ${sub.subject}\n${String(e)}`,
 		});

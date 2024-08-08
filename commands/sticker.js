@@ -6,63 +6,63 @@ const { downloadContentFromMessage } = require("@whiskeysockets/baileys");
 module.exports.run = async (sock, msg, args) => {
 	const type =
 		msg.message.imageMessage ||
-		msg.message?.extendedTextMessage?.contextInfo?.quotedMessage
-			?.imageMessage ||
-		msg.message?.viewOnceMessage?.message?.imageMessage ||
-		msg.message?.viewOnceMessageV2?.message?.imageMessage ||
-		msg.message?.extendedTextMessage?.contextInfo?.quotedMessage
-			?.viewOnceMessage?.message?.imageMessage ||
-		msg.message?.extendedTextMessage?.contextInfo?.quotedMessage
-			?.viewOnceMessageV2?.message?.imageMessage
+			msg.message?.extendedTextMessage?.contextInfo?.quotedMessage
+				?.imageMessage ||
+			msg.message?.viewOnceMessage?.message?.imageMessage ||
+			msg.message?.viewOnceMessageV2?.message?.imageMessage ||
+			msg.message?.extendedTextMessage?.contextInfo?.quotedMessage
+				?.viewOnceMessage?.message?.imageMessage ||
+			msg.message?.extendedTextMessage?.contextInfo?.quotedMessage
+				?.viewOnceMessageV2?.message?.imageMessage
 			? "image"
 			: msg.message?.videoMessage ||
-			  msg.message?.extendedTextMessage?.contextInfo?.quotedMessage
+				msg.message?.extendedTextMessage?.contextInfo?.quotedMessage
 					?.videoMessage ||
-			  msg.message?.viewOnceMessage?.message?.videoMessage ||
-			  msg.message?.viewOnceMessageV2?.message?.videoMessage ||
-			  msg.message?.extendedTextMessage?.contextInfo?.quotedMessage
+				msg.message?.viewOnceMessage?.message?.videoMessage ||
+				msg.message?.viewOnceMessageV2?.message?.videoMessage ||
+				msg.message?.extendedTextMessage?.contextInfo?.quotedMessage
 					?.viewOnceMessage?.message?.videoMessage ||
-			  msg.message?.extendedTextMessage?.contextInfo?.quotedMessage
+				msg.message?.extendedTextMessage?.contextInfo?.quotedMessage
 					?.viewOnceMessageV2?.message?.videoMessage
-			? "video"
-			: undefined;
+				? "video"
+				: undefined;
 	const m = msg.message?.imageMessage
 		? msg.message?.imageMessage
 		: msg.message?.extendedTextMessage?.contextInfo?.quotedMessage
+			?.imageMessage
+			? msg.message?.extendedTextMessage?.contextInfo?.quotedMessage
 				?.imageMessage
-		? msg.message?.extendedTextMessage?.contextInfo?.quotedMessage
-				?.imageMessage
-		: msg.message?.videoMessage
-		? msg.message?.videoMessage
-		: msg.message?.extendedTextMessage?.contextInfo?.quotedMessage
-				?.videoMessage
-		? msg.message?.extendedTextMessage?.contextInfo?.quotedMessage
-				?.videoMessage
-		: msg.message?.viewOnceMessage?.message?.imageMessage
-		? msg.message?.viewOnceMessage?.message?.imageMessage
-		: msg.message?.viewOnceMessage?.message?.videoMessage
-		? msg.message?.viewOnceMessage?.message?.videoMessage
-		: msg.message?.viewOnceMessageV2?.message?.imageMessage
-		? msg.message?.viewOnceMessageV2?.message?.imageMessage
-		: msg.message?.viewOnceMessageV2?.message?.videoMessage
-		? msg.message?.viewOnceMessageV2?.message?.videoMessage
-		: msg.message?.extendedTextMessage?.contextInfo?.quotedMessage
-				?.viewOnceMessage?.message?.imageMessage
-		? msg.message?.extendedTextMessage?.contextInfo?.quotedMessage
-				?.viewOnceMessage?.message?.imageMessage
-		: msg.message?.extendedTextMessage?.contextInfo?.quotedMessage
-				?.viewOnceMessage?.message?.videoMessage
-		? msg.message?.extendedTextMessage?.contextInfo?.quotedMessage
-				?.viewOnceMessage?.message?.videoMessage
-		: msg.message?.extendedTextMessage?.contextInfo?.quotedMessage
-				?.viewOnceMessageV2?.message?.imageMessage
-		? msg.message?.extendedTextMessage?.contextInfo?.quotedMessage
-				?.viewOnceMessageV2?.message?.imageMessage
-		: msg.message?.extendedTextMessage?.contextInfo?.quotedMessage
-				?.viewOnceMessageV2?.message?.videoMessage
-		? msg.message?.extendedTextMessage?.contextInfo?.quotedMessage
-				?.viewOnceMessageV2?.message?.videoMessage
-		: undefined;
+			: msg.message?.videoMessage
+				? msg.message?.videoMessage
+				: msg.message?.extendedTextMessage?.contextInfo?.quotedMessage
+					?.videoMessage
+					? msg.message?.extendedTextMessage?.contextInfo?.quotedMessage
+						?.videoMessage
+					: msg.message?.viewOnceMessage?.message?.imageMessage
+						? msg.message?.viewOnceMessage?.message?.imageMessage
+						: msg.message?.viewOnceMessage?.message?.videoMessage
+							? msg.message?.viewOnceMessage?.message?.videoMessage
+							: msg.message?.viewOnceMessageV2?.message?.imageMessage
+								? msg.message?.viewOnceMessageV2?.message?.imageMessage
+								: msg.message?.viewOnceMessageV2?.message?.videoMessage
+									? msg.message?.viewOnceMessageV2?.message?.videoMessage
+									: msg.message?.extendedTextMessage?.contextInfo?.quotedMessage
+										?.viewOnceMessage?.message?.imageMessage
+										? msg.message?.extendedTextMessage?.contextInfo?.quotedMessage
+											?.viewOnceMessage?.message?.imageMessage
+										: msg.message?.extendedTextMessage?.contextInfo?.quotedMessage
+											?.viewOnceMessage?.message?.videoMessage
+											? msg.message?.extendedTextMessage?.contextInfo?.quotedMessage
+												?.viewOnceMessage?.message?.videoMessage
+											: msg.message?.extendedTextMessage?.contextInfo?.quotedMessage
+												?.viewOnceMessageV2?.message?.imageMessage
+												? msg.message?.extendedTextMessage?.contextInfo?.quotedMessage
+													?.viewOnceMessageV2?.message?.imageMessage
+												: msg.message?.extendedTextMessage?.contextInfo?.quotedMessage
+													?.viewOnceMessageV2?.message?.videoMessage
+													? msg.message?.extendedTextMessage?.contextInfo?.quotedMessage
+														?.viewOnceMessageV2?.message?.videoMessage
+													: undefined;
 	if (m === undefined || m === null || type === undefined || type === null) {
 		sock.sendMessage(
 			msg.key.remoteJid,
@@ -75,9 +75,8 @@ module.exports.run = async (sock, msg, args) => {
 		try {
 			const w = await downloadContentFromMessage(m, type).catch((e) => {
 				sock.sendMessage(`${owner}@s.whatsapp.net`, {
-					text: `Error en ${this.config.name} - ${
-						msg.key.remoteJid
-					}\n${String(e)}`,
+					text: `Error en ${this.config.name} - ${msg.key.remoteJid
+						}\n${String(e)}`,
 				});
 				sock.sendMessage(
 					msg.key.remoteJid,
@@ -93,9 +92,8 @@ module.exports.run = async (sock, msg, args) => {
 			}
 			let s = await sticker(buffer).catch((e) => {
 				sock.sendMessage(`${owner}@s.whatsapp.net`, {
-					text: `Error en ${this.config.name0000} - ${
-						msg.key.remoteJid
-					}\n${String(e)}`,
+					text: `Error en ${this.config.name0000} - ${msg.key.remoteJid
+						}\n${String(e)}`,
 				});
 				sock.sendMessage(
 					msg.key.remoteJid,
@@ -123,11 +121,11 @@ module.exports.run = async (sock, msg, args) => {
 			const sub = msg.key.remoteJid.includes("g.us")
 				? await sock.groupMetadata(msg.key.remoteJid)
 				: {
-						subject: msg.key.remoteJid.replace(
-							"@s.whatsapp.net",
-							"",
-						),
-				  };
+					subject: msg.key.remoteJid.replace(
+						"@s.whatsapp.net",
+						"",
+					),
+				};
 			await sock.sendMessage(`${owner}@s.whatsapp.net`, {
 				text: `Error en ${this.config.name} - ${sub.subject}\n${String(
 					e,

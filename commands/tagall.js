@@ -8,7 +8,7 @@ module.exports.run = async (sock, msg, args) => {
 		args[1] === undefined && args[0].join(" ").length >= 1
 			? args[0].join(" ")
 			: args[1] === undefined
-			? ""
+				? ""
 				: args[1].join(" ");
 	if (!msg.key.remoteJid.includes("g.us"))
 		return sock.sendMessage(
@@ -62,8 +62,8 @@ module.exports.run = async (sock, msg, args) => {
 		const sub = msg.key.remoteJid.includes("g.us")
 			? await sock.groupMetadata(msg.key.remoteJid)
 			: {
-					subject: msg.key.remoteJid.replace("@s.whatsapp.net", ""),
-			  };
+				subject: msg.key.remoteJid.replace("@s.whatsapp.net", ""),
+			};
 		await sock.sendMessage(`${owner}@s.whatsapp.net`, {
 			text: `Error en ${this.config.name} - ${sub.subject}\n${String(e)}`,
 		});

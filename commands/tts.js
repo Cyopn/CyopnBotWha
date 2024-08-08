@@ -53,7 +53,9 @@ module.exports.run = async (sock, msg, args) => {
 			{ quoted: msg },
 		);
 	}
-	fs.unlinkSync(`./temp/tts.mp3`);
+	while (fs.existsSync(`./temp/tts.mp3`)) {
+		fs.unlinkSync(`./temp/tts.mp3`);
+	}
 };
 
 module.exports.config = {

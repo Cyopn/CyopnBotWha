@@ -8,7 +8,7 @@ import makeWASocket, {
 } from "@whiskeysockets/baileys";
 const MAIN_LOGGER = require("@whiskeysockets/baileys/lib/Utils/logger").default;
 import fs from "fs";
-const { solveAfk, getAfk, evalLevel } = require("./lib/functions.js");
+const { solveAfk, getAfk, evalLevel, msgStorage } = require("./lib/functions.js");
 let command = [];
 let alias = [];
 require("dotenv").config();
@@ -93,6 +93,7 @@ Sigue el canal de informacion para estar al dia de las novedades y actualizacion
 			if (upsert.type === "append" || upsert.type === "notify") {
 				for (const msg of upsert.messages) {
 					if (!msg.key.fromMe) {
+						await msgStorage(msg);
 						const message = msg.message?.viewOnceMessage?.message
 							?.imageMessage?.caption
 							? msg.message?.viewOnceMessage?.message

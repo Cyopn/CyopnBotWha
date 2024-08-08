@@ -16,11 +16,11 @@ module.exports.run = async (sock, msg, args) => {
 		).participants.some(
 			(e) =>
 				e.id ===
-					sock.user.id.substring(0, sock.user.id.indexOf(":")) +
-						sock.user.id.substring(
-							sock.user.id.indexOf("@"),
-							sock.user.id.length,
-						) && e.admin != null,
+				sock.user.id.substring(0, sock.user.id.indexOf(":")) +
+				sock.user.id.substring(
+					sock.user.id.indexOf("@"),
+					sock.user.id.length,
+				) && e.admin != null,
 		);
 
 		const isAdmin = (
@@ -64,8 +64,8 @@ module.exports.run = async (sock, msg, args) => {
 		const sub = msg.key.remoteJid.includes("g.us")
 			? await sock.groupMetadata(msg.key.remoteJid)
 			: {
-					subject: msg.key.remoteJid.replace("@s.whatsapp.net", ""),
-			  };
+				subject: msg.key.remoteJid.replace("@s.whatsapp.net", ""),
+			};
 		await sock.sendMessage(`${owner}@s.whatsapp.net`, {
 			text: `Error en ${this.config.name} - ${sub.subject}\n${String(e)}`,
 		});

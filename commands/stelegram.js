@@ -8,8 +8,8 @@ module.exports.run = async (sock, msg, args) => {
 		args[1] === undefined && args[0].join("").length >= 1
 			? args[0].join("")
 			: args[1] === undefined
-			? ""
-			: args[1].join("");
+				? ""
+				: args[1].join("");
 	if (!arg)
 		return await sock.sendMessage(
 			msg.key.remoteJid,
@@ -56,9 +56,8 @@ module.exports.run = async (sock, msg, args) => {
 					});
 					result = await sticker(buffer.data).catch((e) => {
 						sock.sendMessage(`${owner}@s.whatsapp.net`, {
-							text: `Error en ${this.config.name0000} - ${
-								msg.key.remoteJid
-							}\n${String(e)}`,
+							text: `Error en ${this.config.name0000} - ${msg.key.remoteJid
+								}\n${String(e)}`,
 						});
 						sock.sendMessage(
 							msg.key.remoteJid,
@@ -71,9 +70,8 @@ module.exports.run = async (sock, msg, args) => {
 				} else {
 					result = await sticker(st.data).catch((e) => {
 						sock.sendMessage(`${owner}@s.whatsapp.net`, {
-							text: `Error en ${this.config.name0000} - ${
-								msg.key.remoteJid
-							}\n${String(e)}`,
+							text: `Error en ${this.config.name0000} - ${msg.key.remoteJid
+								}\n${String(e)}`,
 						});
 						sock.sendMessage(
 							msg.key.remoteJid,
@@ -108,8 +106,8 @@ module.exports.run = async (sock, msg, args) => {
 		const sub = msg.key.remoteJid.includes("g.us")
 			? await sock.groupMetadata(msg.key.remoteJid)
 			: {
-					subject: msg.key.remoteJid.replace("@s.whatsapp.net", ""),
-			  };
+				subject: msg.key.remoteJid.replace("@s.whatsapp.net", ""),
+			};
 		await sock.sendMessage(`${owner}@s.whatsapp.net`, {
 			text: `Error en ${this.config.name} - ${sub.subject}\n${String(e)}`,
 		});
