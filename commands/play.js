@@ -40,28 +40,31 @@ module.exports.run = async (sock, msg, args) => {
 							: "";
 				}
 
-				yt.convertAudio(
+				const data = await yt.Audio({
+					url: arg,
+					directory: "./temp/",
+					title: ttl,
+					onDownloading: (progress) => { }
+				});
+
+				if (data.error) return await sock.sendMessage(
+					msg.key.remoteJid,
 					{
-						url: arg,
-						itag: 140,
-						directoryDownload: "./temp/",
-						title: ttl,
+						text: `Ocurrio un error al descargar el audio.`,
 					},
-					(t) => { },
-					async () => {
-						await sock.sendMessage(
-							msg.key.remoteJid,
-							{
-								audio: {
-									url: `./temp/${ttl}.mp3`,
-								},
-								mimetype: "audio/mpeg",
-							},
-							{ quoted: msg },
-						);
-						fs.unlinkSync(`./temp/${ttl}.mp3`);
-					},
+					{ quoted: msg },
 				);
+
+				await sock.sendMessage(
+					msg.key.remoteJid,
+					{
+						document: fs.readFileSync(`./temp/${ttl}.mp3`),
+						fileName: `${ttl}.mp3`,
+						mimetype: "audio/mpeg",
+					},
+					{ quoted: msg },
+				);
+				if (fs.existsSync(`./temp/${ttl}.mp3`)) fs.unlinkSync(`./temp/${ttl}.mp3`);
 			} else {
 				await sock.sendMessage(
 					msg.key.remoteJid,
@@ -93,28 +96,31 @@ module.exports.run = async (sock, msg, args) => {
 							: "";
 				}
 
-				yt.convertAudio(
+				const data = await yt.Audio({
+					url: rs.url,
+					directory: "./temp/",
+					title: ttl,
+					onDownloading: (progress) => { }
+				});
+
+				if (data.error) return await sock.sendMessage(
+					msg.key.remoteJid,
 					{
-						url: rs.url,
-						itag: 140,
-						directoryDownload: "./temp/",
-						title: ttl,
+						text: `Ocurrio un error al descargar el audio.`,
 					},
-					(t) => { },
-					async () => {
-						await sock.sendMessage(
-							msg.key.remoteJid,
-							{
-								audio: {
-									url: `./temp/${ttl}.mp3`,
-								},
-								mimetype: "audio/mpeg",
-							},
-							{ quoted: msg },
-						);
-						fs.unlinkSync(`./temp/${ttl}.mp3`);
-					},
+					{ quoted: msg },
 				);
+
+				await sock.sendMessage(
+					msg.key.remoteJid,
+					{
+						document: fs.readFileSync(`./temp/${ttl}.mp3`),
+						fileName: `${ttl}.mp3`,
+						mimetype: "audio/mpeg",
+					},
+					{ quoted: msg },
+				);
+				if (fs.existsSync(`./temp/${ttl}.mp3`)) fs.unlinkSync(`./temp/${ttl}.mp3`);
 			} else {
 				await sock.sendMessage(
 					msg.key.remoteJid,

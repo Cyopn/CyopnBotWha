@@ -36,31 +36,35 @@ module.exports.run = async (sock, msg, args) => {
 					ttl += title[i].match(/([A-Za-z])/g)
 						? title[i]
 						: title[i] === " "
-						? " "
-						: "";
+							? " "
+							: "";
 				}
 
-				yt.convertVideo(
+				const data = await yt.Video({
+					url: arg,
+					directory: "./temp/",
+					title: ttl,
+					onDownloading: (progress) => { }
+				});
+
+				if (data.error) return await sock.sendMessage(
+					msg.key.remoteJid,
 					{
-						url: arg,
-						itag: 136,
-						directoryDownload: "./temp/",
-						title: ttl,
+						text: `Ocurrio un error al descargar el video.`,
 					},
-					(t) => {},
-					async () => {
-						await sock.sendMessage(
-							msg.key.remoteJid,
-							{
-								video: {
-									url: `./temp/${ttl}.mp4`,
-								},
-							},
-							{ quoted: msg },
-						);
-						fs.unlinkSync(`./temp/${ttl}.mp4`);
-					},
+					{ quoted: msg },
 				);
+
+				await sock.sendMessage(
+					msg.key.remoteJid,
+					{
+						document: fs.readFileSync(`./temp/${ttl}.mp4`),
+						fileName: `${ttl}.mp4`,
+						mimetype: "video/mp4",
+					},
+					{ quoted: msg },
+				);
+				if (fs.existsSync(`./temp/${ttl}.mp4`)) fs.unlinkSync(`./temp/${ttl}.mp4`);
 			} else {
 				await sock.sendMessage(
 					msg.key.remoteJid,
@@ -88,31 +92,35 @@ module.exports.run = async (sock, msg, args) => {
 					ttl += title[i].match(/([A-Za-z])/g)
 						? title[i]
 						: title[i] === " "
-						? " "
-						: "";
+							? " "
+							: "";
 				}
 
-				yt.convertVideo(
+				const data = await yt.Video({
+					url: arg,
+					directory: "./temp/",
+					title: ttl,
+					onDownloading: (progress) => { }
+				});
+
+				if (data.error) return await sock.sendMessage(
+					msg.key.remoteJid,
 					{
-						url: rs.url,
-						itag: 136,
-						directoryDownload: "./temp/",
-						title: ttl,
+						text: `Ocurrio un error al descargar el video.`,
 					},
-					(t) => {},
-					async () => {
-						await sock.sendMessage(
-							msg.key.remoteJid,
-							{
-								video: {
-									url: `./temp/${ttl}.mp4`,
-								},
-							},
-							{ quoted: msg },
-						);
-						fs.unlinkSync(`./temp/${ttl}.mp4`);
-					},
+					{ quoted: msg },
 				);
+
+				await sock.sendMessage(
+					msg.key.remoteJid,
+					{
+						document: fs.readFileSync(`./temp/${ttl}.mp4`),
+						fileName: `${ttl}.mp4`,
+						mimetype: "video/mp4",
+					},
+					{ quoted: msg },
+				);
+				if (fs.existsSync(`./temp/${ttl}.mp4`)) fs.unlinkSync(`./temp/${ttl}.mp4`);
 			} else {
 				await sock.sendMessage(
 					msg.key.remoteJid,
@@ -127,8 +135,8 @@ module.exports.run = async (sock, msg, args) => {
 		const sub = msg.key.remoteJid.includes("g.us")
 			? await sock.groupMetadata(msg.key.remoteJid)
 			: {
-					subject: msg.key.remoteJid.replace("@s.whatsapp.net", ""),
-			  };
+				subject: msg.key.remoteJid.replace("@s.whatsapp.net", ""),
+			};
 		await sock.sendMessage(`${owner}@s.whatsapp.net`, {
 			text: `Error en ${this.config.name} - ${sub.subject}\n${String(e)}`,
 		});
