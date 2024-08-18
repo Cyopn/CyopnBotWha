@@ -37,7 +37,7 @@ module.exports.run = async (sock, msg, args) => {
 				: msg.message?.extendedTextMessage?.contextInfo?.quotedMessage
 					?.videoMessage
 					? msg.message?.extendedTextMessage?.contextInfo?.quotedMessage
-						?.videoMessage
+						?.videoMessage/* 
 					: msg.message?.viewOnceMessage?.message?.imageMessage
 						? msg.message?.viewOnceMessage?.message?.imageMessage
 						: msg.message?.viewOnceMessage?.message?.videoMessage
@@ -61,8 +61,8 @@ module.exports.run = async (sock, msg, args) => {
 												: msg.message?.extendedTextMessage?.contextInfo?.quotedMessage
 													?.viewOnceMessageV2?.message?.videoMessage
 													? msg.message?.extendedTextMessage?.contextInfo?.quotedMessage
-														?.viewOnceMessageV2?.message?.videoMessage
-													: undefined;
+														?.viewOnceMessageV2?.message?.videoMessage */
+					: undefined;
 	if (m === undefined || m === null || type === undefined || type === null) {
 		sock.sendMessage(
 			msg.key.remoteJid,
