@@ -23,7 +23,7 @@ module.exports.run = async (sock, msg, args) => {
 			const { status, title, author, error, time, thumb } =
 				await ytSolver(arg);
 			if (status === 200) {
-				await sock.sendMessage(
+				const edit = await sock.sendMessage(
 					msg.key.remoteJid,
 					{
 						text: `Inicia la descarga de *${title}*\nCanal/Autor: ${author}\nDuracion: ${time} minutos`,
@@ -44,7 +44,9 @@ module.exports.run = async (sock, msg, args) => {
 					url: arg,
 					directory: "./temp/",
 					title: ttl,
-					onDownloading: (progress) => { }
+					onDownloading: async (progress) => {
+						//await sock.sendMessage(msg.key.remoteJid, { edit: edit.key, text: `Inicia la descarga de *${title}*\nCanal/Autor: ${author}\nDuracion: ${time} minutos\nProgreso: ${progress.percentage.toFixed(2) === 100.00 ? progress.percentage.toFixed(2) + "%" : "Completo"}` })
+					}
 				});
 
 				if (data.error) return await sock.sendMessage(
@@ -77,9 +79,9 @@ module.exports.run = async (sock, msg, args) => {
 		} else {
 			const [rs] = await yts.search(arg, { limit: 1 });
 			const { status, title, author, error, time, thumb } =
-				await ytSolver(rs.url);
+				await ytSolver(`https://www.youtube.com/watch?v=${rs.id}`);
 			if (status === 200) {
-				await sock.sendMessage(
+				const edit = await sock.sendMessage(
 					msg.key.remoteJid,
 					{
 						text: `Inicia la descarga de *${title}*\nCanal/Autor: ${author}\nDuracion: ${time} minutos`,
@@ -97,10 +99,12 @@ module.exports.run = async (sock, msg, args) => {
 				}
 
 				const data = await yt.Audio({
-					url: rs.url,
+					url: `https://www.youtube.com/watch?v=${rs.id}`,
 					directory: "./temp/",
 					title: ttl,
-					onDownloading: (progress) => { }
+					onDownloading: async (progress) => {
+						//await sock.sendMessage(msg.key.remoteJid, { edit: edit.key, text: `Inicia la descarga de *${title}*\nCanal/Autor: ${author}\nDuracion: ${time} minutos\nProgreso: ${progress.percentage.toFixed(2) === 100.00 ? progress.percentage.toFixed(2) + "%" : "Completo"}` })
+					}
 				});
 
 				if (data.error) return await sock.sendMessage(

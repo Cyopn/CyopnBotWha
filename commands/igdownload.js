@@ -1,6 +1,6 @@
 require("dotenv").config();
 const { prefix, owner } = process.env;
-const ig = require("instagram-url-direct")
+const { getInstagramUrl } = require("../lib/functions")
 
 module.exports.run = async (sock, msg, args) => {
 	const arg =
@@ -31,7 +31,7 @@ module.exports.run = async (sock, msg, args) => {
 		);
 
 	try {
-		const result = await ig(arg)
+		const result = await getInstagramUrl(arg)
 		if (result.results_number > 0) {
 			result.url_list.forEach(async (rs) => {
 				if (rs.includes("jpg")) {
