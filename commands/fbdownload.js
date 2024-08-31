@@ -1,6 +1,6 @@
 require("dotenv").config();
 const { prefix, owner } = process.env;
-const { facebookdlv2 } = require("@bochilteam/scraper");
+const { fbdl } = require("ruhend-scraper")
 
 module.exports.run = async (sock, msg, args) => {
 	const arg =
@@ -26,52 +26,38 @@ module.exports.run = async (sock, msg, args) => {
 			},
 			{ quoted: msg },
 		);
-	const r = await facebookdlv2(arg).catch((e) => { });
-	if (r === undefined) {
+
+	try {
+		const r = await fbdl(arg);
+		if (!r.status) return await sock.sendMessage(msg.key.remoteJid, { text: "No se encontro el contenido." }, { quoted: msg });
+		const data = r.data.find(i => i.resolution === "720p (HD)") || r.data.find(i => i.resolution === "360p (SD)");
+		if (!data) return await sock.sendMessage(msg.key.remoteJid, { text: "No se encontro el contenido." }, { quoted: msg });
+		await sock.sendMessage(
+			msg.key.remoteJid,
+			{ video: { url: data.url }, caption: "w" },
+			{ quoted: msg },
+		);
+	} catch (e) {
+		const sub = msg.key.remoteJid.includes("g.us")
+			? await sock.groupMetadata(msg.key.remoteJid)
+			: {
+				subject: msg.key.remoteJid.replace(
+					"@s.whatsapp.net",
+					"",
+				),
+			};
+		await sock.sendMessage(`${owner}@s.whatsapp.net`, {
+			text: `Error en ${this.config.name} - ${sub.subject}\n${String(
+				e,
+			)}`,
+		});
 		await sock.sendMessage(
 			msg.key.remoteJid,
 			{
-				text: `El enlace proporcionado no es valido o el contenido no esta disponible.`,
+				text: "Ocurrio un error inesperado.",
 			},
 			{ quoted: msg },
 		);
-	} else {
-		/*
-		Filtro para la primera opcion (facebookdl) 
-		const ma = r.result.filter(
-			(rs) =>
-				rs.ext === "mp4" &&
-				!rs.url.includes("youtube4kdownloader") &&
-				rs.isVideo,
-		); */
-		try {
-			await sock.sendMessage(
-				msg.key.remoteJid,
-				{ video: { url: r.result[0].url }, caption: "w" },
-				{ quoted: msg },
-			);
-		} catch (e) {
-			const sub = msg.key.remoteJid.includes("g.us")
-				? await sock.groupMetadata(msg.key.remoteJid)
-				: {
-					subject: msg.key.remoteJid.replace(
-						"@s.whatsapp.net",
-						"",
-					),
-				};
-			await sock.sendMessage(`${owner}@s.whatsapp.net`, {
-				text: `Error en ${this.config.name} - ${sub.subject}\n${String(
-					e,
-				)}`,
-			});
-			await sock.sendMessage(
-				msg.key.remoteJid,
-				{
-					text: "Ocurrio un error inesperado.",
-				},
-				{ quoted: msg },
-			);
-		}
 	}
 };
 
