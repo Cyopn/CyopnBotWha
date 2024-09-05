@@ -16,7 +16,7 @@ const { prefix, owner, channel } = process.env;
 const logger = MAIN_LOGGER.child({});
 logger.level = "silent";
 //Hosting
-const express = require("express");
+/* const express = require("express");
 const bodyParser = require("body-parser");
 const app = express();
 const port = 3001;
@@ -34,7 +34,7 @@ app.get("/", (request, response) => {
 
 app.listen(port, () => {
 	console.log(`Aplicacion corriendo en el puerto ${port}.`);
-});
+}); */
 //Hosting
 fs.readdir("./commands/", (err, files) => {
 	if (err) return console.error(err);
