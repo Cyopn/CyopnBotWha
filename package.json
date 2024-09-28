@@ -10,10 +10,10 @@
         "@adiwajshing/keyed-db": "^0.2.4",
         "@bochilteam/scraper": "^5.0.1",
         "@hapi/boom": "^10.0.1",
-        "@whiskeysockets/baileys": "^6.7.7",
+        "@whiskeysockets/baileys": "^6.7.8",
         "axios": "^1.7.7",
         "dotenv": "^16.4.5",
-        "express": "^4.19.2",
+        "express": "^4.21.0",
         "formdata-node": "^5.0.1",
         "got-cjs": "^12.5.4",
         "instagram-url-direct": "^1.0.20",
@@ -49,6 +49,6 @@
     "homepage": "https://github.com/Cyopn/CyopnBotWha#readme",
     "devDependencies": {
         "ts-node": "^10.9.2",
-        "typescript": "^5.5.4"
+        "typescript": "^5.6.2"
     }
 }

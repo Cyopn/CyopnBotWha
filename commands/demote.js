@@ -1,5 +1,6 @@
 require("dotenv").config();
 const { prefix, owner } = process.env;
+const { errorHandler } = require("../lib/functions");
 const axios = require("axios").default;
 
 module.exports.run = async (sock, msg, args) => {
@@ -22,13 +23,11 @@ module.exports.run = async (sock, msg, args) => {
 				sock.user.id.length,
 			) && e.admin != null,
 	);
-
 	const isAdmin = (
 		await sock.groupMetadata(msg.key.remoteJid)
 	).participants.some(
 		(e) => e.id === msg.key.participant && e.admin !== null,
 	);
-
 	if (!isAdmin)
 		return sock.sendMessage(
 			msg.key.remoteJid,
@@ -111,21 +110,8 @@ ${lu.map((e) => `@${e.replace("@s.whatsapp.net", "")}`).join("\n")}`,
 			);
 		}
 	} catch (e) {
-		const sub = msg.key.remoteJid.includes("g.us")
-			? await sock.groupMetadata(msg.key.remoteJid)
-			: {
-				subject: msg.key.remoteJid.replace("@s.whatsapp.net", ""),
-			};
-		await sock.sendMessage(`${owner}@s.whatsapp.net`, {
-			text: `Error en ${this.config.name} - ${sub.subject}\n${String(e)}`,
-		});
-		await sock.sendMessage(
-			msg.key.remoteJid,
-			{
-				text: "Ocurrio un error inesperado.",
-			},
-			{ quoted: msg },
-		);
+
+		await errorHandler(sock, msg, this.config.name, e);
 	}
 };
 

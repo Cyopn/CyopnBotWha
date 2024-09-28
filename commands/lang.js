@@ -1,7 +1,7 @@
 require("dotenv").config();
 const { prefix, owner } = process.env;
 
-module.exports.run = async (sock, msg, args) => {
+module.exports.run = async (sock, msg) => {
     const t = `af - Afrikaans
 sq - Albanian
 de - German

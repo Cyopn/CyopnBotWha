@@ -1,6 +1,6 @@
 require("dotenv").config();
 const { prefix, owner } = process.env;
-const { ytSolver } = require("../lib/functions");
+const { ytSolver, errorHandler } = require("../lib/functions");
 const yt = require("yt-converter");
 const yts = require("youtube-sr").default;
 const fs = require("fs");
@@ -77,7 +77,7 @@ module.exports.run = async (sock, msg, args) => {
 				);
 			}
 		} else {
-			const [rs] = await yts.search(arg, { limit: 1 });
+			const [rs] = await yts.search(arg, { limit: 1, safeSearch: false });
 			const { status, title, author, error, time, thumb } =
 				await ytSolver(`https://www.youtube.com/watch?v=${rs.id}`);
 			if (status === 200) {
@@ -136,21 +136,7 @@ module.exports.run = async (sock, msg, args) => {
 			}
 		}
 	} catch (e) {
-		const sub = msg.key.remoteJid.includes("g.us")
-			? await sock.groupMetadata(msg.key.remoteJid)
-			: {
-				subject: msg.key.remoteJid.replace("@s.whatsapp.net", ""),
-			};
-		await sock.sendMessage(`${owner}@s.whatsapp.net`, {
-			text: `Error en ${this.config.name} - ${sub.subject}\n${String(e)}`,
-		});
-		await sock.sendMessage(
-			msg.key.remoteJid,
-			{
-				text: "Ocurrio un error inesperado.",
-			},
-			{ quoted: msg },
-		);
+		await errorHandler(sock, msg, this.config.name, e);
 	}
 };
 
