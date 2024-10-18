@@ -73,35 +73,15 @@ module.exports.run = async (sock, msg, args) => {
 		);
 	} else {
 		try {
-			const w = await downloadContentFromMessage(m, type).catch((e) => {
-				sock.sendMessage(`${owner}@s.whatsapp.net`, {
-					text: `Error en ${this.config.name} - ${msg.key.remoteJid
-						}\n${String(e)}`,
-				});
-				sock.sendMessage(
-					msg.key.remoteJid,
-					{
-						text: "Ocurrio un error inesperado.",
-					},
-					{ quoted: msg },
-				);
+			const w = await downloadContentFromMessage(m, type).catch(async (e) => {
+				await errorHandler(sock, msg, "sticker", e);
 			});
 			let buffer = Buffer.from([]);
 			for await (const chunk of w) {
 				buffer = Buffer.concat([buffer, chunk]);
 			}
-			let s = await sticker(buffer).catch((e) => {
-				sock.sendMessage(`${owner}@s.whatsapp.net`, {
-					text: `Error en ${this.config.name0000} - ${msg.key.remoteJid
-						}\n${String(e)}`,
-				});
-				sock.sendMessage(
-					msg.key.remoteJid,
-					{
-						text: "Ocurrio un error inesperado.",
-					},
-					{ quoted: msg },
-				);
+			let s = await sticker(buffer).catch(async (e) => {
+				await errorHandler(sock, msg, "sticker", e);
 			});
 			await sock
 				.sendMessage(msg.key.remoteJid, { sticker: s }, { quoted: msg })
@@ -118,26 +98,7 @@ module.exports.run = async (sock, msg, args) => {
 					);
 				});
 		} catch (e) {
-			const sub = msg.key.remoteJid.includes("g.us")
-				? await sock.groupMetadata(msg.key.remoteJid)
-				: {
-					subject: msg.key.remoteJid.replace(
-						"@s.whatsapp.net",
-						"",
-					),
-				};
-			await sock.sendMessage(`${owner}@s.whatsapp.net`, {
-				text: `Error en ${this.config.name} - ${sub.subject}\n${String(
-					e,
-				)}`,
-			});
-			await sock.sendMessage(
-				msg.key.remoteJid,
-				{
-					text: "Ocurrio un error inesperado.",
-				},
-				{ quoted: msg },
-			);
+			await errorHandler(sock, msg, this.config.name, e);
 		}
 	}
 };

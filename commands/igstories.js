@@ -54,6 +54,6 @@ module.exports.config = {
 	name: `igstories`,
 	alias: `igs`,
 	type: `misc`,
-	description: `Envia la mutimedia de historias de Instagram.`,
+	description: `Envia la contenido de historias de Instagram.`,
 	fulldesc: `Comando para descargar historias Instagram, escribe ${prefix}igstories (nombre de usuario), o con su alias ${prefix}igs (nombre de usuario), recuerda que no es necesario escribir los parentesis, tambien puedes responder a un nombre de usuario ya enviado, usando ${prefix}igstories, o su alias ${prefix}igs respondiendo al nombre de usuario. \nEste comando puede usarse en mensajes directos y/o grupos.`,
 };

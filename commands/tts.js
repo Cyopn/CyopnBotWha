@@ -19,43 +19,49 @@ module.exports.run = async (sock, msg, args) => {
 			},
 			{ quoted: msg },
 		);
-	if (lang.indexOf(arg[0]) != -1) {
-		const ln = arg.shift()
-		if (arg.length <= 0)
-			return sock.sendMessage(
+
+	try {
+		if (lang.indexOf(arg[0]) != -1) {
+			const ln = arg.shift()
+			if (arg.length <= 0)
+				return sock.sendMessage(
+					msg.key.remoteJid,
+					{
+						text: `Es necesario proporcionar un texto, escribe ${prefix}tts [idioma (español por defecto)] [texto], recuerda que no es necesario escribir los corchetes, si tienes dudas sobre este comando escribe ${prefix}help tts.`,
+					},
+					{ quoted: msg },
+				);
+			const file = await createAudioFile(arg.join(" "), './temp/tts', ln).catch(async (e) => { await errorHandler(sock, msg, 'tts', e); });
+			await sock.sendMessage(
 				msg.key.remoteJid,
 				{
-					text: `Es necesario proporcionar un texto, escribe ${prefix}tts [idioma (español por defecto)] [texto], recuerda que no es necesario escribir los corchetes, si tienes dudas sobre este comando escribe ${prefix}help tts.`,
+					audio: {
+						url: file,
+					},
+					mimetype: "audio/mpeg",
 				},
 				{ quoted: msg },
 			);
-		const file = await createAudioFile(arg.join(" "), './temp/tts', ln)
-		await sock.sendMessage(
-			msg.key.remoteJid,
-			{
-				audio: {
-					url: file,
+		} else {
+			const file = await createAudioFile(arg.join(" "), './temp/tts', 'es').catch(async (e) => { await errorHandler(sock, msg, 'tts', e); });
+			await sock.sendMessage(
+				msg.key.remoteJid,
+				{
+					audio: {
+						url: file,
+					},
+					mimetype: "audio/mpeg",
 				},
-				mimetype: "audio/mpeg",
-			},
-			{ quoted: msg },
-		);
-	} else {
-		const file = await createAudioFile(arg.join(" "), './temp/tts', 'es')
-		await sock.sendMessage(
-			msg.key.remoteJid,
-			{
-				audio: {
-					url: file,
-				},
-				mimetype: "audio/mpeg",
-			},
-			{ quoted: msg },
-		);
+				{ quoted: msg },
+			);
+		}
+	} catch (e) {
+		await errorHandler(sock, msg, this.config.name, e);
 	}
 	while (fs.existsSync(`./temp/tts.mp3`)) {
 		fs.unlinkSync(`./temp/tts.mp3`);
 	}
+
 };
 
 module.exports.config = {
