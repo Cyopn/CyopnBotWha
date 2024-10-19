@@ -16,25 +16,22 @@ const { prefix, owner, channel } = process.env;
 const logger = MAIN_LOGGER.child({});
 logger.level = "silent";
 //Hosting
-/* const express = require("express");
+const express = require("express");
 const bodyParser = require("body-parser");
 const app = express();
-const port = 3001;
-
+const port = 4000;
 app.use(bodyParser.json());
 app.use(
 	bodyParser.urlencoded({
 		extended: true,
 	}),
 );
-
 app.get("/", (request, response) => {
 	response.json({ info: "En linea" });
 });
-
 app.listen(port, () => {
 	console.log(`Aplicacion corriendo en el puerto ${port}.`);
-}); */
+});
 //Hosting
 fs.readdir("./commands/", (err, files) => {
 	if (err) return console.error(err);
