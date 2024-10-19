@@ -1,5 +1,6 @@
 require("dotenv").config();
-const { prefix, owner } = process.env;
+const { prefix } = process.env;
+const { errorHandler } = require("../lib/functions");
 
 module.exports.run = async (sock, msg, args) => {
 	if (!msg.key.remoteJid.includes("g.us"))

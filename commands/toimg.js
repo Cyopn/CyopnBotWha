@@ -1,7 +1,7 @@
 require("dotenv").config();
 const { prefix, owner } = process.env;
 const { downloadContentFromMessage } = require("@whiskeysockets/baileys");
-const { toPng } = require("../lib/functions");
+const { toPng, errorHandler } = require("../lib/functions");
 
 module.exports.run = async (sock, msg, args) => {
 	const s =

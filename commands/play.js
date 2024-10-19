@@ -1,5 +1,5 @@
 require("dotenv").config();
-const { prefix, owner } = process.env;
+const { prefix } = process.env;
 const { ytSolver, errorHandler } = require("../lib/functions");
 const yt = require("yt-converter");
 const yts = require("youtube-sr").default;

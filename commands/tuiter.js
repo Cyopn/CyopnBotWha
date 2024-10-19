@@ -1,6 +1,8 @@
 require("dotenv").config();
 const { prefix, owner } = process.env;
 const { twitter } = require("@bochilteam/scraper");
+const { errorHandler } = require("../lib/functions");
+
 module.exports.run = async (sock, msg, args) => {
 	let arg =
 		args[1] === undefined && args[0].join("").length >= 1

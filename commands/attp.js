@@ -1,5 +1,5 @@
 require("dotenv").config();
-const { prefix, owner } = process.env;
+const { prefix } = process.env;
 const { sticker, errorHandler } = require("../lib/functions");
 const axios = require("axios").default;
 

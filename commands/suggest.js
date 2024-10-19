@@ -1,10 +1,12 @@
 require("dotenv").config();
-const { prefix, owner } = process.env;
+const { prefix } = process.env;
+const { errorHandler } = require("../lib/functions");
 const { crearDB } = require("megadb");
 const db = new crearDB({
 	nombre: "suggest",
 	carpeta: "./database",
 });
+
 module.exports.run = async (sock, msg, args) => {
 	try {
 		if (args[1] !== undefined || args[0].join(" ").length > 1) {

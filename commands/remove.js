@@ -1,6 +1,5 @@
 require("dotenv").config();
-const { prefix, owner } = process.env;
-const axios = require("axios").default;
+const { prefix } = process.env;
 const { errorHandler } = require("../lib/functions");
 
 module.exports.run = async (sock, msg, args) => {

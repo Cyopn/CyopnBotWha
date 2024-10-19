@@ -1,6 +1,6 @@
 require("dotenv").config();
 const { prefix, owner } = process.env;
-const { sticker } = require("../lib/functions");
+const { sticker, errorHandler } = require("../lib/functions");
 const { downloadContentFromMessage } = require("@whiskeysockets/baileys");
 
 module.exports.run = async (sock, msg, args) => {
@@ -85,17 +85,8 @@ module.exports.run = async (sock, msg, args) => {
 			});
 			await sock
 				.sendMessage(msg.key.remoteJid, { sticker: s }, { quoted: msg })
-				.catch((e) => {
-					sock.sendMessage(`${owner}@s.whatsapp.net`, {
-						text: String(e),
-					});
-					sock.sendMessage(
-						msg.key.remoteJid,
-						{
-							text: "Ocurrio un error inesperado.",
-						},
-						{ quoted: msg },
-					);
+				.catch(async (e) => {
+					await errorHandler(sock, msg, this.config.name, e);
 				});
 		} catch (e) {
 			await errorHandler(sock, msg, this.config.name, e);

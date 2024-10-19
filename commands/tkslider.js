@@ -1,6 +1,8 @@
 require("dotenv").config();
-const { prefix, zenKey, owner } = process.env;
+const { prefix } = process.env;
 const axios = require("axios").default;
+const { errorHandler } = require("../lib/functions");
+
 module.exports.run = async (sock, msg, args) => {
 	const arg =
 		args[1] === undefined && args[0].join("").length >= 1

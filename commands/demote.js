@@ -1,7 +1,6 @@
 require("dotenv").config();
-const { prefix, owner } = process.env;
+const { prefix } = process.env;
 const { errorHandler } = require("../lib/functions");
-const axios = require("axios").default;
 
 module.exports.run = async (sock, msg, args) => {
 	if (!msg.key.remoteJid.includes("g.us"))

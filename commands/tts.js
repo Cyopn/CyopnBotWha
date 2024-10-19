@@ -1,7 +1,8 @@
 require("dotenv").config();
-const { prefix, owner } = process.env;
+const { prefix } = process.env;
 const { createAudioFile } = require("simple-tts-mp3")
 const fs = require("fs");
+const { errorHandler } = require("../lib/functions");
 
 module.exports.run = async (sock, msg, args) => {
 	const lang = ["af", "sq", "de", "ar", "bn", "my", "bs", "bg", "km", "kn", "ca", "cs", "zh", "zh-TW", "si", "ko", "hr", "da", "sk", "es", "et", "fi", "fr", "el", "gu", "hi", "nl", "hu", "id", "en", "is", "it", "ja", "la", "lv", "ml", "ms", "mr", "ne", "no", "pl", "pt", "ro", "ru", "sr", "sw", "sv", "su", "tl", "th", "ta", "te", "tr", "uk", "ur", "vi"]

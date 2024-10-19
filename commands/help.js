@@ -1,5 +1,5 @@
 require("dotenv").config();
-const { prefix, owner, channel } = process.env;
+const { prefix, channel } = process.env;
 const { getCommands } = require("../lib/functions");
 
 module.exports.run = async (sock, msg, args) => {

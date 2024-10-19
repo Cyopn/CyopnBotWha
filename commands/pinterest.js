@@ -1,5 +1,5 @@
 require("dotenv").config();
-const { prefix, owner } = process.env;
+const { prefix } = process.env;
 const axios = require("axios").default;
 const { errorHandler } = require("../lib/functions");
 
@@ -31,7 +31,7 @@ module.exports.run = async (sock, msg, args) => {
             }
         });
         const data = response.data;
-        if (data.status === 400) return await sock.sendMessage(
+        if (data.status === 400 || data.data === undefined) return await sock.sendMessage(
             msg.key.remoteJid,
             {
                 text: "No se encontro el contenido.",

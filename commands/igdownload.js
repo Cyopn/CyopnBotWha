@@ -1,6 +1,7 @@
 require("dotenv").config();
-const { prefix, owner } = process.env;
+const { prefix } = process.env;
 const { ndown } = require("nayan-media-downloader")
+const { errorHandler } = require("../lib/functions");
 
 module.exports.run = async (sock, msg, args) => {
 	const arg =

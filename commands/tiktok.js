@@ -1,8 +1,7 @@
 require("dotenv").config();
-const { prefix, /*zenKey,*/ owner } = process.env;
-//const axios = require("axios");
-const { tiktokdl } = require("@bochilteam/scraper");
+const { prefix } = process.env;
 const axios = require('axios').default;
+const { errorHandler } = require("../lib/functions");
 
 module.exports.run = async (sock, msg, args) => {
 	const arg =

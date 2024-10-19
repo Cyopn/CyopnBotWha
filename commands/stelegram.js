@@ -1,7 +1,7 @@
 require("dotenv").config();
 const { prefix, owner, token } = process.env;
 const axios = require("axios").default;
-const { tgsConverter, sticker } = require("../lib/functions.js");
+const { tgsConverter, sticker, errorHandler } = require("../lib/functions.js");
 
 module.exports.run = async (sock, msg, args) => {
 	const arg =
@@ -54,52 +54,14 @@ module.exports.run = async (sock, msg, args) => {
 					const buffer = await axios.get(url, {
 						responseType: "arraybuffer",
 					});
-					result = await sticker(buffer.data).catch((e) => {
-						sock.sendMessage(`${owner}@s.whatsapp.net`, {
-							text: `Error en ${this.config.name0000} - ${msg.key.remoteJid
-								}\n${String(e)}`,
-						});
-						sock.sendMessage(
-							msg.key.remoteJid,
-							{
-								text: "Ocurrio un error inesperado.",
-							},
-							{ quoted: msg },
-						);
+					result = await sticker(buffer.data).catch(async (e) => {
+						await errorHandler(sock, msg, this.config.name, e);
 					});
 				} else {
-					result = await sticker(st.data).catch((e) => {
-						sock.sendMessage(`${owner}@s.whatsapp.net`, {
-							text: `Error en ${this.config.name0000} - ${msg.key.remoteJid
-								}\n${String(e)}`,
-						});
-						sock.sendMessage(
-							msg.key.remoteJid,
-							{
-								text: "Ocurrio un error inesperado.",
-							},
-							{ quoted: msg },
-						);
+					result = await sticker(st.data).catch(async (e) => {
+						await errorHandler(sock, msg, this.config.name, e);
 					});
 				}
-				await sock
-					.sendMessage(
-						msg.key.remoteJid,
-						{ sticker: result },
-						{ quoted: msg },
-					)
-					.catch((e) => {
-						sock.sendMessage(`${owner}@s.whatsapp.net`, {
-							text: String(e),
-						});
-						sock.sendMessage(
-							msg.key.remoteJid,
-							{
-								text: "Ocurrio un error inesperado.",
-							},
-							{ quoted: msg },
-						);
-					});
 			}
 		}
 	} catch (e) {

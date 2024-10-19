@@ -1,6 +1,6 @@
 require("dotenv").config();
+const { prefix } = process.env;
 const { errorHandler } = require("../lib/functions");
-const { prefix, owner } = process.env;
 
 module.exports.run = async (sock, msg, args) => {
 	const arg =

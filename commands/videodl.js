@@ -4,6 +4,7 @@ const { ytSolver } = require("../lib/functions");
 const yt = require("yt-converter");
 const yts = require("youtube-sr").default;
 const fs = require("fs");
+const { errorHandler } = require("../lib/functions");
 
 module.exports.run = async (sock, msg, args) => {
 	let arg = args[1] === undefined ? args[0].join("") : args[1].join("");
