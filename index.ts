@@ -1,5 +1,4 @@
 import { Boom } from "@hapi/boom";
-
 import makeWASocket, {
 	DisconnectReason,
 	fetchLatestBaileysVersion,
@@ -151,39 +150,6 @@ Sigue el canal de informacion para estar al dia de las novedades y actualizacion
 							: quotedM?.videoMessage?.caption
 							? quotedM?.videoMessage?.caption.trim().split(" ")
 							: undefined;
-						/* const { remoteJid, participant } = msg.key;
-						const gid = remoteJid.split("@")[0];
-						const uid =
-							participant !== undefined
-								? participant.split("@")[0]
-								: remoteJid.split("@")[0];
-						if (msg.key.remoteJid.includes("g.us")) {
-							await evalLevel(sock,msg, message);
-							const mentionMsg = message.split(" ");
-							for (let i = 0; i < mentionMsg.length; i++) {
-								if (mentionMsg[i].includes("@")) {
-									const mention = mentionMsg[i]
-										.split("@")[1]
-										.split("]")[0];
-									const reg = new RegExp("^[0-9]+$");
-									if (reg.test(mention)) {
-										const afk = await getAfk(gid, mention);
-										if (afk !== undefined) {
-											await sock.sendMessage(
-												msg.key.remoteJid,
-												{
-													text: `El usuario @${mention} no esta disponible. \nRazon: ${afk}.`,
-													mentions: [
-														`${mention}@s.whatsapp.net`,
-													],
-												},
-												{ quoted: msg },
-											);
-										}
-									}
-								}
-							}
-						} */
 						if (message.startsWith(prefix) && message.length > 1) {
 							const arg = message
 								.slice(prefix.length)
@@ -198,19 +164,6 @@ Sigue el canal de informacion para estar al dia de las novedades y actualizacion
 							if (cm >= 0) {
 								const commFil = command[cm];
 								const commFile = require(`./commands/${commFil}`);
-								/* if (commFile.config.name.includes("afk")) {
-									if (msg.key.remoteJid.includes("g.us")) {
-										if (await solveAfk(gid, uid, "dep")) {
-											await sock.sendMessage(
-												msg.key.remoteJid,
-												{
-													text: `Tu tiempo de inactividad ha terminado. Bienvenido de vuelta.`,
-												},
-												{ quoted: msg },
-											);
-										}
-									}
-								} */
 								try {
 									commFile.run(sock, msg, args);
 								} catch (e) {
@@ -231,18 +184,6 @@ Sigue el canal de informacion para estar al dia de las novedades y actualizacion
 									);
 								}
 							}
-						} else {
-							/* if (msg.key.remoteJid.includes("g.us")) {
-								if (await solveAfk(gid, uid, "none")) {
-									await sock.sendMessage(
-										msg.key.remoteJid,
-										{
-											text: `Tu tiempo de inactividad ha terminado. Bienvenido de vuelta.`,
-										},
-										{ quoted: msg },
-									);
-								}
-							} */
 						}
 					}
 				}
