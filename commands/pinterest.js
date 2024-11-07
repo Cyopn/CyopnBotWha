@@ -2,6 +2,7 @@ require("dotenv").config();
 const { prefix } = process.env;
 const axios = require("axios").default;
 const { errorHandler } = require("../lib/functions");
+const { pintarest } = require("nayan-media-downloader");
 
 module.exports.run = async (sock, msg, args) => {
     const arg =
@@ -18,39 +19,45 @@ module.exports.run = async (sock, msg, args) => {
         { quoted: msg },
     );
     try {
-        const response = await axios.request({
-            method: 'POST',
-            url: 'https://pinterest-downloader-download-pinterest-image-video-and-reels.p.rapidapi.com/api/server',
-            headers: {
-                'x-rapidapi-key': '38211cd4dcmsh34d9a30b672d1bfp1b3e3cjsna306af72a23a',
-                'x-rapidapi-host': 'pinterest-downloader-download-pinterest-image-video-and-reels.p.rapidapi.com',
-                'Content-Type': 'application/json'
-            },
-            data: {
-                id: arg
+        const result = await pintarest(arg)
+        if (result.status) {
+            const url = result.url
+            const ext = result.url.split('.').pop(-1)
+            if (ext === "mp4") {
+                await sock.sendMessage(
+                    msg.key.remoteJid,
+                    {
+                        caption: "w",
+                        video: { url: url },
+                    },
+                    { quoted: msg },
+                );
+            } else if (ext === "jpg" || ext === "jpeg" || ext === "png") {
+                await sock.sendMessage(
+                    msg.key.remoteJid,
+                    {
+                        caption: "w",
+                        image: { url: url },
+                    },
+                    { quoted: msg },
+                );
+            } else if (ext === "gif") {
+                await sock.sendMessage(
+                    msg.key.remoteJid,
+                    {
+                        text: `Enlace de descarga: ${url}`
+                    },
+                    { quoted: msg },
+                );
             }
-        });
-        const data = response.data;
-        if (data.status === 400 || data.data === undefined) return await sock.sendMessage(
-            msg.key.remoteJid,
-            {
-                text: "No se encontro el contenido.",
-            },
-            { quoted: msg },
-        );
-        if (data.data.videos !== null) return await sock.sendMessage(
-            msg.key.remoteJid,
-            { video: { url: data.data.videos.V_720P.url }, caption: "w" },
-            { quoted: msg },
-        );
-        await sock.sendMessage(
-            msg.key.remoteJid,
-            {
-                caption: "w",
-                image: { url: data.data.images.orig.url },
-            },
-            { quoted: msg },
-        );
+        } else {
+            await sock.sendMessage(
+                msg.key.remoteJid,
+                {
+                    text: `El enlace proporcionado no es válido (deben ser enlaces de tipo https://pin.it/).`,
+                },
+                { quoted: msg },)
+        }
     } catch (e) {
         await errorHandler(sock, msg, this.config.name, e);
     }
