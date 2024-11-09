@@ -22,7 +22,7 @@
         "megadb": "^3.4.0",
         "nayan-media-downloader": "^2.6.4",
         "node-fetch": "^3.3.2",
-        "puppeteer": "^23.7.0",
+        "puppeteer": "^23.7.1",
         "qrcode-terminal": "^0.12.0",
         "ruhend-scraper": "^8.0.3",
         "simple-tts-mp3": "^1.1.0",
