@@ -1,8 +1,6 @@
 require("dotenv").config();
 const { prefix } = process.env;
-const axios = require("axios").default;
 const { errorHandler } = require("../lib/functions");
-const { pintarest } = require("nayan-media-downloader");
 
 module.exports.run = async (sock, msg, args) => {
     const arg =
@@ -66,7 +64,7 @@ module.exports.run = async (sock, msg, args) => {
 module.exports.config = {
     name: `pinterest`,
     alias: `pin`,
-    type: `misc`,
+    type: `ign`,
     description: `Envía contenido de Pinterest.`,
     fulldesc: `Comando para enviar contenido de Pinterest, escribe ${prefix}pinterest (enlace), o su alias ${prefix}pin (enlace), recuerda que no es necesario escribir los parentesis, o también puedes responder a un enlace ya enviado, usando ${prefix}pinterest, o su alias ${prefix}pin respondiendo al enlace. \nEste comando puede usarse en mensajes directos y/o grupos.`,
 };
