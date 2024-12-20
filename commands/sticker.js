@@ -37,31 +37,7 @@ module.exports.run = async (sock, msg, args) => {
 				: msg.message?.extendedTextMessage?.contextInfo?.quotedMessage
 					?.videoMessage
 					? msg.message?.extendedTextMessage?.contextInfo?.quotedMessage
-						?.videoMessage/* 
-					: msg.message?.viewOnceMessage?.message?.imageMessage
-						? msg.message?.viewOnceMessage?.message?.imageMessage
-						: msg.message?.viewOnceMessage?.message?.videoMessage
-							? msg.message?.viewOnceMessage?.message?.videoMessage
-							: msg.message?.viewOnceMessageV2?.message?.imageMessage
-								? msg.message?.viewOnceMessageV2?.message?.imageMessage
-								: msg.message?.viewOnceMessageV2?.message?.videoMessage
-									? msg.message?.viewOnceMessageV2?.message?.videoMessage
-									: msg.message?.extendedTextMessage?.contextInfo?.quotedMessage
-										?.viewOnceMessage?.message?.imageMessage
-										? msg.message?.extendedTextMessage?.contextInfo?.quotedMessage
-											?.viewOnceMessage?.message?.imageMessage
-										: msg.message?.extendedTextMessage?.contextInfo?.quotedMessage
-											?.viewOnceMessage?.message?.videoMessage
-											? msg.message?.extendedTextMessage?.contextInfo?.quotedMessage
-												?.viewOnceMessage?.message?.videoMessage
-											: msg.message?.extendedTextMessage?.contextInfo?.quotedMessage
-												?.viewOnceMessageV2?.message?.imageMessage
-												? msg.message?.extendedTextMessage?.contextInfo?.quotedMessage
-													?.viewOnceMessageV2?.message?.imageMessage
-												: msg.message?.extendedTextMessage?.contextInfo?.quotedMessage
-													?.viewOnceMessageV2?.message?.videoMessage
-													? msg.message?.extendedTextMessage?.contextInfo?.quotedMessage
-														?.viewOnceMessageV2?.message?.videoMessage */
+						?.videoMessage
 					: undefined;
 	if (m === undefined || m === null || type === undefined || type === null) {
 		sock.sendMessage(

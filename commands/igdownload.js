@@ -1,6 +1,6 @@
 require("dotenv").config();
 const { prefix } = process.env;
-const { ndown } = require("nayan-media-downloader")
+const { igdl } = require("ruhend-scraper")
 const { errorHandler } = require("../lib/functions");
 
 module.exports.run = async (sock, msg, args) => {
@@ -30,7 +30,7 @@ module.exports.run = async (sock, msg, args) => {
 			{ quoted: msg },
 		);
 	try {
-		const result = await ndown(arg)
+		const result = await igdl(arg)
 		if (result.data === undefined) return await sock.sendMessage(
 			msg.key.remoteJid,
 			{
