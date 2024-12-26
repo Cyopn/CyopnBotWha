@@ -55,13 +55,18 @@ module.exports.run = async (sock, msg, args) => {
 						responseType: "arraybuffer",
 					});
 					result = await sticker(buffer.data).catch(async (e) => {
-						await errorHandler(sock, msg, this.config.name, e);
+						await errorHandler(sock, msg, "stelegram", e);
 					});
 				} else {
 					result = await sticker(st.data).catch(async (e) => {
-						await errorHandler(sock, msg, this.config.name, e);
+						await errorHandler(sock, msg, "stelegram", e);
 					});
 				}
+				await sock
+				.sendMessage(msg.key.remoteJid, { sticker: result }, { quoted: msg })
+				.catch(async (e) => {
+					await errorHandler(sock, msg, "stelegram", e);
+				});
 			}
 		}
 	} catch (e) {
