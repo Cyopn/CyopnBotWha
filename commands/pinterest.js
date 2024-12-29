@@ -1,6 +1,7 @@
 require("dotenv").config();
 const { prefix } = process.env;
 const { errorHandler } = require("../lib/functions");
+const { pinterest } = require("../lib/scrapper")
 
 module.exports.run = async (sock, msg, args) => {
     const arg =
@@ -17,10 +18,8 @@ module.exports.run = async (sock, msg, args) => {
         { quoted: msg },
     );
     try {
-        const result = await pintarest(arg)
-        if (result.status) {
-            const url = result.url
-            const ext = result.url.split('.').pop(-1)
+        await pinterest(arg).then(async (url) => {
+            const ext = url.split('.').pop(-1)
             if (ext === "mp4") {
                 await sock.sendMessage(
                     msg.key.remoteJid,
@@ -30,7 +29,7 @@ module.exports.run = async (sock, msg, args) => {
                     },
                     { quoted: msg },
                 );
-            } else if (ext === "jpg" || ext === "jpeg" || ext === "png") {
+            } else if (ext === "jpg") {
                 await sock.sendMessage(
                     msg.key.remoteJid,
                     {
@@ -48,14 +47,10 @@ module.exports.run = async (sock, msg, args) => {
                     { quoted: msg },
                 );
             }
-        } else {
-            await sock.sendMessage(
-                msg.key.remoteJid,
-                {
-                    text: `El enlace proporcionado no es válido (deben ser enlaces de tipo https://pin.it/).`,
-                },
-                { quoted: msg },)
-        }
+        }).catch(async (e) => {
+            await errorHandler(sock, msg, "pinterest", e);
+        })
+
     } catch (e) {
         await errorHandler(sock, msg, this.config.name, e);
     }
