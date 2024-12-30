@@ -1,10 +1,8 @@
 require("dotenv").config();
 const { prefix, owner } = process.env;
-const { ytSolver } = require("../lib/functions");
-const yt = require("yt-converter");
 const yts = require("youtube-sr").default;
-const fs = require("fs");
 const { errorHandler } = require("../lib/functions");
+const { ytmp4 } = require("ruhend-scraper");
 
 module.exports.run = async (sock, msg, args) => {
 	let arg = args[1] === undefined ? args[0].join("") : args[1].join("");
@@ -21,116 +19,40 @@ module.exports.run = async (sock, msg, args) => {
 	);
 	try {
 		if (isurl) {
-			const { status, title, author, error, time, thumb } =
-				await ytSolver(arg);
-			if (status === 200) {
-				await sock.sendMessage(
-					msg.key.remoteJid,
-					{
-						text: `Inicia la descarga de *${title}*\nCanal/Autor: ${author}\nDuracion: ${time} minutos`,
-					},
-					{ quoted: msg },
-				);
-
-				let ttl = "";
-				for (let i = 0; i < title.length; i++) {
-					ttl += title[i].match(/([A-Za-z])/g)
-						? title[i]
-						: title[i] === " "
-							? " "
-							: "";
-				}
-
-				const data = await yt.Video({
-					url: arg,
-					directory: "./temp/",
-					title: ttl,
-					onDownloading: (progress) => { }
-				});
-
-				if (data.error) return await sock.sendMessage(
-					msg.key.remoteJid,
-					{
-						text: `Ocurrio un error al descargar el video.`,
-					},
-					{ quoted: msg },
-				);
-
-				await sock.sendMessage(
-					msg.key.remoteJid,
-					{
-						document: fs.readFileSync(`./temp/${ttl}.mp4`),
-						fileName: `${ttl}.mp4`,
-						mimetype: "video/mp4",
-					},
-					{ quoted: msg },
-				);
-				if (fs.existsSync(`./temp/${ttl}.mp4`)) fs.unlinkSync(`./temp/${ttl}.mp4`);
-			} else {
-				await sock.sendMessage(
-					msg.key.remoteJid,
-					{
-						text: `El enlace no es valido.`,
-					},
-					{ quoted: msg },
-				);
-			}
+			const { title, video, author, description, duration, views, upload, thumbnail } = await ytmp4(arg)
+			await sock.sendMessage(
+				msg.key.remoteJid,
+				{
+					text: `Inicia el envio de *${title}*\nCanal/Autor: ${author}\nDuracion: ${duration} minutos.`,
+				},
+				{ quoted: msg },
+			);
+			await sock.sendMessage(
+				msg.key.remoteJid,
+				{
+					video: { url: video },
+					caption: "w",
+				},
+				{ quoted: msg },
+			);
 		} else {
 			const [rs] = await yts.search(arg, { limit: 1 });
-			const { status, title, author, error, time, thumb } =
-				await ytSolver(rs.url);
-			if (status === 200) {
-				await sock.sendMessage(
-					msg.key.remoteJid,
-					{
-						text: `Inicia la descarga de *${title}*\nCanal/Autor: ${author}\nDuracion: ${time} minutos`,
-					},
-					{ quoted: msg },
-				);
-
-				let ttl = "";
-				for (let i = 0; i < title.length; i++) {
-					ttl += title[i].match(/([A-Za-z])/g)
-						? title[i]
-						: title[i] === " "
-							? " "
-							: "";
-				}
-
-				const data = await yt.Video({
-					url: arg,
-					directory: "./temp/",
-					title: ttl,
-					onDownloading: (progress) => { }
-				});
-
-				if (data.error) return await sock.sendMessage(
-					msg.key.remoteJid,
-					{
-						text: `Ocurrio un error al descargar el video.`,
-					},
-					{ quoted: msg },
-				);
-
-				await sock.sendMessage(
-					msg.key.remoteJid,
-					{
-						document: fs.readFileSync(`./temp/${ttl}.mp4`),
-						fileName: `${ttl}.mp4`,
-						mimetype: "video/mp4",
-					},
-					{ quoted: msg },
-				);
-				if (fs.existsSync(`./temp/${ttl}.mp4`)) fs.unlinkSync(`./temp/${ttl}.mp4`);
-			} else {
-				await sock.sendMessage(
-					msg.key.remoteJid,
-					{
-						text: `No se encontro nada.`,
-					},
-					{ quoted: msg },
-				);
-			}
+			const { title, video, author, description, duration, views, upload, thumbnail } = await ytmp4(`https://www.youtube.com/watch?v=${rs.id}`)
+			await sock.sendMessage(
+				msg.key.remoteJid,
+				{
+					text: `Inicia el envio de *${title}*\nCanal/Autor: ${author}\nDuracion: ${duration} minutos.`,
+				},
+				{ quoted: msg },
+			);
+			await sock.sendMessage(
+				msg.key.remoteJid,
+				{
+					video: { url: video },
+					caption: "w",
+				},
+				{ quoted: msg },
+			);
 		}
 	} catch (e) {
 		await errorHandler(sock, msg, this.config.name, e);

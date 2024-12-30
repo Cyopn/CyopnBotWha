@@ -30,8 +30,7 @@
         "simple-tts-mp3": "^1.1.0",
         "wa-sticker-formatter": "^4.4.4",
         "youtube-sr": "^4.3.11",
-        "yt-converter": "^2.1.1",
-        "ytdl-core": "^4.11.5"
+        "ytdl-core": "npm:@distube/ytdl-core@^4.15.8"
     },
     "scripts": {
         "start": "ts-node index.ts",
