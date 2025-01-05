@@ -1,7 +1,7 @@
 require("dotenv").config();
 const { prefix } = process.env;
-const axios = require('axios').default;
 const { errorHandler } = require("../lib/functions");
+const { tiktok } = require("../lib/scrapper");
 
 module.exports.run = async (sock, msg, args) => {
 	const arg =
@@ -18,36 +18,40 @@ module.exports.run = async (sock, msg, args) => {
 			},
 			{ quoted: msg },
 		);
-	let formdata = new FormData();
-	formdata.append("url", arg);
-	let response = await axios.request({
-		url: "https://api.tikmate.app/api/lookup",
-		method: "POST",
-		headers: {
-			"Accept": "*/*",
-		},
-		data: formdata,
-	}).catch((e) => { return e.response.data });
-	if (response.success === false) {
-		await sock.sendMessage(
-			msg.key.remoteJid,
-			{
-				text: `No se pudo encontrar el contenido.`,
-			},
-			{ quoted: msg },
-		);
-	} else {
-		try {
+	try {
+		const res = await tiktok(arg, "media")
+		if (res.length > 0) {
+			res.forEach(async (media) => {  
+				if (media.type == "video") {
+					await sock.sendMessage(
+						msg.key.remoteJid,
+						{
+							video: { url: media.url },
+						},
+						{ quoted: msg },
+					);
+				} else {
+					await sock.sendMessage(
+						msg.key.remoteJid,
+						{
+							image: { url: media.url },
+						},
+						{ quoted: msg },
+					);
+				}
+			})
+		} else {
 			await sock.sendMessage(
 				msg.key.remoteJid,
-				{ video: { url: `https://tikmate.app/download/${response.data.token}/${response.data.id}.mp4?hd=1` }, caption: "w" },
+				{
+					text: "No se encontraron videos o imagenes en el enlace proporcionado.",
+				},
 				{ quoted: msg },
 			);
-		} catch (e) {
-			await errorHandler(sock, msg, this.config.name, e);
 		}
+	} catch (e) {
+		await errorHandler(sock, msg, this.config.name, e);
 	}
-
 };
 
 module.exports.config = {
