@@ -1,6 +1,6 @@
 require("dotenv").config();
 const { prefix, owner } = process.env;
-const { twitter } = require("@bochilteam/scraper");
+const { twitter } = require("../lib/scrapper");
 const { errorHandler } = require("../lib/functions");
 
 module.exports.run = async (sock, msg, args) => {
@@ -20,15 +20,35 @@ module.exports.run = async (sock, msg, args) => {
 		);
 	try {
 		const res = await twitter(arg)
-		const highres = res.reduce((prev, curr) => curr.bitrate > prev.bitrate ? curr : prev);
-		await sock.sendMessage(
-			msg.key.remoteJid,
-			{
-				caption: "w",
-				video: { url: highres.url },
-			},
-			{ quoted: msg },
-		);
+		if (res.length > 0) {
+			res.forEach(async (media) => {
+				if (media.type == "video") {
+					await sock.sendMessage(
+						msg.key.remoteJid,
+						{
+							video: { url: media.url },
+						},
+						{ quoted: msg },
+					);
+				} else {
+					await sock.sendMessage(
+						msg.key.remoteJid,
+						{
+							image: { url: media.url },
+						},
+						{ quoted: msg },
+					);
+				}
+			})
+		} else {
+			await sock.sendMessage(
+				msg.key.remoteJid,
+				{
+					text: "No se encontraron videos o imagenes en el enlace proporcionado.",
+				},
+				{ quoted: msg },
+			);
+		}
 	} catch (e) {
 		await errorHandler(sock, msg, this.config.name, e);
 	}
