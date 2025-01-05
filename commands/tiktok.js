@@ -58,6 +58,6 @@ module.exports.config = {
 	name: `tiktok`,
 	alias: `tk`,
 	type: `misc`,
-	description: `Envia algun tiktok sin marca de agua.`,
-	fulldesc: `Comando para descargar videos de Tiktok, escribe ${prefix}tiktok (enlace), o con su alias ${prefix}tk (enlace), recuerda que no es necesario escribir los parentesis, tambien puedes responder a un enlace ya enviado, usando ${prefix}tiktok, o su alias ${prefix}tk respondiendo al enlace. \nEste comando puede usarse en mensajes directos y/o grupos.`,
+	description: `Envia video o imagen(es) de tiktok sin marca de agua.`,
+	fulldesc: `Comando para descargar videos o imagenes de Tiktok, escribe ${prefix}tiktok (enlace), o con su alias ${prefix}tk (enlace), recuerda que no es necesario escribir los parentesis, tambien puedes responder a un enlace ya enviado, usando ${prefix}tiktok, o su alias ${prefix}tk respondiendo al enlace. \nEste comando puede usarse en mensajes directos y/o grupos.`,
 };

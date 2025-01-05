@@ -58,6 +58,6 @@ module.exports.config = {
 	name: `tuiter`,
 	alias: `twitter`,
 	type: `misc`,
-	description: `Envia algun video de twitter.`,
-	fulldesc: `Comando para descargar videos de Twitter (X), escribe ${prefix}tuiter (enlace), o con su alias ${prefix}twitter (enlace), recuerda que no es necesario escribir los parentesis, tambien puedes responder a un enlace ya enviado, usando ${prefix}tuiter, o su alias ${prefix}twitter respondiendo al enlace. \nEste comando puede usarse en mensajes directos y/o grupos.`,
+	description: `Envia multimedia (video, imagen o gif) de twitter.`,
+	fulldesc: `Comando para descargar videos, imagenes o gifs de Twitter (X), escribe ${prefix}tuiter (enlace), o con su alias ${prefix}twitter (enlace), recuerda que no es necesario escribir los parentesis, tambien puedes responder a un enlace ya enviado, usando ${prefix}tuiter, o su alias ${prefix}twitter respondiendo al enlace. \nEste comando puede usarse en mensajes directos y/o grupos.`,
 };

@@ -64,5 +64,5 @@ module.exports.config = {
 	alias: "vd",
 	type: `ign`,
 	description: `Descarga videos de youtube.`,
-	fulldesc: `Con este comando puedes descargar videos de youtube, solo necesitas proporcionar un enlace o una busqueda.`,
+	fulldesc: `Comando para descargar videos de youtube, solo necesitas proporcionar un enlace o una busqueda.`,
 };
