@@ -39,5 +39,4 @@ module.exports.config = {
 	alias: `m`,
 	type: `misc`,
 	description: `Envia un chistorete digital publicado en reddit.com/r/ChingaTuMadreNoko/ ¡Conviertete en colaborador!`,
-	fulldesc: `Nada que agregar.`,
 };

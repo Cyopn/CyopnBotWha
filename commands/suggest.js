@@ -53,6 +53,4 @@ module.exports.config = {
 	name: `suggest`,
 	alias: `sg`,
 	type: `misc`,
-	description: `Envia una sugerencia al desarrollador.`,
-	fulldesc: `Si tienes alguna idea para mejorar el bot, puedes enviarla con este comando, escribe ${prefix}suggest (enlace), o con su alias ${prefix}sg (enlace), recuerda que no es necesario escribir los parentesis. \nEste comando puede usarse en mensajes directos y/o grupos.`,
-};
+	description: `Envia una sugerencia al desarrollador.`,};

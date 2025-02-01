@@ -1,6 +1,5 @@
 require("dotenv").config();
 const { errorHandler } = require("../lib/functions");
-const { prefix } = process.env;
 
 module.exports.run = async (sock, msg) => {
 	if (!msg.key.remoteJid.includes("g.us"))
@@ -68,5 +67,4 @@ module.exports.config = {
 	alias: `edc`,
 	type: `misc`,
 	description: `Cambia el estado del chat a solo administradores o a todos los miembros del grupo.`,
-	fulldesc: `Comnado para cambiar los ajustes del chat a solo administradores o a todos los miembros del grupo, escribe ${prefix}edchat.\nComando disponible solo para grupos.`,
 };

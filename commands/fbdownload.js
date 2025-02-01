@@ -47,5 +47,4 @@ module.exports.config = {
 	alias: `fbdl`,
 	type: `misc`,
 	description: `Envia el video de alguna publicacion de Facebook.`,
-	fulldesc: `Comando para descargar videos de Facebook, escribe ${prefix}fbdownload (enlace), o con su alias ${prefix}fbdl (enlace), recuerda que no es necesario escribir los parentesis, tambien puedes responder a un enlace ya enviado, usando ${prefix}fbdownload, o su alias ${prefix}fbdl respondiendo al enlace. \nEste comando puede usarse en mensajes directos y/o grupos.`,
 };

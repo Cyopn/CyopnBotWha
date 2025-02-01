@@ -103,5 +103,4 @@ module.exports.config = {
 	alias: `ban`,
 	type: `misc`,
 	description: `Elimina a uno o mas miembros del grupo, es necesario mencionar o etiquetar algun miembro del grupo.`,
-	fulldesc: `Comando para eliminar a uno o mas miembros del grupo, es necesario mencionar o etiquetar algun miembro del grupo, escribe ${prefix}remove (miembro(s)), recuerda que no es necesario escribir los parentesis.\nComanado disponible solo para grupos.`,
 };

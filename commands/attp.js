@@ -37,5 +37,4 @@ module.exports.config = {
 	alias: `ap`,
 	type: `misc`,
 	description: `Crea un sticker segun el texto proporcionado, algunos emojis no son soportados.`,
-	fulldesc: `Comando para crear stickers (pegatinas), algunos emojis no son soportados, usa este comando escribiendo ${prefix}attp (texto), o con su alias ${prefix}ap (texto), recuerda que no es necesario escribir los parentesis. \nEste comando puede usarse en mensajes directos y/o grupos.`,
 };

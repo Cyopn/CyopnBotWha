@@ -84,5 +84,4 @@ module.exports.config = {
     alias: `ta`,
     type: `misc`,
     description: `Convierte un video a audio mp3.`,
-    fulldesc: `Comando para convertir video a audio, escribiendo el prefijo ${prefix} junto al nombre del comando (toaudio) o su alias (ta).\nEste comando lo puedes usar en grupos y mensajes directos.`,
 };

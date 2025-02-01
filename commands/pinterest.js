@@ -61,5 +61,4 @@ module.exports.config = {
     alias: `pin`,
     type: `ign`,
     description: `Envía contenido de Pinterest.`,
-    fulldesc: `Comando para enviar contenido de Pinterest, escribe ${prefix}pinterest (enlace), o su alias ${prefix}pin (enlace), recuerda que no es necesario escribir los parentesis, o también puedes responder a un enlace ya enviado, usando ${prefix}pinterest, o su alias ${prefix}pin respondiendo al enlace. \nEste comando puede usarse en mensajes directos y/o grupos.`,
 };

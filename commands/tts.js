@@ -70,5 +70,4 @@ module.exports.config = {
 	alias: `tts`,
 	type: `misc`,
 	description: `Crea un audio segun el texto proporcionado y en un idioma preferido (español por defecto), usa ${prefix}lang para ver los idiomas permitidos.`,
-	fulldesc: `Comando para enviar audios en algun idioma preferido, usa este comando escribiendo ${prefix}tts [idioma (español por defecto)] [texto], recuerda que no es necesario escribir los corchetes, en caso de no escibir el idioma sera enviado en español. \nEste comando puede usarse en mensajes directos y/o grupos.`,
 };

@@ -42,5 +42,4 @@ module.exports.config = {
     alias: `tka`,
     type: `misc`,
     description: `Envia el audio de tiktok .`,
-    fulldesc: `Comando para descargar el audio de Tiktok, escribe ${prefix}tkaudio (enlace), o con su alias ${prefix}tka (enlace), recuerda que no es necesario escribir los parentesis, tambien puedes responder a un enlace ya enviado, usando ${prefix}tkaudio, o su alias ${prefix}tka respondiendo al enlace. \nEste comando puede usarse en mensajes directos y/o grupos.`,
 };

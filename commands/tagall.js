@@ -67,5 +67,4 @@ module.exports.config = {
 	alias: `tag`,
 	type: `misc`,
 	description: `Menciona a todos los miembros del grupo con un mensaje personalizado.`,
-	fulldesc: `Comando para mencionar a todos los miembros del grupo con un mensaje personalizado, es necesario ser administrador para usar este comando.`,
 };

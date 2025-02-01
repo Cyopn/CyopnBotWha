@@ -36,5 +36,4 @@ module.exports.config = {
 	alias: `ly`,
 	type: `misc`,
 	description: `Envia la letra de alguna cancion.`,
-	fulldesc: `Comando para enviar la letra de una cancion segun la busqueda proporcionada, escribe ${prefix}lyrics (busqueda), o con su alias ${prefix}ly (busqueda), recuerda que no es necesario escribir los parentesis, tambien puedes responder al titulo de una cancion, usando ${prefix}lyrics, o su alias ${prefix}ly, al responderlo. \nEste comando puede usarse en mensajes directos y/o grupos.`,
 };

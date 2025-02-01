@@ -109,7 +109,6 @@ ${lu.map((e) => `@${e.replace("@s.whatsapp.net", "")}`).join("\n")}`,
 			);
 		}
 	} catch (e) {
-
 		await errorHandler(sock, msg, this.config.name, e);
 	}
 };
@@ -119,5 +118,4 @@ module.exports.config = {
 	alias: `dm`,
 	type: `misc`,
 	description: `Degreda a miembro a uno o mas administradores del grupo, es necesario mencionar o etiquetar algun miembro del grupo.`,
-	fulldesc: `Comando para degredar a miembro a uno o mas administradores del grupo, es necesario mencionar o etiquetar algun miembro del grupo, escribe ${prefix}demote (miembro(s)), recuerda que no es necesario escribir los parentesis.\nComanado disponible solo para grupos.`,
 };

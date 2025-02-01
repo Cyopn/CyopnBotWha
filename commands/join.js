@@ -65,5 +65,4 @@ module.exports.config = {
 	alias: `j`,
 	type: `misc`,
 	description: `Agregame a un grupo solo con el enlace de invitacion del grupo.`,
-	fulldesc: `Comando para agregarme a un grupo con su enlace de invitacion, escribe ${prefix}join (enlace), o con su alias ${prefix}join (enlace), recuerda que no es necesario escribir los parentesis, tambien puedes responder a un enlace ya enviado, usando ${prefix}join, o su alias ${prefix}j respondiendo al enlace. \nEste comando puede usarse en mensajes directos y/o grupos.`,
 };

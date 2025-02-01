@@ -79,5 +79,4 @@ module.exports.config = {
 	alias: `st`,
 	type: `misc`,
 	description: `Envia stickers de un paquete de stickers de Telegram.`,
-	fulldesc: `Este comando envia stickers de un paquete de stickers de Telegram, para usarlo escribe ${prefix}stelegram (enlace), recuerda que no es necesario escribir los parentesis, si tienes dudas sobre este comando escribe ${prefix}help stelegram.`,
 };
