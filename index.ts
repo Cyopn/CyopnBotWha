@@ -7,7 +7,7 @@ import makeWASocket, {
 } from "@whiskeysockets/baileys";
 const MAIN_LOGGER = require("@whiskeysockets/baileys/lib/Utils/logger").default;
 import fs from "fs";
-const { solveAfk, getAfk, evalLevel, msgStorage } = require("./lib/functions.js");
+const { msgStorage, processGroup, evalLevel } = require("./lib/functions.js");
 let command = [];
 let alias = [];
 require("dotenv").config();
@@ -88,68 +88,69 @@ Sigue el canal de informacion para estar al dia de las novedades y actualizacion
 			const upsert = events["messages.upsert"];
 			if (upsert.type === "append" || upsert.type === "notify") {
 				for (const msg of upsert.messages) {
+					await processGroup(msg);
 					if (!msg.key.fromMe) {
 						await msgStorage(msg);
 						const message = msg.message?.viewOnceMessage?.message
 							?.imageMessage?.caption
 							? msg.message?.viewOnceMessage?.message
-									?.imageMessage?.caption
+								?.imageMessage?.caption
 							: msg.message?.viewOnceMessage?.message
+								?.videoMessage?.caption
+								? msg.message?.viewOnceMessage?.message
 									?.videoMessage?.caption
-							? msg.message?.viewOnceMessage?.message
-									?.videoMessage?.caption
-							: msg.message?.viewOnceMessageV2?.message
+								: msg.message?.viewOnceMessageV2?.message
 									?.imageMessage?.caption
-							? msg.message?.viewOnceMessageV2?.message
-									?.imageMessage?.caption
-							: msg.message?.viewOnceMessageV2?.message
-									?.videoMessage?.caption
-							? msg.message?.viewOnceMessageV2?.message
-									?.videoMessage?.caption
-							: msg.message?.extendedTextMessage?.text
-							? msg.message?.extendedTextMessage?.text.trim()
-							: msg.message?.conversation
-							? msg.message?.conversation
-							: msg.message?.imageMessage?.caption
-							? msg.message?.imageMessage?.caption
-							: msg.message?.videoMessage?.caption
-							? msg.message?.videoMessage?.caption
-							: "";
+									? msg.message?.viewOnceMessageV2?.message
+										?.imageMessage?.caption
+									: msg.message?.viewOnceMessageV2?.message
+										?.videoMessage?.caption
+										? msg.message?.viewOnceMessageV2?.message
+											?.videoMessage?.caption
+										: msg.message?.extendedTextMessage?.text
+											? msg.message?.extendedTextMessage?.text.trim()
+											: msg.message?.conversation
+												? msg.message?.conversation
+												: msg.message?.imageMessage?.caption
+													? msg.message?.imageMessage?.caption
+													: msg.message?.videoMessage?.caption
+														? msg.message?.videoMessage?.caption
+														: "";
 						const quotedM =
 							msg.message?.extendedTextMessage?.contextInfo
 								?.quotedMessage;
-
 						const quotedMessage = quotedM?.viewOnceMessage?.message
 							?.imageMessage?.caption
 							? quotedM?.viewOnceMessage?.message?.imageMessage?.caption
-									.trim()
-									.split(" ")
+								.trim()
+								.split(" ")
 							: quotedM?.viewOnceMessage?.message?.videoMessage
+								?.caption
+								? quotedM?.viewOnceMessage?.message?.videoMessage?.caption
+									.trim()
+									.split(" ")
+								: quotedM?.viewOnceMessageV2?.message?.imageMessage
 									?.caption
-							? quotedM?.viewOnceMessage?.message?.videoMessage?.caption
-									.trim()
-									.split(" ")
-							: quotedM?.viewOnceMessageV2?.message?.imageMessage
-									?.caption
-							? quotedM?.viewOnceMessageV2?.message?.imageMessage?.caption
-									.trim()
-									.split(" ")
-							: quotedM?.viewOnceMessageV2?.message?.videoMessage
-									?.caption
-							? quotedM?.viewOnceMessageV2?.message?.videoMessage?.caption
-									.trim()
-									.split(" ")
-							: quotedM?.extendedTextMessage?.text
-							? quotedM?.extendedTextMessage?.text
-									.trim()
-									.split(" ")
-							: quotedM?.conversation
-							? quotedM?.conversation.trim().split(" ")
-							: quotedM?.imageMessage?.caption
-							? quotedM?.imageMessage?.caption.trim().split(" ")
-							: quotedM?.videoMessage?.caption
-							? quotedM?.videoMessage?.caption.trim().split(" ")
-							: undefined;
+									? quotedM?.viewOnceMessageV2?.message?.imageMessage?.caption
+										.trim()
+										.split(" ")
+									: quotedM?.viewOnceMessageV2?.message?.videoMessage
+										?.caption
+										? quotedM?.viewOnceMessageV2?.message?.videoMessage?.caption
+											.trim()
+											.split(" ")
+										: quotedM?.extendedTextMessage?.text
+											? quotedM?.extendedTextMessage?.text
+												.trim()
+												.split(" ")
+											: quotedM?.conversation
+												? quotedM?.conversation.trim().split(" ")
+												: quotedM?.imageMessage?.caption
+													? quotedM?.imageMessage?.caption.trim().split(" ")
+													: quotedM?.videoMessage?.caption
+														? quotedM?.videoMessage?.caption.trim().split(" ")
+														: undefined;
+						await evalLevel(sock, msg, message)
 						if (message.startsWith(prefix) && message.length > 1) {
 							const arg = message
 								.slice(prefix.length)
@@ -170,9 +171,8 @@ Sigue el canal de informacion para estar al dia de las novedades y actualizacion
 									await sock.sendMessage(
 										`${owner}@s.whatsapp.net`,
 										{
-											text: `Error al ejecutar ${commFil} - ${
-												msg.key.remoteJid
-											}\n ${String(e)}`,
+											text: `Error al ejecutar ${commFil} - ${msg.key.remoteJid
+												}\n ${String(e)}`,
 										},
 									);
 									await sock.sendMessage(

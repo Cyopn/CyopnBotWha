@@ -24,5 +24,4 @@ module.exports.config = {
     alias: ``,
     type: ``,
     description: ``,
-    fulldesc: ``,
 };
