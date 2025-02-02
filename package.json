@@ -10,7 +10,7 @@
         "@adiwajshing/keyed-db": "^0.2.4",
         "@hapi/boom": "^10.0.1",
         "@tobyg74/tiktok-api-dl": "^1.2.2",
-        "@whiskeysockets/baileys": "^6.7.9",
+        "@whiskeysockets/baileys": "^6.7.12",
         "axios": "^1.7.9",
         "body-parser": "^1.20.3",
         "cheerio": "^1.0.0",
@@ -31,7 +31,7 @@
         "twitter-downloader": "^1.1.8",
         "wa-sticker-formatter": "^4.4.4",
         "youtube-sr": "^4.3.11",
-        "ytdl-core": "npm:@distube/ytdl-core@^4.15.8"
+        "ytdl-core": "npm:@distube/ytdl-core@^4.15.9"
     },
     "scripts": {
         "start": "ts-node index.ts",
