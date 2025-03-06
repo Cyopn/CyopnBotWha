@@ -9,9 +9,9 @@
     "dependencies": {
         "@adiwajshing/keyed-db": "^0.2.4",
         "@hapi/boom": "^10.0.1",
-        "@tobyg74/tiktok-api-dl": "^1.2.2",
-        "@whiskeysockets/baileys": "^6.7.12",
-        "axios": "^1.7.9",
+        "@tobyg74/tiktok-api-dl": "^1.2.8",
+        "@whiskeysockets/baileys": "^6.7.16",
+        "axios": "^1.8.1",
         "body-parser": "^1.20.3",
         "cheerio": "^1.0.0",
         "crypto-js": "^4.2.0",
@@ -26,12 +26,12 @@
         "node-read": "^0.1.7",
         "puppeteer": "^23.11.1",
         "qrcode-terminal": "^0.12.0",
-        "ruhend-scraper": "^8.0.8",
+        "ruhend-scraper": "^8.3.0",
         "simple-tts-mp3": "^1.1.0",
         "twitter-downloader": "^1.1.8",
         "wa-sticker-formatter": "^4.4.4",
         "youtube-sr": "^4.3.11",
-        "ytdl-core": "npm:@distube/ytdl-core@^4.15.9"
+        "ytdl-core": "npm:@distube/ytdl-core@^4.16.4"
     },
     "scripts": {
         "start": "ts-node index.ts",
@@ -52,6 +52,6 @@
     "homepage": "https://github.com/Cyopn/CyopnBotWha#readme",
     "devDependencies": {
         "ts-node": "^10.9.2",
-        "typescript": "^5.7.3"
+        "typescript": "^5.8.2"
     }
 }

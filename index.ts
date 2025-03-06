@@ -11,14 +11,12 @@ const { msgStorage, processGroup, evalLevel } = require("./lib/functions.js");
 let command = [];
 let alias = [];
 require("dotenv").config();
-const { prefix, owner, channel } = process.env;
+const { prefix, owner, channel, port } = process.env;
 const logger = MAIN_LOGGER.child({});
 logger.level = "silent";
-//Hosting
 const express = require("express");
 const bodyParser = require("body-parser");
 const app = express();
-const port = 4000;
 app.use(bodyParser.json());
 app.use(
 	bodyParser.urlencoded({
@@ -31,7 +29,6 @@ app.get("/", (request, response) => {
 app.listen(port, () => {
 	console.log(`Aplicacion corriendo en el puerto ${port}.`);
 });
-//Hosting
 fs.readdir("./commands/", (err, files) => {
 	if (err) return console.error(err);
 	let jsfile = files.filter((f) => f.split(".").pop() === "js");
