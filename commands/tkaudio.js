@@ -39,7 +39,7 @@ module.exports.run = async (sock, msg, args) => {
 
 module.exports.config = {
     name: `tkaudio`,
-    alias: `tka`,
+    alias: [`tka`],
     type: `misc`,
-    description: `Envia el audio de tiktok .`,
+    description: `Envia el audio de tiktok.`,
 };

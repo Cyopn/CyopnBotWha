@@ -69,7 +69,7 @@ vi - Vietnamese`;
 
 module.exports.config = {
     name: `lang`,
-    alias: `la`,
+    alias: [`la`],
     type: `misc`,
     description: `Muestra los idiomas disponibles para el comando ${prefix}tts, debe ser escrito correctamente (respetando mayusculas y minusculas).`,
 };

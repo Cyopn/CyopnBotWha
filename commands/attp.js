@@ -34,7 +34,7 @@ module.exports.run = async (sock, msg, args) => {
 
 module.exports.config = {
 	name: `attp`,
-	alias: `ap`,
+	alias: [`ap`],
 	type: `misc`,
 	description: `Crea un sticker segun el texto proporcionado, algunos emojis no son soportados.`,
 };

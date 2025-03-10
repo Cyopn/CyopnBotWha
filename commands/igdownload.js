@@ -69,7 +69,7 @@ module.exports.run = async (sock, msg, args) => {
 
 module.exports.config = {
 	name: `igdownload`,
-	alias: `igdl`,
+	alias: [`igdl`, `ig`, `instagram`],
 	type: `misc`,
 	description: `Envia la contenido de alguna publicacion de Instagram.`,
 };

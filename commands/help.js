@@ -19,7 +19,7 @@ _Ejemplo: ${prefix}attp Hola_
 	command.forEach((name) => {
 		const sr = command.indexOf(name);
 		if (type[sr] === "ign" || type[sr] === "admin") return;
-		txt += `\n*${name}* (alias: ${alias[sr]})\n_${desc[sr]}_
+		txt += `\n*${name}* (alias: ${alias[sr].toString().replaceAll(",", ", ")})\n_${desc[sr]}_
 `;
 	});
 	sock.sendMessage(
@@ -34,7 +34,7 @@ _Ejemplo: ${prefix}attp Hola_
 
 module.exports.config = {
 	name: "help",
-	alias: "h",
+	alias: [`h`, `ayuda`],
 	type: "help",
 	description: `Muestra este mensaje, escribe ${prefix}help help para obtener mas informacion.`,
 };

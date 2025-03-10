@@ -37,7 +37,7 @@ module.exports.run = async (sock, msg, args) => {
 
 module.exports.config = {
 	name: "tovideo",
-	alias: "tv",
+	alias: [`tv`],
 	type: `misc`,
 	description:
 		"Convierte a video un sticker animado ya enviado, respondiendo a el.",

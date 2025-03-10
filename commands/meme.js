@@ -36,7 +36,7 @@ module.exports.run = async (sock, msg) => {
 
 module.exports.config = {
 	name: `meme`,
-	alias: `m`,
+	alias: [`m`],
 	type: `misc`,
 	description: `Envia un chistorete digital publicado en reddit.com/r/ChingaTuMadreNoko/ ¡Conviertete en colaborador!`,
 };

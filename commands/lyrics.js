@@ -33,7 +33,7 @@ module.exports.run = async (sock, msg, args) => {
 
 module.exports.config = {
 	name: `lyrics`,
-	alias: `ly`,
+	alias: [`ly`],
 	type: `misc`,
 	description: `Envia la letra de alguna cancion.`,
 };

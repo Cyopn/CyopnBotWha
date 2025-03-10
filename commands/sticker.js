@@ -72,7 +72,7 @@ module.exports.run = async (sock, msg, args) => {
 
 module.exports.config = {
 	name: "sticker",
-	alias: "s",
+	alias: [`s`],
 	type: "misc",
 	description: `Envia un sticker a partir de una imagen/video/gif, ya sea enviada o respondiendo a alguna ya enviada.`,
 };

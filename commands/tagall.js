@@ -64,7 +64,7 @@ module.exports.run = async (sock, msg, args) => {
 
 module.exports.config = {
 	name: `tagall`,
-	alias: `tag`,
+	alias: [`tag`],
 	type: `misc`,
 	description: `Menciona a todos los miembros del grupo con un mensaje personalizado.`,
 };

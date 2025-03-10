@@ -76,7 +76,7 @@ module.exports.run = async (sock, msg, args) => {
 
 module.exports.config = {
 	name: `stelegram`,
-	alias: `st`,
+	alias: [`st`],
 	type: `misc`,
 	description: `Envia stickers de un paquete de stickers de Telegram.`,
 };

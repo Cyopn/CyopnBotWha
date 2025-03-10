@@ -51,6 +51,6 @@ module.exports.run = async (sock, msg, args) => {
 
 module.exports.config = {
 	name: `suggest`,
-	alias: `sg`,
+	alias: [`sg`],
 	type: `misc`,
 	description: `Envia una sugerencia al desarrollador.`,};

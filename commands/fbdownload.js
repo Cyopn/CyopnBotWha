@@ -44,7 +44,7 @@ module.exports.run = async (sock, msg, args) => {
 
 module.exports.config = {
 	name: `fbdownload`,
-	alias: `fbdl`,
+	alias: [`fbdl`, `fb`, `facebook`],
 	type: `misc`,
 	description: `Envia el video de alguna publicacion de Facebook.`,
 };

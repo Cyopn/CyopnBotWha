@@ -62,7 +62,7 @@ module.exports.run = async (sock, msg, args) => {
 
 module.exports.config = {
 	name: `join`,
-	alias: `j`,
+	alias: [`j`],
 	type: `misc`,
 	description: `Agregame a un grupo solo con el enlace de invitacion del grupo.`,
 };

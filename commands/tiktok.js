@@ -56,7 +56,7 @@ module.exports.run = async (sock, msg, args) => {
 
 module.exports.config = {
 	name: `tiktok`,
-	alias: `tk`,
+	alias: [`tk`],
 	type: `misc`,
 	description: `Envia video o imagen(es) de tiktok sin marca de agua.`,
 };

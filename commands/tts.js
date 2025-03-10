@@ -67,7 +67,7 @@ module.exports.run = async (sock, msg, args) => {
 
 module.exports.config = {
 	name: `tts`,
-	alias: `tts`,
+	alias: [`ts`],
 	type: `misc`,
 	description: `Crea un audio segun el texto proporcionado y en un idioma preferido (español por defecto), usa ${prefix}lang para ver los idiomas permitidos.`,
 };

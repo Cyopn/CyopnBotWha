@@ -49,7 +49,7 @@ module.exports.run = async (sock, msg, args) => {
 
 module.exports.config = {
     name: `edrank`,
-    alias: `er`,
+    alias: [`er`],
     type: `misc`,
     description: `Activa/desactiva el sistema de niveles.`,
 };

@@ -6,10 +6,9 @@ import makeWASocket, {
 	useMultiFileAuthState,
 } from "@whiskeysockets/baileys";
 const MAIN_LOGGER = require("@whiskeysockets/baileys/lib/Utils/logger").default;
-import fs from "fs";
+import fs from "fs/promises";
 const { msgStorage, processGroup, evalLevel } = require("./lib/functions.js");
-let command = [];
-let alias = [];
+let commands: Map<string, { name: string, alias: string[] }> = new Map()
 require("dotenv").config();
 const { prefix, owner, channel, port } = process.env;
 const logger = MAIN_LOGGER.child({});
@@ -29,16 +28,15 @@ app.get("/", (request, response) => {
 app.listen(port, () => {
 	console.log(`Aplicacion corriendo en el puerto ${port}.`);
 });
-fs.readdir("./commands/", (err, files) => {
-	if (err) return console.error(err);
+fs.readdir(`./commands/`).then((files) => {
 	let jsfile = files.filter((f) => f.split(".").pop() === "js");
 	if (jsfile.length <= 0) return console.log("No se encontro ningun comando");
 	jsfile.forEach((f) => {
 		let pull = require(`./commands/${f}`);
-		command.push(pull.config.name);
-		alias.push(pull.config.alias);
+		commands.set((f.split(".")[0]), { "name": pull.config.name, "alias": pull.config.alias })
 	});
-});
+})
+
 const startSock = async () => {
 	const { state, saveCreds } = await useMultiFileAuthState("auth_info");
 	const { version } = await fetchLatestBaileysVersion();
@@ -148,27 +146,30 @@ Sigue el canal de informacion para estar al dia de las novedades y actualizacion
 														? quotedM?.videoMessage?.caption.trim().split(" ")
 														: undefined;
 						await evalLevel(sock, msg, message)
-						if (message.startsWith(prefix) && message.length > 1) {
-							const arg = message
-								.slice(prefix.length)
-								.trim()
-								.split(" ");
-							const cmd = arg.shift().toLowerCase();
+						if ((message.startsWith(prefix) || message.startsWith("chip")) && message.length > 1) {
+							const cmd = message.startsWith("chip") ? message.replace("chip ", "").split(" ").shift() : message.slice(prefix.length).trim().split(" ").shift().toLowerCase();
+							const arg = message.replace("chip ", "").replace(cmd, "").slice(prefix.length).trim().split(" ")
 							const args = [arg, quotedMessage];
-							const cm =
-								command.indexOf(cmd) === -1
-									? alias.indexOf(cmd)
-									: command.indexOf(cmd);
-							if (cm >= 0) {
-								const commFil = command[cm];
-								const commFile = require(`./commands/${commFil}`);
+							let cm: string = undefined
+							for (let [key, value] of commands) {
+								if (value.name === cmd) {
+									cm = key
+									break
+								}
+								if (value.alias.includes(cmd)) {
+									cm = key
+									break
+								}
+							}
+							if (cm !== undefined) {
+								const commFile = require(`./commands/${cm}`);
 								try {
 									commFile.run(sock, msg, args);
 								} catch (e) {
 									await sock.sendMessage(
 										`${owner}@s.whatsapp.net`,
 										{
-											text: `Error al ejecutar ${commFil} - ${msg.key.remoteJid
+											text: `Error al ejecutar ${commFile} - ${msg.key.remoteJid
 												}\n ${String(e)}`,
 										},
 									);

@@ -115,7 +115,7 @@ ${lu.map((e) => `@${e.replace("@s.whatsapp.net", "")}`).join("\n")}`,
 
 module.exports.config = {
 	name: `demote`,
-	alias: `dm`,
+	alias: [`dm`],
 	type: `misc`,
 	description: `Degreda a miembro a uno o mas administradores del grupo, es necesario mencionar o etiquetar algun miembro del grupo.`,
 };

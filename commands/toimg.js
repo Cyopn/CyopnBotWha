@@ -37,7 +37,7 @@ module.exports.run = async (sock, msg, args) => {
 
 module.exports.config = {
 	name: "toimg",
-	alias: "ti",
+	alias: [`ti`],
 	type: `misc`,
 	description: "Convierte a imagen un sticker ya enviado, respondiendo a el.",
 };

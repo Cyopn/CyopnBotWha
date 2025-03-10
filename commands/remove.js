@@ -100,7 +100,7 @@ ${lu.map((e) => `@${e.replace("@s.whatsapp.net", "")}`).join("\n")}`,
 
 module.exports.config = {
 	name: `remove`,
-	alias: `ban`,
+	alias: [`ban`],
 	type: `misc`,
 	description: `Elimina a uno o mas miembros del grupo, es necesario mencionar o etiquetar algun miembro del grupo.`,
 };

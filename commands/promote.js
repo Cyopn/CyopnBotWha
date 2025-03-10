@@ -115,7 +115,7 @@ ${lu.map((e) => `@${e.replace("@s.whatsapp.net", "")}`).join("\n")}`,
 
 module.exports.config = {
 	name: `promote`,
-	alias: `pr`,
+	alias: [`pr`],
 	type: `misc`,
 	description: `Promueve a administrador a uno o mas miembros del grupo, es necesario mencionar o etiquetar algun miembro del grupo.`,
 };

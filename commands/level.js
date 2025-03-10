@@ -61,7 +61,7 @@ Nilvel: ${level}, Experiencia: ${xp}\n${footer}`,
 
 module.exports.config = {
     name: `level`,
-    alias: `l`,
+    alias: [`l`, `nivel`],
     type: `misc`,
     description: `Muestra tu nivel y experiencia conforme tus mensajes enviados.`,
 };

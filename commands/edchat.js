@@ -64,7 +64,7 @@ module.exports.run = async (sock, msg) => {
 
 module.exports.config = {
 	name: `edchat`,
-	alias: `edc`,
+	alias: [`edc`],
 	type: `misc`,
 	description: `Cambia el estado del chat a solo administradores o a todos los miembros del grupo.`,
 };

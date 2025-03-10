@@ -58,7 +58,7 @@ module.exports.run = async (sock, msg, args) => {
 
 module.exports.config = {
     name: `pinterest`,
-    alias: `pin`,
+    alias: [`pin`],
     type: `ign`,
     description: `Envía contenido de Pinterest.`,
 };

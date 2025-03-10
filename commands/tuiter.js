@@ -56,7 +56,7 @@ module.exports.run = async (sock, msg, args) => {
 
 module.exports.config = {
 	name: `tuiter`,
-	alias: `twitter`,
+	alias: [`twitter`, `tw`],
 	type: `misc`,
 	description: `Envia multimedia (video, imagen o gif) de twitter.`,
 };
