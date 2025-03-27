@@ -10,8 +10,8 @@
         "@adiwajshing/keyed-db": "^0.2.4",
         "@hapi/boom": "^10.0.1",
         "@tobyg74/tiktok-api-dl": "^1.2.8",
-        "@whiskeysockets/baileys": "^6.7.16",
-        "axios": "^1.8.2",
+        "@whiskeysockets/baileys": "^6.17.16",
+        "axios": "^1.8.4",
         "body-parser": "^1.20.3",
         "cheerio": "^1.0.0",
         "crypto-js": "^4.2.0",
@@ -29,13 +29,11 @@
         "ruhend-scraper": "^8.3.0",
         "simple-tts-mp3": "^1.1.0",
         "twitter-downloader": "^1.1.8",
-        "wa-sticker-formatter": "^4.4.4",
-        "youtube-sr": "^4.3.11",
-        "ytdl-core": "npm:@distube/ytdl-core@^4.16.4"
+        "wa-sticker-formatter": "^4.4.4"
     },
     "scripts": {
         "start": "ts-node index.ts",
-        "test": "ts-node test.ts"
+        "test": "node test.js"
     },
     "repository": {
         "type": "git",
