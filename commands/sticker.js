@@ -1,79 +1,72 @@
+//Importaciones de .
 require("dotenv").config();
 const { prefix, owner } = process.env;
-const { sticker, errorHandler } = require("../lib/functions");
-const { downloadContentFromMessage } = require("@whiskeysockets/baileys");
+const { errorHandler } = require("../lib/functions");
+const { decryptMedia } = require('@open-wa/wa-decrypt')
 
-module.exports.run = async (sock, msg, args) => {
-	const type =
-		msg.message.imageMessage ||
-			msg.message?.extendedTextMessage?.contextInfo?.quotedMessage
-				?.imageMessage ||
-			msg.message?.viewOnceMessage?.message?.imageMessage ||
-			msg.message?.viewOnceMessageV2?.message?.imageMessage ||
-			msg.message?.extendedTextMessage?.contextInfo?.quotedMessage
-				?.viewOnceMessage?.message?.imageMessage ||
-			msg.message?.extendedTextMessage?.contextInfo?.quotedMessage
-				?.viewOnceMessageV2?.message?.imageMessage
-			? "image"
-			: msg.message?.videoMessage ||
-				msg.message?.extendedTextMessage?.contextInfo?.quotedMessage
-					?.videoMessage ||
-				msg.message?.viewOnceMessage?.message?.videoMessage ||
-				msg.message?.viewOnceMessageV2?.message?.videoMessage ||
-				msg.message?.extendedTextMessage?.contextInfo?.quotedMessage
-					?.viewOnceMessage?.message?.videoMessage ||
-				msg.message?.extendedTextMessage?.contextInfo?.quotedMessage
-					?.viewOnceMessageV2?.message?.videoMessage
-				? "video"
-				: undefined;
-	const m = msg.message?.imageMessage
-		? msg.message?.imageMessage
-		: msg.message?.extendedTextMessage?.contextInfo?.quotedMessage
-			?.imageMessage
-			? msg.message?.extendedTextMessage?.contextInfo?.quotedMessage
-				?.imageMessage
-			: msg.message?.videoMessage
-				? msg.message?.videoMessage
-				: msg.message?.extendedTextMessage?.contextInfo?.quotedMessage
-					?.videoMessage
-					? msg.message?.extendedTextMessage?.contextInfo?.quotedMessage
-						?.videoMessage
-					: undefined;
-	if (m === undefined || m === null || type === undefined || type === null) {
-		sock.sendMessage(
-			msg.key.remoteJid,
-			{
-				text: `Envia una imagen/video/gif con el comando *${prefix}sticker*, o bien, responde a alguno ya enviado.`,
-			},
-			{ quoted: msg },
-		);
-	} else {
-		try {
-			const w = await downloadContentFromMessage(m, type).catch(async (e) => {
-				await errorHandler(sock, msg, "sticker", e);
-			});
-			let buffer = Buffer.from([]);
-			for await (const chunk of w) {
-				buffer = Buffer.concat([buffer, chunk]);
-			}
-			let s = await sticker(buffer).catch(async (e) => {
-				await errorHandler(sock, msg, "sticker", e);
-			});
-			await sock
-				.sendMessage(msg.key.remoteJid, { sticker: s }, { quoted: msg })
-				.catch(async (e) => {
-					await errorHandler(sock, msg, this.config.name, e);
-				});
-		} catch (e) {
-			await errorHandler(sock, msg, this.config.name, e);
-		}
-	}
+module.exports.run = async (client, message, args) => {
+    const { type, id, from, isMedia, quotedMsg, mimetype } = message
+    try {
+        if (isMedia && type === 'image') {
+            const mediaData = await decryptMedia(message);
+            const imageBase64 = `data:${message.mimetype};base64,${mediaData.toString(
+                'base64'
+            )}`;
+            client.sendImageAsSticker(from, imageBase64, {
+                author: 'ig: @Cyopn_',
+                pack: 'CyopnBot',
+                keepScale: true
+            })
+        } else if (quotedMsg && quotedMsg.type === 'image') {
+            const mediaData = await decryptMedia(quotedMsg);
+            const imageBase64 = `data:${quotedMsg.mimetype};base64,${mediaData.toString(
+                'base64'
+            )}`;
+            client.sendImageAsSticker(from, imageBase64, {
+                author: 'ig: @Cyopn_',
+                pack: 'CyopnBot',
+                keepScale: true
+            })
+        } else if (isMedia && mimetype === 'video/mp4') {
+            if (message.duration <= 10 || mimetype === 'image/gif' && message.duration <= 10) {
+                const mediaData = await decryptMedia(message)
+                await client.sendMp4AsSticker(from, `data:${message.mimetype};base64,${mediaData.toString('base64')}`, {
+                    crop: false
+                }, {
+                    author: 'ig: @Cyopn_',
+                    pack: 'CyopnBot'
+                }).catch(e => {
+                    console.log(e.toString())
+                    if (e.toString().includes("STICKER_TOO_LARGE: maxContentLength size of 1500000 exceeded")) return client.reply(from, 'Es imposible crear el sticker, el archivo es demasiado pesado.', id)
+                })
+            } else {
+                await client.reply(from, 'El video debe durar menos de 10 segundos.', id)
+            }
+        } else if (quotedMsg && quotedMsg.mimetype === 'video/mp4') {
+            if (quotedMsg.duration <= 10 || quotedMsg.mimetype === 'image/gif' && quotedMsg.duration <= 10) {
+                const mediaData = await decryptMedia(quotedMsg)
+
+                await client.sendMp4AsSticker(from, `data:${quotedMsg.mimetype};base64,${mediaData.toString('base64')}`, { crop: false }, {
+                    author: 'ig: @Cyopn_',
+                    pack: 'CyopnBot'
+                }).catch(e => {
+                    if (e.toString().includes("STICKER_TOO_LARGE: maxContentLength size of 1500000 exceeded")) return client.reply(from, 'Es imposible crear el sticker, el archivo es demasiado pesado', id)
+                })
+
+            } else {
+                await client.reply(from, 'El video debe durar menos de 10 segundos', id)
+            }
+        } else {
+            await client.reply(from, `Envia una imagen/video/gif con el comando *${prefix}sticker* o responde a una ya enviada.`, id)
+        }
+    } catch (e) {
+        await errorHandler(client, message, this.config.name, e);
+    }
 };
 
 module.exports.config = {
-	name: "sticker",
-	alias: "s",
-	type: "misc",
-	description: `Envia un sticker a partir de una imagen/video/gif, ya sea enviada o respondiendo a alguna ya enviada.`,
-	fulldesc: `Este comando funciona para crear stickers (pegatinas), puedes enviar una imagen, video o gif escribiendo el prefijo ${prefix} junto al nombre del comando (sticker) o su alias (s) antes de enviarla, otra manera de usarlo es respondiendo a una imagen, video o gif ya enviado, de igual modo escribiendo el prefijo ${prefix} junto al nombre del comando (sticker) o su alias (s).\nEste comando lo puedes usar en grupos y mensajes directos.`,
+    name: `sticker`,
+    alias: [`s`],
+    type: `misc`,
+    description: `Envia un sticker a partir de una imagen/video/gif, ya sea enviado o respondiendo a alguno ya enviado.`,
 };

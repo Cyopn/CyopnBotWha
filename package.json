@@ -7,14 +7,10 @@
         "lib": "lib"
     },
     "dependencies": {
-        "@adiwajshing/keyed-db": "^0.2.4",
-        "@hapi/boom": "^10.0.1",
+        "@open-wa/wa-automate": "^4.76.0",
         "@tobyg74/tiktok-api-dl": "^1.2.2",
         "@whiskeysockets/baileys": "^6.7.9",
         "axios": "^1.7.9",
-        "body-parser": "^1.20.3",
-        "cheerio": "^1.0.0",
-        "crypto-js": "^4.2.0",
         "dotenv": "^16.4.7",
         "express": "^4.21.2",
         "ffmpeg": "^0.0.4",
@@ -24,17 +20,12 @@
         "ko-sleep": "^1.1.4",
         "megadb": "^3.4.0",
         "node-read": "^0.1.7",
-        "puppeteer": "^23.11.1",
-        "qrcode-terminal": "^0.12.0",
         "ruhend-scraper": "^8.0.8",
         "simple-tts-mp3": "^1.1.0",
-        "twitter-downloader": "^1.1.8",
-        "wa-sticker-formatter": "^4.4.4",
-        "youtube-sr": "^4.3.11",
-        "ytdl-core": "npm:@distube/ytdl-core@^4.15.8"
+        "twitter-downloader": "^1.1.8"
     },
     "scripts": {
-        "start": "ts-node index.ts",
+        "start": "node index.js",
         "test": "node test.js"
     },
     "repository": {

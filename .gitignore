@@ -13,3 +13,9 @@ auth_info
 secrets.json
 info.txt
 media_storage
+
+# managed
+**.data.json
+**.node-persist**
+**_IGNORE_**
+# end managed

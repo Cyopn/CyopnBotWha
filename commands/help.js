@@ -1,10 +1,18 @@
+//Importaciones de .
 require("dotenv").config();
 const { prefix, channel } = process.env;
-const { getCommands } = require("../lib/functions");
+const { errorHandler, getCommands } = require("../lib/functions");
 
-module.exports.run = async (sock, msg, args) => {
-	const { command, alias, type, desc, fulldesc } = await getCommands();
-	let txt = `*CyopnBot* 
+module.exports.run = async (client, message, args) => {
+	const arg =
+		args[1] === undefined && args[0].join(" ").length >= 1
+			? args[0].join(" ")
+			: args[1] === undefined
+				? ""
+				: args[1].join(" ");
+	try {
+		const { command, alias, type, desc } = await getCommands();
+		let txt = `*CyopnBot* 
 *Prefijo*: [  ${prefix}  ] 
 _yo_ : https://instagram.com/Cyopn_
 Sigue el canal de informacion para estar al dia de las novedades y actualizaciones: ${channel}
@@ -16,80 +24,22 @@ Se deben sustituir los parentesis/corchetes segun corresponda.
 _Ejemplo: ${prefix}attp Hola_
 
 *Comandos disponibles*:`;
-	const arg = args[0].join(" ");
-	if (!arg) {
 		command.forEach((name) => {
 			const sr = command.indexOf(name);
 			if (type[sr] === "ign" || type[sr] === "admin") return;
-			txt += `\n*${name}* (alias: ${alias[sr]})\n_${desc[sr]}_
+			txt += `\n*${name}* (alias: ${alias[sr].toString().replaceAll(",", ", ")})\n_${desc[sr]}_
 `;
 		});
-		sock.sendMessage(
-			msg.key.remoteJid,
-			{
-				text: txt,
-			},
-			{ quoted: msg },
-		);
+		await client.reply(message.from, txt, message.id);
 		txt = "";
-	} else {
-		const cmd =
-			command.indexOf(arg) === -1
-				? alias.indexOf(arg)
-				: command.indexOf(arg);
-		if (cmd >= 0) {
-			let txt = `Mas informacion sobre el comando: *${command[cmd]}*
-Descripcion: ${fulldesc[cmd]}`;
-			sock.sendMessage(
-				msg.key.remoteJid,
-				{
-					text: txt,
-				},
-				{ quoted: msg },
-			);
-			txt = "";
-		} else {
-			switch (arg) {
-				case "admin":
-					command.forEach((name) => {
-						const sr = command.indexOf(name);
-						if (
-							type[sr] === "ign" ||
-							type[sr] === "misc" ||
-							type[sr] === "help" ||
-							type[sr] === "test"
-						)
-							return;
-						txt += `\n*${name}* (alias: ${alias[sr]})\n_${desc[sr]}_
-			`;
-					});
-					sock.sendMessage(
-						msg.key.remoteJid,
-						{
-							text: txt,
-						},
-						{ quoted: msg },
-					);
-					txt = "";
-					break;
-				default:
-					sock.sendMessage(
-						msg.key.remoteJid,
-						{
-							text: `El comando *${arg}* no existe.`,
-						},
-						{ quoted: msg },
-					);
-					break;
-			}
-		}
+	} catch (e) {
+		await errorHandler(client, message, this.config.name, e);
 	}
 };
 
 module.exports.config = {
-	name: "help",
-	alias: "h",
-	type: "help",
-	description: `Muestra este mensaje, escribe ${prefix}help help para obtener mas informacion.`,
-	fulldesc: `Este comando no solo funciona para obtener los comandos, si no, al escibir el nombre o alias de otro comando (${prefix}help sticker, incluso si lo usas con sus alias (${prefix}h s), mostrara mas detalles sobre su uso.\nEste comando lo puedes usar en grupos y mensajes directos.`,
+	name: `help`,
+	alias: [`h`, `ayuda`],
+	type: `help`,
+	description: `Muestra este mensaje.`,
 };
