@@ -10,7 +10,7 @@ import fs from "fs/promises";
 const { msgStorage, processGroup, evalLevel } = require("./lib/functions.js");
 let commands: Map<string, { name: string, alias: string[] }> = new Map()
 require("dotenv").config();
-const { prefix, owner, channel, port } = process.env;
+const { prefix, owner, channel, port, bot } = process.env;
 const logger = MAIN_LOGGER.child({});
 logger.level = "silent";
 const express = require("express");
@@ -54,7 +54,12 @@ const startSock = async () => {
 	sock.ev.process(async (events) => {
 		if (events["connection.update"]) {
 			const update = events["connection.update"];
-			const { connection, lastDisconnect } = update;
+			const { connection, lastDisconnect, qr,  } = update;
+
+			if (qr) {
+				const code = await sock.requestPairingCode(bot);
+				console.log("Codigo de verificacion: ", code);
+			}
 			if (connection === "close") {
 				if (
 					(lastDisconnect?.error as Boom)?.output?.statusCode !==

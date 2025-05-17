@@ -8,3 +8,5 @@ channel=https://whatsapp.com/channel/0029VaBECw9LdQefGF8o8d1L
 token=
 #Puerto sobre el que la apicacion se mostrara
 port=4000
+#Numero del bot
+bot=
