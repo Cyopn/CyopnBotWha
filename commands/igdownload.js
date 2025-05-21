@@ -1,6 +1,6 @@
 require("dotenv").config();
 const { prefix } = process.env;
-const { igdl } = require("ruhend-scraper")
+const { instagram } = require("../lib/scrapper")
 const { errorHandler } = require("../lib/functions");
 
 module.exports.run = async (sock, msg, args) => {
@@ -30,23 +30,21 @@ module.exports.run = async (sock, msg, args) => {
 			{ quoted: msg },
 		);
 	try {
-		const result = await igdl(arg)
-		if (result.data === undefined) return await sock.sendMessage(
+		const result = await instagram(arg)
+		if (result.msg) return await sock.sendMessage(
 			msg.key.remoteJid,
 			{
 				text: "No se encontro el contenido.",
 			},
 			{ quoted: msg },
 		);
-		let res = []
-		result.data.forEach(e => {
-			if (res.indexOf(e.url) !== -1) return
-			if (e.url.includes("jpg")) {
+		result.url.forEach(e => {
+			if (e.includes("jpg")) {
 				sock.sendMessage(
 					msg.key.remoteJid,
 					{
 						caption: "w",
-						image: { url: e.url },
+						image: { url: e },
 					},
 					{ quoted: msg },
 				);
@@ -55,12 +53,11 @@ module.exports.run = async (sock, msg, args) => {
 					msg.key.remoteJid,
 					{
 						caption: "w",
-						video: { url: e.url },
+						video: { url: e },
 					},
 					{ quoted: msg },
 				);
 			}
-			res.push(e.url)
 		});
 	} catch (e) {
 		await errorHandler(sock, msg, this.config.name, e);
