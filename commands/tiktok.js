@@ -19,35 +19,34 @@ module.exports.run = async (sock, msg, args) => {
 			{ quoted: msg },
 		);
 	try {
-		const res = await tiktok(arg, "media")
-		if (res.length > 0) {
-			res.forEach(async (media) => {  
-				if (media.type == "video") {
-					await sock.sendMessage(
-						msg.key.remoteJid,
-						{
-							video: { url: media.url },
-						},
-						{ quoted: msg },
-					);
-				} else {
-					await sock.sendMessage(
-						msg.key.remoteJid,
-						{
-							image: { url: media.url },
-						},
-						{ quoted: msg },
-					);
-				}
-			})
-		} else {
+		const res = await tiktok(arg)
+		if (res.data.error) return sock.sendMessage(
+			msg.key.remoteJid,
+			{
+				text: res.data.error,
+			},
+			{ quoted: msg },
+		);
+		if (res.data.video) {
 			await sock.sendMessage(
 				msg.key.remoteJid,
 				{
-					text: "No se encontraron videos o imagenes en el enlace proporcionado.",
+					video: { url: res.data.video },
+					caption: `w`,
 				},
 				{ quoted: msg },
 			);
+		} else {
+			res.data.image.forEach(async (image) => {
+				await sock.sendMessage(
+					msg.key.remoteJid,
+					{
+						image: { url: image },
+						caption: `w`,
+					},
+					{ quoted: msg },
+				);
+			});
 		}
 	} catch (e) {
 		await errorHandler(sock, msg, this.config.name, e);
