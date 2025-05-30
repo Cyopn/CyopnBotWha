@@ -30,7 +30,7 @@ module.exports.run = async (sock, msg, args) => {
 			{ quoted: msg },
 		);
 	try {
-		const result = await instagram(arg)
+		const result = await instagram(arg);
 		if (result.msg) return await sock.sendMessage(
 			msg.key.remoteJid,
 			{
