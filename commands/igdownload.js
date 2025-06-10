@@ -39,7 +39,7 @@ module.exports.run = async (sock, msg, args) => {
 			{ quoted: msg },
 		);
 		result.url.forEach(e => {
-			if (e.includes("jpg")) {
+			if (e.includes("jpg") || result.metadata !== undefined) {
 				sock.sendMessage(
 					msg.key.remoteJid,
 					{
