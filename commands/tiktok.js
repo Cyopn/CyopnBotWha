@@ -1,7 +1,7 @@
 require("dotenv").config();
 const { prefix } = process.env;
 const { errorHandler } = require("../lib/functions");
-const { tiktok2 } = require("../lib/scrapper");
+const { tiktok } = require("../lib/scrapper");
 
 module.exports.run = async (sock, msg, args) => {
 	const arg =
@@ -19,7 +19,7 @@ module.exports.run = async (sock, msg, args) => {
 			{ quoted: msg },
 		);
 	try {
-		const res = await tiktok2(arg)
+		const res = await tiktok(arg)
 		if (res.video) {
 			await sock.sendMessage(
 				msg.key.remoteJid,
