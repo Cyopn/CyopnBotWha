@@ -20,21 +20,22 @@ module.exports.run = async (sock, msg, args) => {
 		);
 	try {
 		const res = await tiktok(arg)
-		if (res.video) {
+		console.log(res);
+		if (res.data.video) {
 			await sock.sendMessage(
 				msg.key.remoteJid,
 				{
-					video: { url: res.video.noWatermark },
+					video: { url: res.data.video },
 					caption: `w`,
 				},
 				{ quoted: msg },
 			);
 		} else {
-			res.images.forEach(async (image) => {
+			res.data.image.forEach(async (image) => {
 				await sock.sendMessage(
 					msg.key.remoteJid,
 					{
-						image: { url: image.url },
+						image: { url: image },
 						caption: `w`,
 					},
 					{ quoted: msg },

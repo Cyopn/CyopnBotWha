@@ -5,16 +5,20 @@ import makeWASocket, {
 	makeCacheableSignalKeyStore,
 	useMultiFileAuthState,
 } from "@whiskeysockets/baileys";
-const MAIN_LOGGER = require("@whiskeysockets/baileys/lib/Utils/logger").default;
 import fs from "fs/promises";
 const { msgStorage, processGroup, evalLevel } = require("./lib/functions.js");
-let commands: Map<string, { name: string, alias: string[] }> = new Map()
 require("dotenv").config();
 const { prefix, owner, channel, port, bot } = process.env;
-const logger = MAIN_LOGGER.child({});
-logger.level = "silent";
 const express = require("express");
 const bodyParser = require("body-parser");
+import NodeCache from '@cacheable/node-cache'
+import P from 'pino'
+import sleep from 'ko-sleep'
+const logger = P({ timestamp: () => `,"time":"${new Date().toJSON()}"` }, P.destination('./logs.txt'))
+logger.level = 'silent'
+const msgRetryCounterCache = new NodeCache<any>()
+
+let commands: Map<string, { name: string, alias: string[] }> = new Map()
 const app = express();
 app.use(bodyParser.json());
 app.use(
@@ -38,41 +42,43 @@ fs.readdir(`./commands/`).then((files) => {
 })
 
 const startSock = async () => {
-	const { state, saveCreds } = await useMultiFileAuthState("auth_info");
-	const { version } = await fetchLatestBaileysVersion();
+	const { state, saveCreds } = await useMultiFileAuthState('auth_info')
+	const { version } = await fetchLatestBaileysVersion()
 
 	const sock = makeWASocket({
 		version,
 		logger,
-		printQRInTerminal: true,
 		auth: {
 			creds: state.creds,
 			keys: makeCacheableSignalKeyStore(state.keys, logger),
 		},
+		msgRetryCounterCache,
 	});
+
+	if (!sock.authState.creds.registered) {
+		await sleep(1000)
+		const code = await sock.requestPairingCode(bot)
+		console.log(`Codigo de verificacion: ${code}`)
+	}
+
 	console.log("Cliente listo");
 	sock.ev.process(async (events) => {
-		if (events["connection.update"]) {
-			const update = events["connection.update"];
-			const { connection, lastDisconnect, qr,  } = update;
-
-			if (qr) {
-				const code = await sock.requestPairingCode(bot);
-				console.log("Codigo de verificacion: ", code);
-			}
-			if (connection === "close") {
-				if (
-					(lastDisconnect?.error as Boom)?.output?.statusCode !==
-					DisconnectReason.loggedOut
-				) {
-					console.log("Reconectando");
-					startSock();
+		if (events['connection.update']) {
+			const update = events['connection.update']
+			const { connection, lastDisconnect } = update
+			if (connection === 'close') {
+				if ((lastDisconnect?.error as Boom)?.output?.statusCode !== DisconnectReason.loggedOut) {
+					startSock()
+				} else {
+					console.log('COnexion cerrada, sin sesion.')
 				}
 			}
 		}
+
 		if (events["creds.update"]) {
 			await saveCreds();
 		}
+
 		if (events["groups.upsert"]) {
 			const [metadata] = events["groups.upsert"];
 			await sock.sendMessage(metadata.id, {
@@ -84,6 +90,7 @@ Whatsapp: wa.me/+5215633592644\nInstagram: https://www.instagram.com/cyopn_/
 Sigue el canal de informacion para estar al dia de las novedades y actualizaciones: ${channel}`,
 			});
 		}
+		
 		if (events["messages.upsert"]) {
 			const upsert = events["messages.upsert"];
 			if (upsert.type === "append" || upsert.type === "notify") {
