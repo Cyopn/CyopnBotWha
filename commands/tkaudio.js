@@ -23,7 +23,7 @@ module.exports.run = async (sock, msg, args) => {
         await sock.sendMessage(
             msg.key.remoteJid,
             {
-                audio: { url: res.audio },
+                audio: { url: res.data.audio },
                 mimetype: "audio/mpeg",
             },
             { quoted: msg },
