@@ -6,17 +6,18 @@ import makeWASocket, {
 	useMultiFileAuthState,
 } from "@whiskeysockets/baileys";
 import fs from "fs/promises";
+import NodeCache from '@cacheable/node-cache'
+import P from 'pino'
+import sleep from 'ko-sleep'
+
 const { msgStorage, processGroup, evalLevel } = require("./lib/functions.js");
 require("dotenv").config();
 const { prefix, owner, channel, port, bot } = process.env;
 const express = require("express");
 const bodyParser = require("body-parser");
-import NodeCache from '@cacheable/node-cache'
-import P from 'pino'
-import sleep from 'ko-sleep'
+const msgRetryCounterCache = new NodeCache<any>()
 const logger = P({ timestamp: () => `,"time":"${new Date().toJSON()}"` }, P.destination('./logs.txt'))
 logger.level = 'silent'
-const msgRetryCounterCache = new NodeCache<any>()
 
 let commands: Map<string, { name: string, alias: string[] }> = new Map()
 const app = express();
