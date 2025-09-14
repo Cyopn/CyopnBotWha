@@ -5,17 +5,12 @@ media/audio/tts.mp3
 media/images/w.jpg
 media/temp/output.json
 commands/test.js
+db/
 **test.*
 output.json
-database
 auth_info
 .env
 secrets.json
 info.txt
 media_storage
 logs.txt
-# managed
-**.data.json
-**.node-persist**
-**_IGNORE_**
-# end managed

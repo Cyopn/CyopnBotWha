@@ -1,20 +1,16 @@
 require("dotenv").config();
-const { prefix, owner } = process.env;
 const { errorHandler } = require("../lib/functions");
-const db = require("megadb");
-
-let dbl = new db.crearDB({
-    nombre: "level",
-    carpeta: "./database",
-});
-
-let dbg = new db.crearDB({
-    nombre: "groups",
-    carpeta: "./database",
-});
+const db = require("megadbx");
 
 module.exports.run = async (sock, msg, args) => {
     try {
+        let dbl = new db.MegaDBFull("level", {
+            dir: "./"
+        });
+
+        let dbg = new db.MegaDBFull("groups", {
+            dir: "./"
+        });
         if (!msg.key.remoteJid.includes("g.us"))
             return sock.sendMessage(
                 msg.key.remoteJid,
@@ -28,12 +24,14 @@ module.exports.run = async (sock, msg, args) => {
         const footer = enable ? "" : "El sistema de niveles esta desactivado."
         let lu = [];
         let mentioned = false;
-        for (u of args[0]) {
-            if (Number.isNaN(Number.parseInt(u.replace("@", "")))) return
-            mentioned = true;
-            lu.push(u);
+        if (args[0] === undefined) {
+            for (u of args[0]) {
+                if (Number.isNaN(Number.parseInt(u.replace("@", "")))) return
+                mentioned = true;
+                lu.push(u);
+            }
         }
-        const p = mentioned ? lu[0].replace("@", "") : `${msg.key.participant.split("@")[0]}`;
+        const p = mentioned ? lu[0].replace("@", "") : `${msg.key.participantPn.split("@")[0]}`;
         if (await dbl.has(`${gid}.${p}`)) {
             const { xp, level } = await dbl.get(`${gid}.${p}`)
             sock.sendMessage(
@@ -54,6 +52,10 @@ Nilvel: ${level}, Experiencia: ${xp}\n${footer}`,
                 { quoted: msg },
             )
         }
+        await dbl.flush()
+        await dbl.close()
+        await dbg.flush()
+        await dbg.close()
     } catch (e) {
         await errorHandler(sock, msg, this.config.name, e);
     }
@@ -61,7 +63,7 @@ Nilvel: ${level}, Experiencia: ${xp}\n${footer}`,
 
 module.exports.config = {
     name: `level`,
-    alias: [`l`, `nivel`],
+    alias: [`l`, `nivel`, `lvl`, `xp`],
     type: `misc`,
     description: `Muestra tu nivel y experiencia conforme tus mensajes enviados.`,
 };

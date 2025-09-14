@@ -12,16 +12,9 @@ module.exports.run = async (sock, msg, args) => {
 			{ quoted: msg },
 		);
 	const imAdmin = (
-		await sock.groupMetadata(msg.key.remoteJid)
-	).participants.some(
-		(e) =>
-			e.id ===
-			sock.user.id.substring(0, sock.user.id.indexOf(":")) +
-			sock.user.id.substring(
-				sock.user.id.indexOf("@"),
-				sock.user.id.length,
-			) && e.admin != null,
-	);
+		await sock.groupMetadata(msg.key.remoteJid)).participants.some(e => {
+			return e.jid === (sock.user.id).replace((sock.user.id).substring(sock.user.id.indexOf(":"), sock.user.id.indexOf("@")), "") && e.admin != null
+		})
 	const isAdmin = (
 		await sock.groupMetadata(msg.key.remoteJid)
 	).participants.some(
@@ -74,7 +67,9 @@ module.exports.run = async (sock, msg, args) => {
 				u = u.replace("@", "").concat("@s.whatsapp.net");
 				const isAdmin = (
 					await sock.groupMetadata(msg.key.remoteJid)
-				).participants.some((r) => r.id === u && r.admin != null);
+				).participants.some((r) => {
+					return r.jid === u && r.admin !== null
+				});
 				if (isAdmin) {
 					lu.push(u);
 				} else {

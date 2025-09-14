@@ -1,19 +1,17 @@
 require("dotenv").config();
 const { errorHandler } = require("../lib/functions");
-const db = require("megadb");
-let dbl = new db.crearDB({
-    nombre: "level",
-    carpeta: "./database",
-});
-
-let dbg = new db.crearDB({
-    nombre: "groups",
-    carpeta: "./database",
-});
+const db = require("megadbx");
 
 module.exports.run = async (sock, msg, args) => {
     const { remoteJid } = msg.key;
     try {
+        let dbl = new db.MegaDBFull("level", {
+            dir: "./"
+        });
+
+        let dbg = new db.MegaDBFull("groups", {
+            dir: "./"
+        });
         if (!remoteJid.includes("g.us"))
             return sock.sendMessage(
                 msg.key.remoteJid,
@@ -85,6 +83,10 @@ module.exports.run = async (sock, msg, args) => {
                 { quoted: msg },
             );
         }
+        await dbl.flush()
+        await dbl.close()
+        await dbg.flush()
+        await dbg.close()
     } catch (e) {
         await errorHandler(sock, msg, this.config.name, e);
     }
