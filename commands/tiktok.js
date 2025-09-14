@@ -20,7 +20,7 @@ module.exports.run = async (sock, msg, args) => {
 		);
 	try {
 		const res = await tiktok(arg)
-		console.log(res);
+		if(res.data.error) return await sock.sendMessage(msg.key.remoteJid, { text: res.data.error }, { quoted: msg });
 		if (res.data.video) {
 			await sock.sendMessage(
 				msg.key.remoteJid,
