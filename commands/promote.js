@@ -64,7 +64,9 @@ module.exports.run = async (sock, msg, args) => {
 					{ quoted: msg },
 				);
 			} else {
-				u = u.replace("@", "").concat("@s.whatsapp.net");
+				u = (await sock.groupMetadata(msg.key.remoteJid)).participants.filter(e => {
+					return e.jid ? e.lid.includes(u.replace("@", "")) : null
+				})[0].jid;
 				const isAdmin = (
 					await sock.groupMetadata(msg.key.remoteJid)
 				).participants.some((r) => {
