@@ -5,7 +5,7 @@ const db = require("megadbx");
 
 module.exports.run = async (sock, msg, args) => {
 	try {
-		const dbg = new db.MegaDBFull("suggest", {
+		const dbg = new db.MegaDB("suggest", {
 			dir: "./"
 		});
 		if (args[1] !== undefined || args[0].join(" ").length > 1) {

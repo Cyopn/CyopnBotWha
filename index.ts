@@ -10,12 +10,12 @@ import NodeCache from '@cacheable/node-cache'
 import P from 'pino'
 import sleep from 'ko-sleep'
 
-const { msgStorage, processGroup, evalLevel, loadDatabase } = require("./lib/functions.js");
+const { msgStorage, processGroup, evalLevel } = require("./lib/functions.js");
 require("dotenv").config();
 const { prefix, owner, channel, port, bot } = process.env;
 const express = require("express");
 const bodyParser = require("body-parser");
-const msgRetryCounterCache = new NodeCache()
+const msgRetryCounterCache = new NodeCache<any>()
 const logger = P({ timestamp: () => `,"time":"${new Date().toJSON()}"` }, P.destination('./logs.txt'))
 logger.level = 'silent'
 
@@ -43,7 +43,6 @@ fs.readdir(`./commands/`).then((files) => {
 })
 
 const startSock = async () => {
-	await loadDatabase()
 	const { state, saveCreds } = await useMultiFileAuthState('auth_info')
 	const { version } = await fetchLatestBaileysVersion()
 

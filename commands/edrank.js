@@ -6,7 +6,7 @@ module.exports.run = async (sock, msg, args) => {
     const { remoteJid } = msg.key;
     const gid = remoteJid.split("@")[0];
     try {
-        let dbg = new db.MegaDBFull("groups", {
+        let dbg = new db.MegaDB("groups", {
             dir: "./"
         });
         if (!msg.key.remoteJid.includes("g.us"))

@@ -4,11 +4,11 @@ const db = require("megadbx");
 
 module.exports.run = async (sock, msg, args) => {
     try {
-        let dbl = new db.MegaDBFull("level", {
+        let dbl = new db.MegaDB("level", {
             dir: "./"
         });
 
-        let dbg = new db.MegaDBFull("groups", {
+        let dbg = new db.MegaDB("groups", {
             dir: "./"
         });
         if (!msg.key.remoteJid.includes("g.us"))
