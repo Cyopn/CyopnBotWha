@@ -15,7 +15,7 @@ require("dotenv").config();
 const { prefix, owner, channel, port, bot } = process.env;
 const express = require("express");
 const bodyParser = require("body-parser");
-const msgRetryCounterCache = new NodeCache<any>()
+const msgRetryCounterCache = new NodeCache()
 const logger = P({ timestamp: () => `,"time":"${new Date().toJSON()}"` }, P.destination('./logs.txt'))
 logger.level = 'silent'
 
@@ -72,7 +72,7 @@ const startSock = async () => {
 				if ((lastDisconnect?.error as Boom)?.output?.statusCode !== DisconnectReason.loggedOut) {
 					startSock()
 				} else {
-					console.log('COnexion cerrada, sin sesion.')
+					console.log('Conexion cerrada, sin sesion.')
 				}
 			}
 		}

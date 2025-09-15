@@ -38,7 +38,7 @@ module.exports.run = async (sock, msg, args) => {
                 msg.key.remoteJid,
                 {
                     text: `Felicidades @${p}
-Nilvel: ${level}, Experiencia: ${xp}\n${footer}`,
+Nivel: ${level}, Experiencia: ${xp}\n${footer}`,
                     mentions: [p.replace("@", "").concat("@s.whatsapp.net")],
                 },
                 { quoted: msg },
