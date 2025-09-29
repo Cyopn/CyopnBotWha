@@ -1,16 +1,9 @@
 require("dotenv").config();
 const { errorHandler } = require("../lib/functions");
-const db = require("megadbx");
+const { getConfig, getXpLevel } = require("../lib/db")
 
 module.exports.run = async (sock, msg, args) => {
     try {
-        let dbl = new db.MegaDB("level", {
-            dir: "./"
-        });
-
-        let dbg = new db.MegaDB("groups", {
-            dir: "./"
-        });
         if (!msg.key.remoteJid.includes("g.us"))
             return sock.sendMessage(
                 msg.key.remoteJid,
@@ -20,42 +13,48 @@ module.exports.run = async (sock, msg, args) => {
                 { quoted: msg },
             );
         const gid = msg.key.remoteJid.split("@")[0];
-        const enable = await dbg.get(`${gid}.rank`);
+        const enable = await getConfig("rank", gid);
         const footer = enable ? "" : "El sistema de niveles esta desactivado."
         let lu = [];
         let mentioned = false;
-        if (args[0] === undefined) {
+        if (args[0] !== undefined) {
             for (u of args[0]) {
+                u = (await sock.groupMetadata(msg.key.remoteJid)).participants.filter(e => {
+                    return e.jid ? e.lid.includes(u.replace("@", "")) : null
+                })[0].jid;
+                console.log(u)
                 if (Number.isNaN(Number.parseInt(u.replace("@", "")))) return
                 mentioned = true;
                 lu.push(u);
             }
         }
         const p = mentioned ? lu[0].replace("@", "") : `${msg.key.participantPn.split("@")[0]}`;
-        if (await dbl.has(`${gid}.${p}`)) {
-            const { xp, level } = await dbl.get(`${gid}.${p}`)
-            sock.sendMessage(
+        const { has, xp, level } = await getXpLevel(gid, p);
+        if (!has) {
+            return sock.sendMessage(
                 msg.key.remoteJid,
                 {
-                    text: `Felicidades @${p}
-Nivel: ${level}, Experiencia: ${xp}\n${footer}`,
-                    mentions: [p.replace("@", "").concat("@s.whatsapp.net")],
+                    text: `${mentioned ? `El miembro @${lu[0].replace(
+                        "@s.whatsapp.net",
+                        "",
+                    )} no tiene` : "No tienes"} nivel ni experiencia aún. \n${footer}`,
+                    mentions: mentioned ? [lu[0]] : []
                 },
                 { quoted: msg },
             );
         } else {
-            sock.sendMessage(
+            return sock.sendMessage(
                 msg.key.remoteJid,
                 {
-                    text: `El miembro aun no envia suficientes mensajes.\n${footer}`,
+                    text: `${mentioned ? `El miembro @${lu[0].replace(
+                        "@s.whatsapp.net",
+                        "",
+                    )} tiene` : "Tienes:"} \nNivel: *${level}*\nExperiencia: *${xp}*\n${footer}`,
+                    mentions: mentioned ? [lu[0]] : []
                 },
                 { quoted: msg },
-            )
+            );
         }
-        await dbl.flush()
-        await dbl.close()
-        await dbg.flush()
-        await dbg.close()
     } catch (e) {
         await errorHandler(sock, msg, this.config.name, e);
     }

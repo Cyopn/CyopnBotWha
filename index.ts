@@ -10,7 +10,8 @@ import NodeCache from '@cacheable/node-cache'
 import P from 'pino'
 import sleep from 'ko-sleep'
 
-const { msgStorage, processGroup, evalLevel } = require("./lib/functions.js");
+const { msgStorage } = require("./lib/functions.js");
+const { processGroup, evalLevel } = require("./lib/db.js");
 require("dotenv").config();
 const { prefix, owner, channel, port, bot } = process.env;
 const express = require("express");

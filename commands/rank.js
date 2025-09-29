@@ -1,17 +1,10 @@
 require("dotenv").config();
-const { errorHandler } = require("../lib/functions");
-const db = require("megadbx");
+const { errorHandler } = require("../lib/functions")
+const { getConfig, getRank } = require("../lib/db");
 
 module.exports.run = async (sock, msg, args) => {
     const { remoteJid } = msg.key;
     try {
-        let dbl = new db.MegaDB("level", {
-            dir: "./"
-        });
-
-        let dbg = new db.MegaDB("groups", {
-            dir: "./"
-        });
         if (!remoteJid.includes("g.us"))
             return sock.sendMessage(
                 msg.key.remoteJid,
@@ -20,73 +13,30 @@ module.exports.run = async (sock, msg, args) => {
                 },
                 { quoted: msg },
             );
-        let dbObj = {};
         const gid = remoteJid.split("@")[0];
-        const enable = await dbg.get(`${gid}.rank`);
-        const has = await dbl.get(`${gid}`)
+        const enable = getConfig("rank", gid);
         const name = (await sock.groupMetadata(remoteJid)).subject;
-        if (has) {
-            let keys = await dbl.keys(`${gid}`);
-            for (let i in keys) {
-                let val = await dbl.get(`${gid}.${keys[i]}`);
-                dbObj[keys[i]] = val;
-            }
-            let dbArray = [];
-            for (let x in dbObj) {
-                dbArray.push({
-                    id: x,
-                    xp: dbObj[x].xp,
-                    level: dbObj[x].level,
-                });
-            }
-            dbArray.sort(function (a, b) {
-                if (a.level > b.level) {
-                    return -1;
-                } else if (a.level < b.level) {
-                    return 1;
-                } else {
-                    if (a.xp > b.xp) {
-                        return -1;
-                    } else if (a.xp < b.xp) {
-                        return 1;
-                    } else {
-                        return 0;
-                    }
-                }
-            });
-            let text = "";
-            let i = 0;
-            let mentions = [];
-            dbArray.forEach((k) => {
-                i += 1;
-                if (i <= 10) {
-                    text += `${i}-. @${k.id} ~ Nivel: ${k.level} ~ Experiencia: ${k.xp} \n`;
-                    mentions.push(`${k.id}@s.whatsapp.net`);
-                }
-            });
-            const footer = enable ? "" : "El sistema de niveles esta desactivado."
-            await sock.sendMessage(
+        const { has, mentions, text } = await getRank(gid);
+        const footer = enable ? "" : "El sistema de niveles esta desactivado.";
+        if (!has) {
+            return sock.sendMessage(
                 msg.key.remoteJid,
                 {
-                    text: `Tabla de clasificacion en *${name}* \n${text}${footer}`,
-                    mentions: mentions,
+                    text: `No hay datos suficientes para mostrar la tabla de clasificación.\n${footer}`,
                 },
                 { quoted: msg },
             );
         } else {
-            const footer = enable ? "" : "El sistema de niveles esta desactivado."
             await sock.sendMessage(
                 msg.key.remoteJid,
                 {
-                    text: `Aun no se tienen suficientes datos.\n${footer}`,
+                    text: `Tabla de clasificación en *${name}* \n${text}`,
+                    mentions: mentions,
                 },
                 { quoted: msg },
             );
         }
-        await dbl.flush()
-        await dbl.close()
-        await dbg.flush()
-        await dbg.close()
+
     } catch (e) {
         await errorHandler(sock, msg, this.config.name, e);
     }

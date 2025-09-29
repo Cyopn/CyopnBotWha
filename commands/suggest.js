@@ -1,13 +1,10 @@
 require("dotenv").config();
 const { prefix } = process.env;
 const { errorHandler } = require("../lib/functions");
-const db = require("megadbx");
+const { saveSuggest } = require("../lib/db");
 
 module.exports.run = async (sock, msg, args) => {
 	try {
-		const dbg = new db.MegaDB("suggest", {
-			dir: "./"
-		});
 		if (args[1] !== undefined || args[0].join(" ").length > 1) {
 			const { remoteJid, participant } = msg.key;
 			const gid = remoteJid.split("@")[0];
@@ -15,18 +12,7 @@ module.exports.run = async (sock, msg, args) => {
 				participant !== undefined
 					? participant.split("@")[0]
 					: remoteJid.split("@")[0];
-			const date = new Date();
-			await dbg.set(
-				`${gid}.${uid}-${date.getDate()}/${date.getUTCMonth() + 1
-				}-${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`,
-				{
-					suggest: args[0].join(" "),
-					suggestQuoted:
-						args[1] !== undefined
-							? args[1].join(" ")
-							: "No hay mensaje citado",
-				}
-			);
+			await saveSuggest(gid, uid, args[0].join(" "), args[1]);
 			await sock.sendMessage(
 				msg.key.remoteJid,
 				{
@@ -43,8 +29,6 @@ module.exports.run = async (sock, msg, args) => {
 				{ quoted: msg },
 			);
 		}
-		await dbg.flush()
-		await dbg.close()
 	} catch (e) {
 		await errorHandler(sock, msg, this.config.name, e);
 	}
