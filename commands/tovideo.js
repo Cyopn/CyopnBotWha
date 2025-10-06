@@ -24,7 +24,7 @@ module.exports.run = async (sock, msg, args) => {
             buffer = Buffer.concat([buffer, chunk]);
         }
         await writeFile("./temp/w.webp", buffer)
-        exec(`py ./lib/converter/mp4.py`, async (error, stdout, stderr) => {
+        exec(`bash -c "source ./env/bin/activate && python ./lib/converter/mp4.py"`, async (error, stdout, stderr) => {
             if (error) {
                 await errorHandler(sock, msg, this.config.name, error);
                 return;
