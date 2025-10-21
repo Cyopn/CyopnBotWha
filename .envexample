@@ -10,3 +10,6 @@ token=
 port=4000
 #Numero del bot
 bot=
+#Ejecutable de python
+py_cmd_img=
+py_cmd_vid=

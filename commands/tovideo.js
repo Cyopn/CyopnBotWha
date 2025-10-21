@@ -1,5 +1,5 @@
 require("dotenv").config();
-const { prefix, owner } = process.env;
+const { prefix, py_cmd_vid} = process.env;
 const { downloadContentFromMessage } = require("@whiskeysockets/baileys");
 const { writeFile, unlink } = require("fs/promises");
 const { errorHandler } = require("../lib/functions");
@@ -24,7 +24,7 @@ module.exports.run = async (sock, msg, args) => {
             buffer = Buffer.concat([buffer, chunk]);
         }
         await writeFile("./temp/w.webp", buffer);
-        exec(`bash -c "source ./env/bin/activate && python ./lib/converter/mp4.py"`, async (error, stdout, stderr) => {
+        exec(`${py_cmd_vid}`, async (error, stdout, stderr) => {
             if (error) {
                 await errorHandler(sock, msg, this.config.name, error);
                 return;

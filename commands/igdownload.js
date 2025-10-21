@@ -4,6 +4,7 @@ const { instagram } = require("../lib/scrapper");
 const { errorHandler } = require("../lib/functions");
 
 module.exports.run = async (sock, msg, args) => {
+	const mode = args[0][0] === "img" || args[0][0] === "video" ? args[0].shift() : "";
 	const arg =
 		args[1] === undefined && args[0].join(" ").length >= 1
 			? args[0].join(" ")
@@ -38,9 +39,9 @@ module.exports.run = async (sock, msg, args) => {
 			},
 			{ quoted: msg }
 		);
-		result.url.forEach(e => {
-			if (e.includes("jpg")) {
-				sock.sendMessage(
+		result.url.forEach(async e => {
+			if (e.includes("jpg") || mode === "img") {
+				await sock.sendMessage(
 					msg.key.remoteJid,
 					{
 						caption: "w",
@@ -48,8 +49,18 @@ module.exports.run = async (sock, msg, args) => {
 					},
 					{ quoted: msg }
 				);
-			} else {
-				sock.sendMessage(
+			} else if (mode === "video") {
+				await sock.sendMessage(
+					msg.key.remoteJid,
+					{
+						caption: "w",
+						video: { url: e },
+					},
+					{ quoted: msg }
+				);
+			}
+			else {
+				await sock.sendMessage(
 					msg.key.remoteJid,
 					{
 						caption: "w",
