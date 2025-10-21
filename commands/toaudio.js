@@ -3,7 +3,7 @@ const { prefix, owner } = process.env;
 const { errorHandler } = require("../lib/functions");
 const { downloadContentFromMessage } = require("@whiskeysockets/baileys");
 const fs = require("fs");
-const ffmpeg = require("ffmpeg")
+const ffmpeg = require("ffmpeg");
 
 module.exports.run = async (sock, msg, args) => {
     try {
@@ -49,7 +49,7 @@ module.exports.run = async (sock, msg, args) => {
             },
             { quoted: msg },
         );
-        let w = await downloadContentFromMessage(m, type)
+        let w = await downloadContentFromMessage(m, type);
         w.pipe(fs.createWriteStream(`./temp/video.mp4`)).once("finish", () => {
             var process = new ffmpeg(`./temp/video.mp4`);
             process.then(function (video) {
@@ -73,7 +73,7 @@ module.exports.run = async (sock, msg, args) => {
             }, async function (err) {
                 await errorHandler(sock, msg, "toaudio", err);
             });
-        })
+        });
     } catch (e) {
         await errorHandler(sock, msg, this.config.name, e);
     }

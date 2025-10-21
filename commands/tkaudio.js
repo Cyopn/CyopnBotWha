@@ -19,7 +19,7 @@ module.exports.run = async (sock, msg, args) => {
             { quoted: msg },
         );
     try {
-        const res = await tiktok(arg)
+        const res = await tiktok(arg);
         await sock.sendMessage(
             msg.key.remoteJid,
             {

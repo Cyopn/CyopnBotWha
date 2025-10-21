@@ -9,24 +9,32 @@ module.exports.run = async (sock, msg, args) => {
 			{
 				text: `Comando solo disponible en grupos.`,
 			},
-			{ quoted: msg },
+			{ quoted: msg }
 		);
 	const imAdmin = (
-		await sock.groupMetadata(msg.key.remoteJid)).participants.some(e => {
-			return e.jid === (sock.user.id).replace((sock.user.id).substring(sock.user.id.indexOf(":"), sock.user.id.indexOf("@")), "") && e.admin != null
-		})
+		await sock.groupMetadata(msg.key.remoteJid)
+	).participants.some((e) => {
+		return (
+			e.jid ===
+			sock.user.id.replace(
+				sock.user.id.substring(
+					sock.user.id.indexOf(":"),
+					sock.user.id.indexOf("@")
+				),
+				""
+			) && e.admin != null
+		);
+	});
 	const isAdmin = (
 		await sock.groupMetadata(msg.key.remoteJid)
-	).participants.some(
-		(e) => e.id === msg.key.participant && e.admin !== null,
-	);
+	).participants.some((e) => e.id === msg.key.participant && e.admin !== null);
 	if (!isAdmin)
 		return sock.sendMessage(
 			msg.key.remoteJid,
 			{
 				text: `Debes ser administrador para usar este comando.`,
 			},
-			{ quoted: msg },
+			{ quoted: msg }
 		);
 	if (!imAdmin)
 		return sock.sendMessage(
@@ -34,7 +42,7 @@ module.exports.run = async (sock, msg, args) => {
 			{
 				text: `Debo ser administrador para usar este comando.`,
 			},
-			{ quoted: msg },
+			{ quoted: msg }
 		);
 	if (args[0].length <= 0 || !args[0].join("").includes("@"))
 		return sock.sendMessage(
@@ -42,7 +50,7 @@ module.exports.run = async (sock, msg, args) => {
 			{
 				text: `Es necesario mencionar o etiquetar algun mienbro del grupo, escribe ${prefix}demote (miembro(s) mencionado(s)), recuerda que no es necesario escribir los parentesis.`,
 			},
-			{ quoted: msg },
+			{ quoted: msg }
 		);
 	try {
 		let lu = [];
@@ -53,7 +61,7 @@ module.exports.run = async (sock, msg, args) => {
 					{
 						text: `No existe el miembro ${u}, es necesario mencionar o etiquetar algun mienbro del grupo, escribe ${prefix}prodem (miembro(s) mencionado(s)), recuerda que no es necesario escribir los parentesis.`,
 					},
-					{ quoted: msg },
+					{ quoted: msg }
 				);
 			if (u.includes(sock.user.id.slice(0, sock.user.id.indexOf(":")))) {
 				await sock.sendMessage(
@@ -61,16 +69,18 @@ module.exports.run = async (sock, msg, args) => {
 					{
 						text: `No puedo degradarme a mi mismo.`,
 					},
-					{ quoted: msg },
+					{ quoted: msg }
 				);
 			} else {
-				u = (await sock.groupMetadata(msg.key.remoteJid)).participants.filter(e => {
-					return e.jid ? e.lid.includes(u.replace("@", "")) : null
-				})[0].jid;
+				u = (await sock.groupMetadata(msg.key.remoteJid)).participants.filter(
+					(e) => {
+						return e.jid ? e.lid.includes(u.replace("@", "")) : null;
+					}
+				)[0].jid;
 				const isAdmin = (
 					await sock.groupMetadata(msg.key.remoteJid)
 				).participants.some((r) => {
-					return r.jid === u && r.admin !== null
+					return r.jid === u && r.admin !== null;
 				});
 				if (isAdmin) {
 					lu.push(u);
@@ -80,11 +90,11 @@ module.exports.run = async (sock, msg, args) => {
 						{
 							text: `El usuario @${u.replace(
 								"@s.whatsapp.net",
-								"",
+								""
 							)} no es administrador.`,
 							mentions: [`${u}`],
 						},
-						{ quoted: msg },
+						{ quoted: msg }
 					);
 				}
 			}
@@ -92,7 +102,7 @@ module.exports.run = async (sock, msg, args) => {
 		const response = await sock.groupParticipantsUpdate(
 			msg.key.remoteJid,
 			lu,
-			"demote",
+			"demote"
 		);
 		if (response.length > 0 && response[0].status == 200) {
 			sock.sendMessage(
@@ -102,7 +112,7 @@ module.exports.run = async (sock, msg, args) => {
 ${lu.map((e) => `@${e.replace("@s.whatsapp.net", "")}`).join("\n")}`,
 					mentions: lu,
 				},
-				{ quoted: msg },
+				{ quoted: msg }
 			);
 		}
 	} catch (e) {

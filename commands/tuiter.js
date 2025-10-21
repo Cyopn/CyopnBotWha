@@ -19,7 +19,7 @@ module.exports.run = async (sock, msg, args) => {
 			{ quoted: msg },
 		);
 	try {
-		const res = await twitter(arg)
+		const res = await twitter(arg);
 		if (res.length > 0) {
 			res.forEach(async (media) => {
 				if (media.type == "video") {
@@ -39,7 +39,7 @@ module.exports.run = async (sock, msg, args) => {
 						{ quoted: msg },
 					);
 				}
-			})
+			});
 		} else {
 			await sock.sendMessage(
 				msg.key.remoteJid,

@@ -1,5 +1,5 @@
 require("dotenv").config();
-const { errorHandler } = require("../lib/functions")
+const { errorHandler } = require("../lib/functions");
 const { getConfig, getRank } = require("../lib/db");
 
 module.exports.run = async (sock, msg, args) => {

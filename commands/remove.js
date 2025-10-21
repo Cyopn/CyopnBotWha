@@ -13,8 +13,8 @@ module.exports.run = async (sock, msg, args) => {
 		);
 	const imAdmin = (
 		await sock.groupMetadata(msg.key.remoteJid)).participants.some(e => {
-			return e.jid === (sock.user.id).replace((sock.user.id).substring(sock.user.id.indexOf(":"), sock.user.id.indexOf("@")), "") && e.admin != null
-		})
+			return e.jid === (sock.user.id).replace((sock.user.id).substring(sock.user.id.indexOf(":"), sock.user.id.indexOf("@")), "") && e.admin != null;
+		});
 
 	const isAdmin = (
 		await sock.groupMetadata(msg.key.remoteJid)

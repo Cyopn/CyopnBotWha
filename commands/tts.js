@@ -1,11 +1,11 @@
 require("dotenv").config();
 const { prefix } = process.env;
-const { createAudioFile } = require("simple-tts-mp3")
+const { createAudioFile } = require("simple-tts-mp3");
 const fs = require("fs");
 const { errorHandler } = require("../lib/functions");
 
 module.exports.run = async (sock, msg, args) => {
-	const lang = ["af", "sq", "de", "ar", "bn", "my", "bs", "bg", "km", "kn", "ca", "cs", "zh", "zh-TW", "si", "ko", "hr", "da", "sk", "es", "et", "fi", "fr", "el", "gu", "hi", "nl", "hu", "id", "en", "is", "it", "ja", "la", "lv", "ml", "ms", "mr", "ne", "no", "pl", "pt", "ro", "ru", "sr", "sw", "sv", "su", "tl", "th", "ta", "te", "tr", "uk", "ur", "vi"]
+	const lang = ["af", "sq", "de", "ar", "bn", "my", "bs", "bg", "km", "kn", "ca", "cs", "zh", "zh-TW", "si", "ko", "hr", "da", "sk", "es", "et", "fi", "fr", "el", "gu", "hi", "nl", "hu", "id", "en", "is", "it", "ja", "la", "lv", "ml", "ms", "mr", "ne", "no", "pl", "pt", "ro", "ru", "sr", "sw", "sv", "su", "tl", "th", "ta", "te", "tr", "uk", "ur", "vi"];
 	const arg =
 		args[1] === undefined && args[0].join(" ").length >= 1
 			? args[0]
@@ -23,7 +23,7 @@ module.exports.run = async (sock, msg, args) => {
 
 	try {
 		if (lang.indexOf(arg[0]) != -1) {
-			const ln = arg.shift()
+			const ln = arg.shift();
 			if (arg.length <= 0)
 				return sock.sendMessage(
 					msg.key.remoteJid,

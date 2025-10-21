@@ -16,3 +16,4 @@ media_storage
 logs.txt
 temp/**.**
 env
+.eslintcache

@@ -1,7 +1,7 @@
 require("dotenv").config();
 const { prefix } = process.env;
 const { errorHandler } = require("../lib/functions");
-const { pinterest } = require("../lib/scrapper")
+const { pinterest } = require("../lib/scrapper");
 
 module.exports.run = async (sock, msg, args) => {
     const arg =
@@ -19,7 +19,7 @@ module.exports.run = async (sock, msg, args) => {
     );
     try {
         await pinterest(arg).then(async (url) => {
-            const ext = url.split('.').pop(-1)
+            const ext = url.split('.').pop(-1);
             if (ext === "mp4") {
                 await sock.sendMessage(
                     msg.key.remoteJid,
@@ -49,7 +49,7 @@ module.exports.run = async (sock, msg, args) => {
             }
         }).catch(async (e) => {
             await errorHandler(sock, msg, "pinterest", e);
-        })
+        });
 
     } catch (e) {
         await errorHandler(sock, msg, this.config.name, e);

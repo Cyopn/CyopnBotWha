@@ -1,6 +1,6 @@
 require("dotenv").config();
 const { errorHandler } = require("../lib/functions");
-const { getConfig, getXpLevel } = require("../lib/db")
+const { getConfig, getXpLevel } = require("../lib/db");
 
 module.exports.run = async (sock, msg, args) => {
     try {
@@ -14,16 +14,16 @@ module.exports.run = async (sock, msg, args) => {
             );
         const gid = msg.key.remoteJid.split("@")[0];
         const enable = await getConfig("rank", gid);
-        const footer = enable ? "" : "El sistema de niveles esta desactivado."
+        const footer = enable ? "" : "El sistema de niveles esta desactivado.";
         let lu = [];
         let mentioned = false;
         if (args[0] !== undefined) {
             for (u of args[0]) {
                 u = (await sock.groupMetadata(msg.key.remoteJid)).participants.filter(e => {
-                    return e.jid ? e.lid.includes(u.replace("@", "")) : null
+                    return e.jid ? e.lid.includes(u.replace("@", "")) : null;
                 })[0].jid;
-                console.log(u)
-                if (Number.isNaN(Number.parseInt(u.replace("@", "")))) return
+                console.log(u);
+                if (Number.isNaN(Number.parseInt(u.replace("@", "")))) return;
                 mentioned = true;
                 lu.push(u);
             }
