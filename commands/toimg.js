@@ -1,5 +1,5 @@
 require("dotenv").config();
-const { prefix, py_cmd } = process.env;
+const { prefix, py_cmd_img } = process.env;
 const { downloadContentFromMessage } = require("@whiskeysockets/baileys");
 const { writeFile, unlink } = require("fs/promises");
 const { errorHandler } = require("../lib/functions");
