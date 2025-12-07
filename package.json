@@ -9,20 +9,20 @@
     "dependencies": {
         "@adiwajshing/keyed-db": "^0.2.4",
         "@hapi/boom": "^10.0.1",
-        "@tobyg74/tiktok-api-dl": "^1.3.5",
-        "@whiskeysockets/baileys": "^6.7.19",
-        "axios": "^1.12.1",
-        "body-parser": "^1.20.3",
+        "@tobyg74/tiktok-api-dl": "^1.3.7",
+        "@whiskeysockets/baileys": "^6.7.21",
+        "axios": "^1.13.2",
+        "body-parser": "^1.20.4",
         "cheerio": "^1.1.2",
         "crypto-js": "^4.2.0",
         "dotenv": "^16.6.1",
-        "express": "^4.21.2",
+        "express": "^4.22.1",
         "ffmpeg": "^0.0.4",
         "formdata-node": "^6.0.3",
         "got-cjs": "^12.5.4",
         "jsdom": "^25.0.1",
         "ko-sleep": "^1.1.4",
-        "megadbx": "^2.0.0",
+        "megadbx": "^2.0.1",
         "node-read": "^0.1.7",
         "puppeteer": "^23.11.1",
         "qrcode-terminal": "^0.12.0",
@@ -50,6 +50,6 @@
     "homepage": "https://github.com/Cyopn/CyopnBotWha#readme",
     "devDependencies": {
         "ts-node": "^10.9.2",
-        "typescript": "^5.9.2"
+        "typescript": "^5.9.3"
     }
 }
