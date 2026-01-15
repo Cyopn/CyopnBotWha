@@ -13,7 +13,7 @@ module.exports.run = async (sock, msg, args) => {
     if (!arg) return sock.sendMessage(
         msg.key.remoteJid,
         {
-            text: `Debes proporcionar un enlace, escribe ${prefix}pinterest (enlace), recuerda que no es necesario escribir los parentesis.`,
+            text: `Debes proporcionar un enlace. Escribe ${prefix}pinterest (enlace). No es necesario escribir los paréntesis.`,
         },
         { quoted: msg },
     );

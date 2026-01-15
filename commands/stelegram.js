@@ -14,7 +14,7 @@ module.exports.run = async (sock, msg, args) => {
 		return await sock.sendMessage(
 			msg.key.remoteJid,
 			{
-				text: `Es necesario proporcionar un enlace, escribe ${prefix}stelegram (texto), recuerda que no es necesario escribir los parentesis, si tienes dudas sobre este comando escribe ${prefix}help stelegram.`,
+				text: `Es necesario proporcionar un enlace. Escribe ${prefix}stelegram (texto). No es necesario escribir los paréntesis. Si tienes dudas sobre este comando, escribe ${prefix}help stelegram.`,
 			},
 			{ quoted: msg },
 		);
@@ -23,7 +23,7 @@ module.exports.run = async (sock, msg, args) => {
 			return await sock.sendMessage(
 				msg.key.remoteJid,
 				{
-					text: `El enlace proporcionado no es valido, recuerda que el enlace debe ser directo del paquete de stickers.`,
+					text: `El enlace proporcionado no es válido; recuerda que debe ser el enlace directo del paquete de stickers.`,
 				},
 				{ quoted: msg },
 			);
@@ -36,7 +36,7 @@ module.exports.run = async (sock, msg, args) => {
 			await sock.sendMessage(
 				msg.key.remoteJid,
 				{
-					text: `Se he encontrado el paquete de ${pack} con ${stickers.length} stickers, el envio puede demorar un poco, espera un momento.`,
+					text: `Se ha encontrado el paquete ${pack} con ${stickers.length} stickers; el envío puede demorar un momento. Por favor, espera.`,
 				},
 				{ quoted: msg },
 			);
@@ -63,10 +63,10 @@ module.exports.run = async (sock, msg, args) => {
 					});
 				}
 				await sock
-				.sendMessage(msg.key.remoteJid, { sticker: result }, { quoted: msg })
-				.catch(async (e) => {
-					await errorHandler(sock, msg, "stelegram", e);
-				});
+					.sendMessage(msg.key.remoteJid, { sticker: result }, { quoted: msg })
+					.catch(async (e) => {
+						await errorHandler(sock, msg, "stelegram", e);
+					});
 			}
 		}
 	} catch (e) {
@@ -78,5 +78,5 @@ module.exports.config = {
 	name: `stelegram`,
 	alias: [`st`],
 	type: `misc`,
-	description: `Envia stickers de un paquete de stickers de Telegram.`,
+	description: `Envía stickers de un paquete de Telegram.`,
 };

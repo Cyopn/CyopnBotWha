@@ -14,7 +14,7 @@ module.exports.run = async (sock, msg, args) => {
         return sock.sendMessage(
             msg.key.remoteJid,
             {
-                text: `Debes proporcionar un enlace, escribe ${prefix}tiktok (enlace), recuerda que no es necesario escribir los parentesis.`,
+                text: `Debes proporcionar un enlace. Escribe ${prefix}tiktok (enlace). No es necesario escribir los paréntesis.`,
             },
             { quoted: msg },
         );
@@ -37,5 +37,5 @@ module.exports.config = {
     name: `tkaudio`,
     alias: [`tka`],
     type: `misc`,
-    description: `Envia el audio de tiktok.`,
+    description: `Envía el audio de TikTok.`,
 };

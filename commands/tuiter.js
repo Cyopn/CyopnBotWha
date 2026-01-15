@@ -14,7 +14,7 @@ module.exports.run = async (sock, msg, args) => {
 		return sock.sendMessage(
 			msg.key.remoteJid,
 			{
-				text: `Es necesario proporcionar un texto, escribe ${prefix}twitter (texto), recuerda que no es necesario escribir los parentesis, si tienes dudas sobre este comando escribe ${prefix}help.`,
+				text: `Es necesario proporcionar un enlace. Escribe ${prefix}twitter (enlace). No es necesario escribir los paréntesis. Si tienes dudas sobre este comando, escribe ${prefix}help.`,
 			},
 			{ quoted: msg },
 		);
@@ -44,7 +44,7 @@ module.exports.run = async (sock, msg, args) => {
 			await sock.sendMessage(
 				msg.key.remoteJid,
 				{
-					text: "No se encontraron videos o imagenes en el enlace proporcionado.",
+					text: "No se encontraron vídeos o imágenes en el enlace proporcionado.",
 				},
 				{ quoted: msg },
 			);
@@ -58,5 +58,5 @@ module.exports.config = {
 	name: `tuiter`,
 	alias: [`twitter`, `tw`],
 	type: `misc`,
-	description: `Envia multimedia (video, imagen o gif) de twitter.`,
+	description: `Envía multimedia (vídeo, imagen o gif) de Twitter.`,
 };

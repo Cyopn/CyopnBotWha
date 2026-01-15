@@ -43,7 +43,7 @@ module.exports.run = async (sock, msg, args) => {
 		sock.sendMessage(
 			msg.key.remoteJid,
 			{
-				text: `Envia una imagen/video/gif con el comando *${prefix}sticker*, o bien, responde a alguno ya enviado.`,
+				text: `Envía una imagen/vídeo/gif con el comando *${prefix}sticker*, o bien responde a uno ya enviado.`,
 			},
 			{ quoted: msg },
 		);
@@ -74,5 +74,5 @@ module.exports.config = {
 	name: "sticker",
 	alias: [`s`],
 	type: "misc",
-	description: `Envia un sticker a partir de una imagen/video/gif, ya sea enviada o respondiendo a alguna ya enviada.`,
+	description: `Envía un sticker a partir de una imagen/vídeo/gif, ya sea enviada o respondiendo a uno ya enviado.`,
 };

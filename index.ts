@@ -36,7 +36,7 @@ app.listen(port, () => {
 });
 fs.readdir(`./commands/`).then((files) => {
 	let jsfile = files.filter((f) => f.split(".").pop() === "js");
-	if (jsfile.length <= 0) return console.log("No se encontro ningun comando");
+	if (jsfile.length <= 0) return console.log("No se encontró ningún comando");
 	jsfile.forEach((f) => {
 		let pull = require(`./commands/${f}`);
 		commands.set((f.split(".")[0]), { "name": pull.config.name, "alias": pull.config.alias })
@@ -84,15 +84,10 @@ const startSock = async () => {
 		if (events["groups.upsert"]) {
 			const [metadata] = events["groups.upsert"];
 			await sock.sendMessage(metadata.id, {
-				text: `Gracias por invitarme.
-Usa !help para ver los comandos disponibles.
-Cualquier duda o sugerencia sera respondida:
-Whatsapp: wa.me/+5215633592644\nInstagram: https://www.instagram.com/cyopn_/
-*Nota importante*: El administrador del bot/numero tendra acceso a este chat.
-Sigue el canal de informacion para estar al dia de las novedades y actualizaciones: ${channel}`,
+				text: `Gracias por invitarme.\nUsa !help para ver los comandos disponibles.\nCualquier duda o sugerencia será respondida en:\nWhatsApp: wa.me/+5215633592644\nInstagram: https://www.instagram.com/cyopn_/\n*Nota importante*: El administrador del bot/número tendrá acceso a este chat.\nSigue el canal de información para estar al día de novedades y actualizaciones: ${channel}`,
 			});
 		}
-		
+
 		if (events["messages.upsert"]) {
 			const upsert = events["messages.upsert"];
 			if (upsert.type === "append" || upsert.type === "notify") {
@@ -190,7 +185,7 @@ Sigue el canal de informacion para estar al dia de las novedades y actualizacion
 									await sock.sendMessage(
 										msg.key.remoteJid,
 										{
-											text: "Ocurrio un error inesperado.",
+											text: "Ocurrió un error inesperado.",
 										},
 										{ quoted: msg },
 									);

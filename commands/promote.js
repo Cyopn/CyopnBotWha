@@ -7,7 +7,7 @@ module.exports.run = async (sock, msg, args) => {
 		return sock.sendMessage(
 			msg.key.remoteJid,
 			{
-				text: `Comando solo disponible en grupos.`,
+				text: `Comando disponible solo en grupos.`,
 			},
 			{ quoted: msg },
 		);
@@ -40,7 +40,7 @@ module.exports.run = async (sock, msg, args) => {
 		return sock.sendMessage(
 			msg.key.remoteJid,
 			{
-				text: `Es necesario mencionar o etiquetar algun miembro del grupo, escribe ${prefix}promote (miembro(s) mencionado(s)), recuerda que no es necesario escribir los parentesis.`,
+				text: `Es necesario mencionar o etiquetar a algún miembro del grupo. Escribe ${prefix}promote (miembro(s) mencionado(s)). No es necesario escribir los paréntesis.`,
 			},
 			{ quoted: msg },
 		);
@@ -51,7 +51,7 @@ module.exports.run = async (sock, msg, args) => {
 				return sock.sendMessage(
 					msg.key.remoteJid,
 					{
-						text: `No existe el miembro ${u}, es necesario mencionar o etiquetar algun miembro del grupo, escribe ${prefix}promote (miembro(s) mencionado(s)), recuerda que no es necesario escribir los parentesis.`,
+						text: `No existe el miembro ${u}. Es necesario mencionar o etiquetar a algún miembro del grupo. Escribe ${prefix}promote (miembro(s) mencionado(s)). No es necesario escribir los paréntesis.`,
 					},
 					{ quoted: msg },
 				);
@@ -59,7 +59,7 @@ module.exports.run = async (sock, msg, args) => {
 				await sock.sendMessage(
 					msg.key.remoteJid,
 					{
-						text: `No puedo promoverme a mi mismo.`,
+						text: `No puedo promoverme a mí mismo.`,
 					},
 					{ quoted: msg },
 				);
@@ -98,8 +98,8 @@ module.exports.run = async (sock, msg, args) => {
 			sock.sendMessage(
 				msg.key.remoteJid,
 				{
-					text: `Se ha(n) promovido a administrador(es) exitosamente:
-${lu.map((e) => `@${e.replace("@s.whatsapp.net", "")}`).join("\n")}`,
+					text: `Se ha(n) promovido correctamente a administrador(es):
+		${lu.map((e) => `@${e.replace("@s.whatsapp.net", "")}`).join("\n")}`,
 					mentions: lu,
 				},
 				{ quoted: msg },
@@ -114,5 +114,5 @@ module.exports.config = {
 	name: `promote`,
 	alias: [`pr`],
 	type: `misc`,
-	description: `Promueve a administrador a uno o mas miembros del grupo, es necesario mencionar o etiquetar algun miembro del grupo.`,
+	description: `Promueve a uno o más miembros a administradores del grupo. Es necesario mencionar o etiquetar a algún miembro del grupo.`,
 };

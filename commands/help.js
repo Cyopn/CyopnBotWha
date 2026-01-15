@@ -5,17 +5,17 @@ const { getCommands } = require("../lib/functions");
 module.exports.run = async (sock, msg, args) => {
 	const { command, alias, type, desc, fulldesc } = await getCommands();
 	let txt = `*CyopnBot* 
-*Prefijo*: [  ${prefix}  ] 
-_yo_ : https://instagram.com/Cyopn_
-Sigue el canal de informacion para estar al dia de las novedades y actualizaciones: ${channel}
+	*Prefijo*: [  ${prefix}  ] 
+	_yo_ : https://instagram.com/Cyopn_
+	Sigue el canal de información para estar al día de las novedades y actualizaciones: ${channel}
 
-*Informacion*
-Escribe ${prefix} seguido de cualquiera de los comandos, recuerda que puedes usar el nombre del comando o su alias.
-_Uso: ${prefix}[Comando] [Texto/Enlace/Otros]_
-Se deben sustituir los parentesis/corchetes segun corresponda.
-_Ejemplo: ${prefix}attp Hola_
+	*Información*
+	Escribe ${prefix} seguido de cualquiera de los comandos. Puedes usar el nombre del comando o su alias.
+	_Uso: ${prefix}[Comando] [Texto/Enlace/Otros]_
+	Se deben sustituir los paréntesis/corchetes según corresponda.
+	_Ejemplo: ${prefix}attp Hola_
 
-*Comandos disponibles*:`;
+	*Comandos disponibles*:`;
 	command.forEach((name) => {
 		const sr = command.indexOf(name);
 		if (type[sr] === "ign" || type[sr] === "admin") return;

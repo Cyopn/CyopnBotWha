@@ -1,5 +1,5 @@
 require("dotenv").config();
-const { prefix, py_cmd_vid} = process.env;
+const { prefix, py_cmd_vid } = process.env;
 const { downloadContentFromMessage } = require("@whiskeysockets/baileys");
 const { writeFile, unlink } = require("fs/promises");
 const { errorHandler } = require("../lib/functions");
@@ -13,7 +13,7 @@ module.exports.run = async (sock, msg, args) => {
         return sock.sendMessage(
             msg.key.remoteJid,
             {
-                text: `Usa ${prefix}toimg respondiendo un sticker.`,
+                text: `Usa ${prefix}toimg respondiendo a un sticker.`,
             },
             { quoted: msg },
         );
@@ -46,9 +46,9 @@ module.exports.run = async (sock, msg, args) => {
 };
 
 module.exports.config = {
-	name: "tovideo",
-	alias: [`tv`],
-	type: `misc`,
-	description:
-		"Convierte a video un sticker animado ya enviado, respondiendo a el.",
+    name: "tovideo",
+    alias: [`tv`],
+    type: `misc`,
+    description:
+        "Convierte a vídeo un sticker animado ya enviado, respondiendo a él.",
 };

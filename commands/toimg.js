@@ -13,7 +13,7 @@ module.exports.run = async (sock, msg, args) => {
         return sock.sendMessage(
             msg.key.remoteJid,
             {
-                text: `Usa ${prefix}toimg respondiendo un sticker.`,
+                text: `Usa ${prefix}toimg respondiendo a un sticker.`,
             },
             { quoted: msg },
         );
@@ -49,5 +49,5 @@ module.exports.config = {
     name: "toimg",
     alias: [`ti`],
     type: `misc`,
-    description: "Convierte a imagen un sticker ya enviado, respondiendo a el.",
+    description: "Convierte a imagen un sticker ya enviado, respondiendo a él.",
 };

@@ -7,7 +7,7 @@ module.exports.run = async (sock, msg, args) => {
 		return sock.sendMessage(
 			msg.key.remoteJid,
 			{
-				text: `Comando solo disponible en grupos.`,
+				text: `Comando disponible solo en grupos.`,
 			},
 			{ quoted: msg },
 		);
@@ -42,7 +42,7 @@ module.exports.run = async (sock, msg, args) => {
 		return sock.sendMessage(
 			msg.key.remoteJid,
 			{
-				text: `Es necesario mencionar o etiquetar algun mienbro del grupo, escribe ${prefix}demote (miembro(s) mencionado(s)), recuerda que no es necesario escribir los parentesis, si tienes dudas sobre este comando escribe ${prefix}help prodem.`,
+				text: `Es necesario mencionar o etiquetar a algún miembro del grupo. Escribe ${prefix}remove (miembro(s) mencionado(s)). No es necesario escribir los paréntesis. Si tienes dudas sobre este comando, escribe ${prefix}help remove.`,
 			},
 			{ quoted: msg },
 		);
@@ -53,7 +53,7 @@ module.exports.run = async (sock, msg, args) => {
 				return sock.sendMessage(
 					msg.key.remoteJid,
 					{
-						text: `No existe el miembro ${u}, es necesario mencionar o etiquetar algun mienbro del grupo, escribe ${prefix}prodem (miembro(s) mencionado(s)), recuerda que no es necesario escribir los parentesis, si tienes dudas sobre este comando escribe ${prefix}help prodem.`,
+						text: `No existe el miembro ${u}. Es necesario mencionar o etiquetar a algún miembro del grupo. Escribe ${prefix}remove (miembro(s) mencionado(s)). No es necesario escribir los paréntesis. Si tienes dudas sobre este comando, escribe ${prefix}help remove.`,
 					},
 					{ quoted: msg },
 				);
@@ -61,7 +61,7 @@ module.exports.run = async (sock, msg, args) => {
 				await sock.sendMessage(
 					msg.key.remoteJid,
 					{
-						text: `No puedo degradarme a mi mismo.`,
+						text: `No puedo eliminarme a mí mismo.`,
 					},
 					{ quoted: msg },
 				);
@@ -79,8 +79,8 @@ module.exports.run = async (sock, msg, args) => {
 			sock.sendMessage(
 				msg.key.remoteJid,
 				{
-					text: `Se ha(n) eliminado a usuario(s) exitosamente:
-${lu.map((e) => `@${e.replace("@s.whatsapp.net", "")}`).join("\n")}`,
+					text: `Se ha(n) eliminado correctamente a usuario(s):
+			${lu.map((e) => `@${e.replace("@s.whatsapp.net", "")}`).join("\n")}`,
 					mentions: lu,
 				},
 				{ quoted: msg },
@@ -95,5 +95,5 @@ module.exports.config = {
 	name: `remove`,
 	alias: [`ban`],
 	type: `misc`,
-	description: `Elimina a uno o mas miembros del grupo, es necesario mencionar o etiquetar algun miembro del grupo.`,
+	description: `Elimina a uno o más miembros del grupo. Es necesario mencionar o etiquetar a algún miembro del grupo.`,
 };

@@ -7,7 +7,7 @@ module.exports.run = async (sock, msg, args) => {
 		return sock.sendMessage(
 			msg.key.remoteJid,
 			{
-				text: `Comando solo disponible en grupos.`,
+				text: `Comando disponible solo en grupos.`,
 			},
 			{ quoted: msg }
 		);
@@ -48,7 +48,7 @@ module.exports.run = async (sock, msg, args) => {
 		return sock.sendMessage(
 			msg.key.remoteJid,
 			{
-				text: `Es necesario mencionar o etiquetar algun mienbro del grupo, escribe ${prefix}demote (miembro(s) mencionado(s)), recuerda que no es necesario escribir los parentesis.`,
+				text: `Es necesario mencionar o etiquetar a algún miembro del grupo. Escribe ${prefix}demote (miembro(s) mencionado(s)). No es necesario escribir los paréntesis.`,
 			},
 			{ quoted: msg }
 		);
@@ -59,7 +59,7 @@ module.exports.run = async (sock, msg, args) => {
 				return sock.sendMessage(
 					msg.key.remoteJid,
 					{
-						text: `No existe el miembro ${u}, es necesario mencionar o etiquetar algun mienbro del grupo, escribe ${prefix}prodem (miembro(s) mencionado(s)), recuerda que no es necesario escribir los parentesis.`,
+						text: `No existe el miembro ${u}. Es necesario mencionar o etiquetar a algún miembro del grupo. Escribe ${prefix}demote (miembro(s) mencionado(s)). No es necesario escribir los paréntesis.`,
 					},
 					{ quoted: msg }
 				);
@@ -67,7 +67,7 @@ module.exports.run = async (sock, msg, args) => {
 				await sock.sendMessage(
 					msg.key.remoteJid,
 					{
-						text: `No puedo degradarme a mi mismo.`,
+						text: `No puedo degradarme a mí mismo.`,
 					},
 					{ quoted: msg }
 				);
@@ -108,8 +108,8 @@ module.exports.run = async (sock, msg, args) => {
 			sock.sendMessage(
 				msg.key.remoteJid,
 				{
-					text: `Se ha(n) degradado a usuario(s) exitosamente:
-${lu.map((e) => `@${e.replace("@s.whatsapp.net", "")}`).join("\n")}`,
+					text: `Se ha(n) degradado correctamente a:
+	${lu.map((e) => `@${e.replace("@s.whatsapp.net", "")}`).join("\n")}`,
 					mentions: lu,
 				},
 				{ quoted: msg }
@@ -124,5 +124,5 @@ module.exports.config = {
 	name: `demote`,
 	alias: [`dm`],
 	type: `misc`,
-	description: `Degreda a miembro a uno o mas administradores del grupo, es necesario mencionar o etiquetar algun miembro del grupo.`,
+	description: `Degrada a uno o más administradores a miembros del grupo. Es necesario mencionar o etiquetar a algún miembro del grupo.`,
 };

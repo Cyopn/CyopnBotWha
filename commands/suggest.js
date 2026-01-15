@@ -16,7 +16,7 @@ module.exports.run = async (sock, msg, args) => {
 			await sock.sendMessage(
 				msg.key.remoteJid,
 				{
-					text: `Sugerencia enviada correctamente, gracias por tu aporte.`,
+					text: `Sugerencia enviada correctamente. Gracias por tu aporte.`,
 				},
 				{ quoted: msg },
 			);
@@ -24,7 +24,7 @@ module.exports.run = async (sock, msg, args) => {
 			return await sock.sendMessage(
 				msg.key.remoteJid,
 				{
-					text: `Es necesario proporcionar un texto, escribe ${prefix}suggest (texto), recuerda que no es necesario escribir los parentesis, si tienes dudas sobre este comando escribe ${prefix}help.`,
+					text: `Es necesario proporcionar un texto. Escribe ${prefix}suggest (texto). No es necesario escribir los paréntesis. Si tienes dudas sobre este comando, escribe ${prefix}help.`,
 				},
 				{ quoted: msg },
 			);
@@ -38,5 +38,5 @@ module.exports.config = {
 	name: `suggest`,
 	alias: [`sg`],
 	type: `misc`,
-	description: `Envia una sugerencia al desarrollador.`,
+	description: `Envía una sugerencia al desarrollador.`,
 };

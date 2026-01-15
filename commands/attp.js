@@ -14,7 +14,7 @@ module.exports.run = async (sock, msg, args) => {
 		return sock.sendMessage(
 			msg.key.remoteJid,
 			{
-				text: `Es necesario proporcionar un texto, escribe ${prefix}attp (texto), recuerda que no es necesario escribir los parentesis, si tienes dudas sobre este comando escribe ${prefix}help attp.`,
+				text: `Es necesario proporcionar un texto. Escribe ${prefix}attp (texto). No es necesario escribir los paréntesis. Si tienes dudas sobre este comando, escribe ${prefix}help attp.`,
 			},
 			{ quoted: msg },
 		);
@@ -36,5 +36,5 @@ module.exports.config = {
 	name: `attp`,
 	alias: [`ap`],
 	type: `misc`,
-	description: `Crea un sticker segun el texto proporcionado, algunos emojis no son soportados.`,
+	description: `Crea un sticker según el texto proporcionado. Algunos emojis no son compatibles.`,
 };

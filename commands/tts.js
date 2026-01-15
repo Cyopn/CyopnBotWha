@@ -16,7 +16,7 @@ module.exports.run = async (sock, msg, args) => {
 		return sock.sendMessage(
 			msg.key.remoteJid,
 			{
-				text: `Es necesario proporcionar un texto, escribe ${prefix}tts [idioma (español por defecto)] [texto], recuerda que no es necesario escribir los corchetes, si tienes dudas sobre este comando escribe ${prefix}help tts.`,
+				text: `Es necesario proporcionar un texto. Escribe ${prefix}tts [idioma (español por defecto)] [texto]. No es necesario escribir los corchetes. Si tienes dudas sobre este comando, escribe ${prefix}help tts.`,
 			},
 			{ quoted: msg },
 		);
@@ -28,7 +28,7 @@ module.exports.run = async (sock, msg, args) => {
 				return sock.sendMessage(
 					msg.key.remoteJid,
 					{
-						text: `Es necesario proporcionar un texto, escribe ${prefix}tts [idioma (español por defecto)] [texto], recuerda que no es necesario escribir los corchetes, si tienes dudas sobre este comando escribe ${prefix}help tts.`,
+						text: `Es necesario proporcionar un texto. Escribe ${prefix}tts [idioma (español por defecto)] [texto]. No es necesario escribir los corchetes. Si tienes dudas sobre este comando, escribe ${prefix}help tts.`,
 					},
 					{ quoted: msg },
 				);
@@ -69,5 +69,5 @@ module.exports.config = {
 	name: `tts`,
 	alias: [`ts`],
 	type: `misc`,
-	description: `Crea un audio segun el texto proporcionado y en un idioma preferido (español por defecto), usa ${prefix}lang para ver los idiomas permitidos.`,
+	description: `Crea un audio según el texto proporcionado y en un idioma preferido (español por defecto). Usa ${prefix}lang para ver los idiomas permitidos.`,
 };

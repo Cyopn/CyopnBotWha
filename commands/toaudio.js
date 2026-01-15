@@ -45,7 +45,7 @@ module.exports.run = async (sock, msg, args) => {
         if (m === undefined || m === null || type === undefined || type === null || type == "image") return await sock.sendMessage(
             msg.key.remoteJid,
             {
-                text: `Envia una video con el comando *${prefix}toaudio*, o bien, responde a alguno ya enviado.`,
+                text: `Envía un vídeo con el comando *${prefix}toaudio*, o bien responde a uno ya enviado.`,
             },
             { quoted: msg },
         );
@@ -83,5 +83,5 @@ module.exports.config = {
     name: `toaudio`,
     alias: [`ta`],
     type: `misc`,
-    description: `Convierte un video a audio mp3.`,
+    description: `Convierte un vídeo a audio MP3.`,
 };

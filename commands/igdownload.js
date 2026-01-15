@@ -15,7 +15,7 @@ module.exports.run = async (sock, msg, args) => {
 		return sock.sendMessage(
 			msg.key.remoteJid,
 			{
-				text: `Debes proporcionar un enlace, escribe ${prefix}igdownload (enlace), recuerda que no es necesario escribir los parentesis.`,
+				text: `Debes proporcionar un enlace. Escribe ${prefix}igdownload (enlace). No es necesario escribir los paréntesis.`,
 			},
 			{ quoted: msg }
 		);
@@ -26,7 +26,7 @@ module.exports.run = async (sock, msg, args) => {
 		return sock.sendMessage(
 			msg.key.remoteJid,
 			{
-				text: `El enlace proporcionado no es valido.`,
+				text: `El enlace proporcionado no es válido.`,
 			},
 			{ quoted: msg }
 		);
@@ -35,7 +35,7 @@ module.exports.run = async (sock, msg, args) => {
 		if (result.msg) return await sock.sendMessage(
 			msg.key.remoteJid,
 			{
-				text: "No se encontro el contenido.",
+				text: "No se encontró el contenido.",
 			},
 			{ quoted: msg }
 		);
@@ -79,5 +79,5 @@ module.exports.config = {
 	name: `igdownload`,
 	alias: [`igdl`, `ig`, `instagram`],
 	type: `misc`,
-	description: `Envia la contenido de alguna publicacion de Instagram.`,
+	description: `Envía el contenido de una publicación de Instagram.`,
 };

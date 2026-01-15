@@ -14,7 +14,7 @@ module.exports.run = async (sock, msg, args) => {
 		return sock.sendMessage(
 			msg.key.remoteJid,
 			{
-				text: `Debes proporcionar un enlace, escribe ${prefix}fbdownload (enlace), recuerda que no es necesario escribir los parentesis.`,
+				text: `Debes proporcionar un enlace. Escribe ${prefix}fbdownload (enlace). No es necesario escribir los paréntesis.`,
 			},
 			{ quoted: msg },
 		);
@@ -23,15 +23,15 @@ module.exports.run = async (sock, msg, args) => {
 		return await sock.sendMessage(
 			msg.key.remoteJid,
 			{
-				text: `El enlace proporcionado no es valido.`,
+				text: `El enlace proporcionado no es válido.`,
 			},
 			{ quoted: msg },
 		);
 	try {
 		const r = await fbdl(arg);
-		if (!r.status) return await sock.sendMessage(msg.key.remoteJid, { text: "No se encontro el contenido." }, { quoted: msg });
+		if (!r.status) return await sock.sendMessage(msg.key.remoteJid, { text: "No se encontró el contenido." }, { quoted: msg });
 		const data = r.data.find(i => i.resolution === "720p (HD)") || r.data.find(i => i.resolution === "360p (SD)");
-		if (!data) return await sock.sendMessage(msg.key.remoteJid, { text: "No se encontro el contenido." }, { quoted: msg });
+		if (!data) return await sock.sendMessage(msg.key.remoteJid, { text: "No se encontró el contenido." }, { quoted: msg });
 		await sock.sendMessage(
 			msg.key.remoteJid,
 			{ video: { url: data.url }, caption: "w" },
@@ -46,5 +46,5 @@ module.exports.config = {
 	name: `fbdownload`,
 	alias: [`fbdl`, `fb`, `facebook`],
 	type: `misc`,
-	description: `Envia el video de alguna publicacion de Facebook.`,
+	description: `Envía el vídeo de una publicación de Facebook.`,
 };

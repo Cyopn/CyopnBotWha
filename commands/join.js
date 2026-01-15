@@ -13,7 +13,7 @@ module.exports.run = async (sock, msg, args) => {
 		return sock.sendMessage(
 			msg.key.remoteJid,
 			{
-				text: `Debes proporcionar un enlace, escribe ${prefix}join (enlace), recuerda que no es necesario escribir los parentesis.`,
+				text: `Debes proporcionar un enlace. Escribe ${prefix}join (enlace). No es necesario escribir los paréntesis.`,
 			},
 			{ quoted: msg },
 		);
@@ -24,7 +24,7 @@ module.exports.run = async (sock, msg, args) => {
 		return await sock.sendMessage(
 			msg.key.remoteJid,
 			{
-				text: "El enlace proporcionado no es valido.",
+				text: "El enlace proporcionado no es válido.",
 			},
 			{ quoted: msg },
 		);
@@ -52,7 +52,7 @@ module.exports.run = async (sock, msg, args) => {
 		if (String(e).includes("not-authorized")) return await sock.sendMessage(
 			msg.key.remoteJid,
 			{
-				text: "Imposible unirse, al parecer he sido elimindo recientemente.",
+				text: "Imposible unirse; al parecer he sido eliminado recientemente.",
 			},
 			{ quoted: msg },
 		);
@@ -64,5 +64,5 @@ module.exports.config = {
 	name: `join`,
 	alias: [`j`],
 	type: `misc`,
-	description: `Agregame a un grupo solo con el enlace de invitacion del grupo.`,
+	description: `Agrégame a un grupo solo con el enlace de invitación del grupo.`,
 };

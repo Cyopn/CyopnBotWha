@@ -13,7 +13,7 @@ module.exports.run = async (sock, msg, args) => {
 		return sock.sendMessage(
 			msg.key.remoteJid,
 			{
-				text: `Es necesario proporcionar una busqueda, escribe ${prefix}lyrics (busqueda), recuerda que no es necesario escribir los parentesis, si tienes dudas sobre este comando escribe ${prefix}help lyrics.`,
+				text: `Es necesario proporcionar una búsqueda. Escribe ${prefix}lyrics (búsqueda). No es necesario escribir los paréntesis. Si tienes dudas sobre este comando, escribe ${prefix}help lyrics.`,
 			},
 			{ quoted: msg },
 		);
@@ -35,5 +35,5 @@ module.exports.config = {
 	name: `lyrics`,
 	alias: [`ly`],
 	type: `misc`,
-	description: `Envia la letra de alguna cancion.`,
+	description: `Envía la letra de una canción.`,
 };
