@@ -5,6 +5,7 @@ const { errorHandler } = require("../lib/functions");
 
 module.exports.run = async (sock, msg, args) => {
 	const mode = args[0][0] === "img" || args[0][0] === "video" ? args[0].shift() : "";
+	const index = isNaN(args[0][args[0].length - 1]) ? "" : args[0].pop();
 	const arg =
 		args[1] === undefined && args[0].join(" ").length >= 1
 			? args[0].join(" ")
@@ -39,35 +40,70 @@ module.exports.run = async (sock, msg, args) => {
 			},
 			{ quoted: msg }
 		);
+		let idx = 0;
 		result.url.forEach(async e => {
-			if (e.includes("jpg") || mode === "img") {
-				await sock.sendMessage(
-					msg.key.remoteJid,
-					{
-						caption: "w",
-						image: { url: e },
-					},
-					{ quoted: msg }
-				);
-			} else if (mode === "video") {
-				await sock.sendMessage(
-					msg.key.remoteJid,
-					{
-						caption: "w",
-						video: { url: e },
-					},
-					{ quoted: msg }
-				);
-			}
-			else {
-				await sock.sendMessage(
-					msg.key.remoteJid,
-					{
-						caption: "w",
-						video: { url: e },
-					},
-					{ quoted: msg }
-				);
+			idx++;
+			if (index) {
+				if (idx != index) return;
+				if (e.includes("jpg") || mode === "img") {
+					await sock.sendMessage(
+						msg.key.remoteJid,
+						{
+							caption: "w",
+							image: { url: e },
+						},
+						{ quoted: msg }
+					);
+				} else if (mode === "video") {
+					await sock.sendMessage(
+						msg.key.remoteJid,
+						{
+							caption: "w",
+							video: { url: e },
+						},
+						{ quoted: msg }
+					);
+				}
+				else {
+					await sock.sendMessage(
+						msg.key.remoteJid,
+						{
+							caption: "w",
+							video: { url: e },
+						},
+						{ quoted: msg }
+					);
+				}
+			} else {
+				if (e.includes("jpg") || mode === "img") {
+					await sock.sendMessage(
+						msg.key.remoteJid,
+						{
+							caption: "w",
+							image: { url: e },
+						},
+						{ quoted: msg }
+					);
+				} else if (mode === "video") {
+					await sock.sendMessage(
+						msg.key.remoteJid,
+						{
+							caption: "w",
+							video: { url: e },
+						},
+						{ quoted: msg }
+					);
+				}
+				else {
+					await sock.sendMessage(
+						msg.key.remoteJid,
+						{
+							caption: "w",
+							video: { url: e },
+						},
+						{ quoted: msg }
+					);
+				}
 			}
 		});
 	} catch (e) {

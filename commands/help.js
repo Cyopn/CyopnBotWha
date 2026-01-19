@@ -34,7 +34,7 @@ module.exports.run = async (sock, msg, args) => {
 
 module.exports.config = {
 	name: "help",
-	alias: [`h`, `ayuda`],
+	alias: [`h`, `ayuda`, `comandos`, `auxilio`, `socorro`],
 	type: "help",
-	description: `Muestra este mensaje, escribe ${prefix}help help para obtener mas informacion.`,
+	description: `Muestra este mensaje.`,
 };
