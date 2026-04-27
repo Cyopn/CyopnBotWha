@@ -358,6 +358,7 @@ const startSock = async () => {
 								.replace(/\s+/g, " ")
 								.trim()
 							: normalizedMessage;
+						const shouldRespondByIdentifier = isGroupChat && hasBotIdentifierInText(normalizedMessage);
 						const isGreetingMentionOnly = shouldRespondByMention && mentionOnlyText.length === 0;
 						const messageKind = getIncomingMessageKind(msg, normalizedMessage);
 						const sender = (msg.key as any).participantPn
@@ -377,10 +378,13 @@ const startSock = async () => {
 							const ollamaEnabled = await getConfig("ollamaAuto", chatId);
 							if (memoryEnabled && ollamaEnabled) {
 								const isPersonalChat = !isGroupChat;
+								const groupPrompt = stripBotMentionsAndIdentifiers(normalizedMessage);
 								if (isPersonalChat) {
 									let response = "";
 									const greetingCandidateText = stripBotMentionsAndIdentifiers(normalizedMessage);
-									if (isGreetingMessage(greetingCandidateText) || isGreetingMentionOnly) {
+									if (hasMenuWord(normalizedMessage)) {
+										response = await buildCommandsMenu();
+									} else if (isGreetingMessage(greetingCandidateText) || isGreetingMentionOnly) {
 										response = buildGreetingReply();
 									} else if (messageKind !== "text") {
 										response = await buildPersonalMediaReply(messageKind);
@@ -399,19 +403,20 @@ const startSock = async () => {
 									const nextCounter = (Number(await getConfigValue("ollamaCounter", chatId, 0)) || 0) + 1;
 									await setConfigValue("ollamaCounter", chatId, nextCounter);
 									const shouldRespondByInterval = nextCounter % every === 0;
-									const shouldRespondByContext = isMessageAboutBot(normalizedMessage);
-									const greetingCandidateText = stripBotMentionsAndIdentifiers(normalizedMessage);
+									const shouldRespondByIdentifier = isGroupChat && hasBotIdentifierInText(normalizedMessage);
+									const shouldRespondByContext = isMessageAboutBot(normalizedMessage) || shouldRespondByIdentifier;
+									const greetingCandidateText = groupPrompt;
 									const shouldRespondByMenuRequest = isGroupChat
-										? hasMenuWord(normalizedMessage) && (hasBotIdentifierInText(normalizedMessage) || shouldRespondByMention)
+										? hasMenuWord(normalizedMessage) && (shouldRespondByIdentifier || shouldRespondByMention)
 										: hasMenuWord(normalizedMessage);
-									if (shouldRespondByInterval || shouldRespondByContext || shouldRespondByReplyToBot || shouldRespondByMention || shouldRespondByMenuRequest) {
+									if (shouldRespondByInterval || shouldRespondByContext || shouldRespondByReplyToBot || shouldRespondByMention || shouldRespondByIdentifier || shouldRespondByMenuRequest) {
 										let response = "";
 										if (isGreetingMessage(greetingCandidateText) || isGreetingMentionOnly) {
 											response = buildGreetingReply();
 										} else if (shouldRespondByMenuRequest) {
 											response = await buildCommandsMenu();
 										} else {
-											response = await chatWithOllama(chatId, normalizedMessage);
+											response = await chatWithOllama(chatId, groupPrompt.length > 0 ? groupPrompt : normalizedMessage);
 										}
 
 										if (response.trim().length > 0) {
@@ -463,6 +468,22 @@ const startSock = async () => {
 										},
 										{ quoted: msg },
 									);
+								}
+							} else {
+								try {
+									const chatId = msg.key.remoteJid.split("@")[0];
+									const memoryEnabledCmd = await getConfig("chatMemory", chatId);
+									const ollamaEnabledCmd = await getConfig("ollamaAuto", chatId);
+									if (memoryEnabledCmd && ollamaEnabledCmd) {
+										const userPrompt = normalizedMessage.length > 0 ? normalizedMessage : "";
+										const response = await chatWithOllama(chatId, userPrompt);
+										if (response && response.trim().length > 0) {
+											await saveConversation(chatId, "assistant", "bot", response, { source: "auto:ollama" });
+											await sock.sendMessage(msg.key.remoteJid, { text: response }, { quoted: msg });
+										}
+									}
+								} catch (err) {
+									console.error('Error auto-responding with Ollama for unknown command:', err);
 								}
 							}
 						}
