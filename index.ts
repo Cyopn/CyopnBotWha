@@ -55,7 +55,6 @@ const MEDIA_INTRO_BY_KIND: Record<string, string> = {
 	link: "Recibi un enlace. Estos comandos te sirven especificamente para enlaces:",
 };
 const buildPersonalMediaReply = async (kind: string) => {
-	// Build allowed commands from analysis map: only commands that explicitly require this kind
 	const allowedCommands = Object.entries(COMMAND_INPUT_MAP)
 		.filter(([, kinds]) => Array.isArray(kinds) && kinds.includes(kind))
 		.map(([name]) => name);
@@ -158,14 +157,12 @@ const analyzeCommandsInput = () => {
 	for (const f of commandFiles) {
 		try {
 			const modulePath = require('path').resolve('./commands', f);
-			// prefer explicit config.expects defined in command modules
 			const mod = require(modulePath);
 			const cmdName = (mod?.config?.name) ? mod.config.name : f.replace(/\.js$/, '');
 			if (Array.isArray(mod?.config?.expects) && mod.config.expects.length > 0) {
 				map[cmdName] = mod.config.expects.map((k: string) => String(k).toLowerCase());
 				continue;
 			}
-			// fallback: simple static heuristics on file content
 			const content = fsSync.readFileSync(modulePath, 'utf8');
 			const kinds: Set<string> = new Set();
 			if (/stickerMessage|downloadContentFromMessage\([^,]+,\s*"sticker"|\bsticker\b/.test(content)) kinds.add('sticker');
@@ -177,7 +174,6 @@ const analyzeCommandsInput = () => {
 			if (/extendedTextMessage\?\.contextInfo\?\.quotedMessage\?\.videoMessage/.test(content)) kinds.add('video');
 			map[cmdName] = Array.from(kinds);
 		} catch (e) {
-			// ignore
 		}
 	}
 	return map;

@@ -1,6 +1,6 @@
 require("dotenv").config();
 const { prefix, owner } = process.env;
-const { sticker, errorHandler } = require("../lib/functions");
+const { sticker, errorHandler, prepareStickerMedia } = require("../lib/functions");
 const { downloadContentFromMessage } = require("@whiskeysockets/baileys");
 
 module.exports.run = async (sock, msg, args) => {
@@ -26,6 +26,14 @@ module.exports.run = async (sock, msg, args) => {
 					?.viewOnceMessageV2?.message?.videoMessage
 				? "video"
 				: undefined;
+	const gif =
+		msg.message?.videoMessage?.gifPlayback ||
+		msg.message?.extendedTextMessage?.contextInfo?.quotedMessage?.videoMessage?.gifPlayback ||
+		msg.message?.viewOnceMessage?.message?.videoMessage?.gifPlayback ||
+		msg.message?.viewOnceMessageV2?.message?.videoMessage?.gifPlayback ||
+		msg.message?.extendedTextMessage?.contextInfo?.quotedMessage?.viewOnceMessage?.message?.videoMessage?.gifPlayback ||
+		msg.message?.extendedTextMessage?.contextInfo?.quotedMessage?.viewOnceMessageV2?.message?.videoMessage?.gifPlayback;
+	const mediaKind = gif ? "gif" : type;
 	const m = msg.message?.imageMessage
 		? msg.message?.imageMessage
 		: msg.message?.extendedTextMessage?.contextInfo?.quotedMessage
@@ -56,7 +64,10 @@ module.exports.run = async (sock, msg, args) => {
 			for await (const chunk of w) {
 				buffer = Buffer.concat([buffer, chunk]);
 			}
-			let s = await sticker(buffer).catch(async (e) => {
+			const prepared = await prepareStickerMedia(buffer, mediaKind || type).catch(async (e) => {
+				await errorHandler(sock, msg, "sticker", e);
+			});
+			let s = await sticker(prepared).catch(async (e) => {
 				await errorHandler(sock, msg, "sticker", e);
 			});
 			await sock
