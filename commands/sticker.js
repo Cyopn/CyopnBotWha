@@ -75,4 +75,6 @@ module.exports.config = {
 	alias: [`s`],
 	type: "misc",
 	description: `Envía un sticker a partir de una imagen/vídeo/gif, ya sea enviada o respondiendo a uno ya enviado.`,
+	expects: ['image', 'video', 'gif'],
+	returns: ['sticker']
 };

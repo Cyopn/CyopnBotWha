@@ -38,4 +38,6 @@ module.exports.config = {
     alias: [`tka`],
     type: `misc`,
     description: `Envía el audio de TikTok.`,
+	expects: ['link'],
+	returns: ['audio']
 };

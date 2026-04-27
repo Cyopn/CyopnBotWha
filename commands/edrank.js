@@ -47,4 +47,6 @@ module.exports.config = {
     alias: [`er`],
     type: `misc`,
     description: `Activa/desactiva el sistema de niveles.`,
+	expects: ['none'],
+	returns: ['text']
 };

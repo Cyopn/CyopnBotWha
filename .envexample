@@ -13,3 +13,11 @@ bot=
 #Ejecutable de python
 py_cmd_img=
 py_cmd_vid=
+#Configuracion de Ollama
+OLLAMA_HOST=http://127.0.0.1:11434
+OLLAMA_MODEL=llama3.1:8b
+OLLAMA_CONTEXT_LIMIT=20
+#Identificadores que activan menu en grupos junto a menu/comandos (separados por coma)
+BOT_MENU_IDENTIFIERS=bot,chip,cyopnbot,cyopn
+#Instruccion base del bot.
+OLLAMA_SYSTEM_PROMPT=Eres CyopnBot, un asistente util y claro. Responde en espanol de forma breve y con buen contexto del chat actual.

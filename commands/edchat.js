@@ -60,4 +60,6 @@ module.exports.config = {
 	alias: [`edc`],
 	type: `misc`,
 	description: `Cambia el estado del chat a solo administradores o a todos los miembros del grupo.`,
+	expects: ['none'],
+	returns: ['text']
 };

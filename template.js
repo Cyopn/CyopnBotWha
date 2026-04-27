@@ -21,7 +21,7 @@ module.exports.run = async (sock, msg, args) => {
 module.exports.config = {
     //Informacion sobre el comando
     name: ``,
-    alias: ``,
+    alias: [``],
     type: ``,
     description: ``,
 };

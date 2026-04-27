@@ -39,4 +39,6 @@ module.exports.config = {
 	alias: [`m`],
 	type: `misc`,
 	description: `Envía un chistorete digital publicado en reddit.com/r/ChingaTuMadreNoko/. ¡Conviértete en colaborador!`,
+	expects: ['none'],
+	returns: ['image']
 };

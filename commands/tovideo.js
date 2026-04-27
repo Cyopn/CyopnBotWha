@@ -49,6 +49,7 @@ module.exports.config = {
     name: "tovideo",
     alias: [`tv`],
     type: `misc`,
-    description:
-        "Convierte a vídeo un sticker animado ya enviado, respondiendo a él.",
+    description:`Convierte a vídeo un sticker animado ya enviado, respondiendo a él.`,
+	expects: ['sticker'],
+	returns: ['video']
 };

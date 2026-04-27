@@ -67,4 +67,6 @@ module.exports.config = {
 	alias: [`tag`],
 	type: `misc`,
 	description: `Menciona a todos los miembros del grupo con un mensaje personalizado.`,
+	expects: ['text'],
+	returns: ['text']
 };

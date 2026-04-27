@@ -59,4 +59,6 @@ module.exports.config = {
 	alias: [`twitter`, `tw`],
 	type: `misc`,
 	description: `Envía multimedia (vídeo, imagen o gif) de Twitter.`,
+	expects: ['link'],
+	returns: ['image', 'video', 'gif']
 };

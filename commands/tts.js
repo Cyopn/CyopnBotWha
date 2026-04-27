@@ -70,4 +70,6 @@ module.exports.config = {
 	alias: [`ts`],
 	type: `misc`,
 	description: `Crea un audio según el texto proporcionado y en un idioma preferido (español por defecto). Usa ${prefix}lang para ver los idiomas permitidos.`,
+	expects: ['text'],
+	returns: ['audio']
 };

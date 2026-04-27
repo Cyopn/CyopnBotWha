@@ -116,4 +116,6 @@ module.exports.config = {
 	alias: [`igdl`, `ig`, `instagram`],
 	type: `misc`,
 	description: `Envía el contenido de una publicación de Instagram.`,
+	expects: ['link'],
+	returns: ['image', 'video']
 };

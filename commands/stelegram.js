@@ -79,4 +79,6 @@ module.exports.config = {
 	alias: [`st`],
 	type: `misc`,
 	description: `Envía stickers de un paquete de Telegram.`,
+	expects: ['link'],
+	returns: ['sticker']
 };

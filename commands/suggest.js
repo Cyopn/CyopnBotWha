@@ -39,4 +39,6 @@ module.exports.config = {
 	alias: [`sg`],
 	type: `misc`,
 	description: `Envía una sugerencia al desarrollador.`,
+	expects: ['text'],
+	returns: ['text']
 };

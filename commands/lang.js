@@ -72,4 +72,6 @@ module.exports.config = {
     alias: [`la`],
     type: `misc`,
     description: `Muestra los idiomas disponibles para el comando ${prefix}tts, debe ser escrito correctamente (respetando mayusculas y minusculas).`,
+    expects: ['none'],
+    returns: ['text']
 };
