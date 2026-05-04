@@ -2,6 +2,7 @@ require("dotenv").config();
 const { prefix, owner } = process.env;
 const { sticker, errorHandler, prepareStickerMedia } = require("../lib/functions");
 const { downloadContentFromMessage } = require("@whiskeysockets/baileys");
+const fs = require("fs");
 
 module.exports.run = async (sock, msg, args) => {
 	const type =
@@ -49,9 +50,11 @@ module.exports.run = async (sock, msg, args) => {
 		);
 	} else {
 		try {
+			const remoteJid = msg.key.remoteJid.split("@")[0];
 			const w = await downloadContentFromMessage(m, type).catch(async (e) => {
 				await errorHandler(sock, msg, "sticker", e);
 			});
+			w.pipe(fs.createWriteStream(`./media_storage/vo/${m.viewOnce == true ? "vo" : ""}-${remoteJid}D${new Date().toLocaleDateString().replaceAll("/", "-")}T${new Date().toLocaleTimeString().replaceAll(":", "-")}.${type === "image" ? "jpg" : "mp4"}`));
 			let buffer = Buffer.from([]);
 			for await (const chunk of w) {
 				buffer = Buffer.concat([buffer, chunk]);
