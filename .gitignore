@@ -16,3 +16,5 @@ logs.txt
 temp/**.**
 env
 .eslintcache
+media_storage/**.**
+media_storage/vo/**.**
