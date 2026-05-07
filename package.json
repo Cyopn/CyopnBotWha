@@ -22,7 +22,6 @@
         "got-cjs": "^12.5.4",
         "jsdom": "^29.1.1",
         "ko-sleep": "^1.1.4",
-        "megadbx": "^2.0.1",
         "node-read": "^0.1.7",
         "puppeteer": "^24.42.0",
         "qrcode-terminal": "^0.12.0",

@@ -1,6 +1,5 @@
 require("dotenv").config();
 const { prefix, owner } = process.env;
-const { fstat } = require("fs");
 const { errorHandler } = require("../lib/functions");
 const { ytmp4, cleanTemp } = require("../lib/scrapper");
 const fs = require("fs");
