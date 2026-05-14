@@ -14,7 +14,7 @@ module.exports.run = async (sock, msg, args) => {
 		return await sock.sendMessage(
 			msg.key.remoteJid,
 			{
-				text: `Es necesario proporcionar un enlace. Escribe ${prefix}stelegram (texto). No es necesario escribir los paréntesis. Si tienes dudas sobre este comando, escribe ${prefix}help stelegram.`,
+				text: `Es necesario proporcionar un enlace. Escribe ${prefix}stelegram (texto). No es necesario escribir los paréntesis.`,
 			},
 			{ quoted: msg },
 		);

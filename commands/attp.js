@@ -14,7 +14,7 @@ module.exports.run = async (sock, msg, args) => {
 		return sock.sendMessage(
 			msg.key.remoteJid,
 			{
-				text: `Es necesario proporcionar un texto. Escribe ${prefix}attp (texto). No es necesario escribir los paréntesis. Si tienes dudas sobre este comando, escribe ${prefix}help attp.`,
+				text: `Es necesario proporcionar un texto. Escribe ${prefix}attp (texto). No es necesario escribir los paréntesis.`,
 			},
 			{ quoted: msg },
 		);

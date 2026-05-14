@@ -16,7 +16,7 @@ module.exports.run = async (sock, msg, args) => {
 		return sock.sendMessage(
 			msg.key.remoteJid,
 			{
-				text: `Es necesario proporcionar un texto. Escribe ${prefix}tts [idioma (español por defecto)] [texto]. No es necesario escribir los corchetes. Si tienes dudas sobre este comando, escribe ${prefix}help tts.`,
+				text: `Es necesario proporcionar un texto. Escribe ${prefix}tts [idioma (español por defecto)] [texto]. No es necesario escribir los corchetes/parentesis.`,
 			},
 			{ quoted: msg },
 		);
@@ -28,7 +28,7 @@ module.exports.run = async (sock, msg, args) => {
 				return sock.sendMessage(
 					msg.key.remoteJid,
 					{
-						text: `Es necesario proporcionar un texto. Escribe ${prefix}tts [idioma (español por defecto)] [texto]. No es necesario escribir los corchetes. Si tienes dudas sobre este comando, escribe ${prefix}help tts.`,
+						text: `Es necesario proporcionar un texto. Escribe ${prefix}tts [idioma (español por defecto)] [texto]. No es necesario escribir los corchetes/parentesis.`,
 					},
 					{ quoted: msg },
 				);

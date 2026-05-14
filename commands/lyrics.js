@@ -13,7 +13,7 @@ module.exports.run = async (sock, msg, args) => {
 		return sock.sendMessage(
 			msg.key.remoteJid,
 			{
-				text: `Es necesario proporcionar una búsqueda. Escribe ${prefix}lyrics (búsqueda). No es necesario escribir los paréntesis. Si tienes dudas sobre este comando, escribe ${prefix}help lyrics.`,
+				text: `Es necesario proporcionar una búsqueda. Escribe ${prefix}lyrics (búsqueda). No es necesario escribir los paréntesis.`,
 			},
 			{ quoted: msg },
 		);

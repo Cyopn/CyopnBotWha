@@ -1,7 +1,7 @@
 require("dotenv").config();
 const { prefix } = process.env;
 const { errorHandler } = require("../lib/functions");
-const { fbdl } = require("ruhend-scraper");
+const {facebook}=require("../lib/scrapper");
 
 module.exports.run = async (sock, msg, args) => {
 	const arg =
@@ -28,13 +28,16 @@ module.exports.run = async (sock, msg, args) => {
 			{ quoted: msg },
 		);
 	try {
-		const r = await fbdl(arg);
-		if (!r.status) return await sock.sendMessage(msg.key.remoteJid, { text: "No se encontró el contenido." }, { quoted: msg });
-		const data = r.data.find(i => i.resolution === "720p (HD)") || r.data.find(i => i.resolution === "360p (SD)");
-		if (!data) return await sock.sendMessage(msg.key.remoteJid, { text: "No se encontró el contenido." }, { quoted: msg });
+		const r = await facebook(arg);
+		if (r.status === "error") return await sock.sendMessage(msg.key.remoteJid, { text: "No se pudo obtener el contenido." }, { quoted: msg });
+		const data = r.data.links;
+		if (data.length === 0) return await sock.sendMessage(msg.key.remoteJid, { text: "No se pudo obtener el contenido." }, { quoted: msg });
+		const videoUrl = data[0];
 		await sock.sendMessage(
 			msg.key.remoteJid,
-			{ video: { url: data.url }, caption: "w" },
+			{
+				video: { url: videoUrl },
+			},
 			{ quoted: msg },
 		);
 	} catch (e) {
