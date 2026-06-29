@@ -1,6 +1,7 @@
 require("dotenv").config();
 const { prefix } = process.env;
 const { instagram } = require("../lib/scrapper");
+const { igdl } = require("ruhend-scraper")
 const { errorHandler } = require("../lib/functions");
 
 module.exports.run = async (sock, msg, args) => {
@@ -32,14 +33,10 @@ module.exports.run = async (sock, msg, args) => {
 			{ quoted: msg }
 		);
 	try {
-		const result = await instagram(arg);
-		if (result.msg) return await sock.sendMessage(
-			msg.key.remoteJid,
-			{
-				text: "No se encontró el contenido.",
-			},
-			{ quoted: msg }
-		);
+		let result = await instagram(arg);
+		if (result.msg) {
+			result.url = await igdl(arg);
+		}
 		let idx = 0;
 		result.url.forEach(async e => {
 			idx++;
