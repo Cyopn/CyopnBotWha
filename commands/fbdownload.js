@@ -57,6 +57,7 @@ module.exports.run = async (sock, msg, args) => {
 		await sock.sendMessage(
 			msg.key.remoteJid,
 			{
+				caption: "w",
 				video: { url: videoUrl },
 			},
 			{ quoted: msg },
