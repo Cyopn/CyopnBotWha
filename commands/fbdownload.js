@@ -1,7 +1,8 @@
 require("dotenv").config();
 const { prefix } = process.env;
 const { errorHandler } = require("../lib/functions");
-const {facebook}=require("../lib/scrapper");
+const { fbdl } = require("ruhend-scraper")
+const { facebook } = require("../lib/scrapper");
 
 module.exports.run = async (sock, msg, args) => {
 	const arg =
@@ -28,11 +29,31 @@ module.exports.run = async (sock, msg, args) => {
 			{ quoted: msg },
 		);
 	try {
-		const r = await facebook(arg);
-		if (r.status === "error") return await sock.sendMessage(msg.key.remoteJid, { text: "No se pudo obtener el contenido." }, { quoted: msg });
-		const data = r.data.links;
-		if (data.length === 0) return await sock.sendMessage(msg.key.remoteJid, { text: "No se pudo obtener el contenido." }, { quoted: msg });
-		const videoUrl = data[0];
+		let retries = 0;
+		let videoUrl = "";
+		while (retries < 2) {
+			if (retries < 2) {
+				const r = await facebook(arg);
+				if (r.status === "error" || r.data.links.length === 0) {
+					retries++;
+					continue;
+				} else {
+					videoUrl = r.data.links[0];
+					retries = 3;
+				}
+			}
+			if (retries === 2) {
+			}
+		}
+		if (videoUrl === "") {
+			return await sock.sendMessage(
+				msg.key.remoteJid,
+				{
+					text: "No se pudo obtener el contenido.",
+				},
+				{ quoted: msg },
+			);
+		}
 		await sock.sendMessage(
 			msg.key.remoteJid,
 			{
