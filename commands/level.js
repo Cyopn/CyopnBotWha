@@ -17,28 +17,27 @@ module.exports.run = async (sock, msg, args) => {
         const footer = enable ? "" : "El sistema de niveles esta desactivado.";
         let lu = [];
         let mentioned = false;
-        if (args[0] !== undefined) {
+        if (args[0][0] && args[0][0].length > 1) {
             for (u of args[0]) {
-                u = (await sock.groupMetadata(msg.key.remoteJid)).participants.filter(e => {
-                    return e.jid ? e.lid.includes(u.replace("@", "")) : null;
-                })[0].jid;
-                console.log(u);
-                if (Number.isNaN(Number.parseInt(u.replace("@", "")))) return;
-                mentioned = true;
-                lu.push(u);
+                const user = u.replace("@", "").toString();
+                (await sock.groupMetadata(msg.key.remoteJid)).participants.forEach(e => {
+                    if (!user.includes(e.id.split("@")[0])) return
+                    lu = [e.id.split("@")[0], e.phoneNumber];
+                    mentioned = true;
+                });
             }
         }
-        const p = mentioned ? lu[0].replace("@", "") : `${msg.key.participantPn.split("@")[0]}`;
+        const p = mentioned ? lu[0] : `${msg.key.participant.split("@")[0]}`;
         const { has, xp, level } = await getXpLevel(gid, p);
         if (!has) {
             return sock.sendMessage(
                 msg.key.remoteJid,
                 {
-                    text: `${mentioned ? `El miembro @${lu[0].replace(
+                    text: `${mentioned ? `El miembro @${lu[1].replace(
                         "@s.whatsapp.net",
                         "",
                     )} no tiene` : "No tienes"} nivel ni experiencia aún. \n${footer}`,
-                    mentions: mentioned ? [lu[0]] : []
+                    mentions: mentioned ? [lu[1]] : []
                 },
                 { quoted: msg },
             );
@@ -46,11 +45,11 @@ module.exports.run = async (sock, msg, args) => {
             return sock.sendMessage(
                 msg.key.remoteJid,
                 {
-                    text: `${mentioned ? `El miembro @${lu[0].replace(
+                    text: `${mentioned ? `El miembro @${lu[1].replace(
                         "@s.whatsapp.net",
                         "",
                     )} tiene` : "Tienes:"} \nNivel: *${level}*\nExperiencia: *${xp}*\n${footer}`,
-                    mentions: mentioned ? [lu[0]] : []
+                    mentions: mentioned ? [lu[1]] : []
                 },
                 { quoted: msg },
             );

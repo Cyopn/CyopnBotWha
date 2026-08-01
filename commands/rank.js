@@ -16,7 +16,8 @@ module.exports.run = async (sock, msg, args) => {
         const gid = remoteJid.split("@")[0];
         const enable = getConfig("rank", gid);
         const name = (await sock.groupMetadata(remoteJid)).subject;
-        const { has, mentions, text } = await getRank(gid);
+        const { has, dict } = await getRank(gid);
+        console.log(dict);
         const footer = enable ? "" : "El sistema de niveles esta desactivado.";
         if (!has) {
             return sock.sendMessage(
@@ -27,6 +28,21 @@ module.exports.run = async (sock, msg, args) => {
                 { quoted: msg },
             );
         } else {
+            const participants = await sock.groupMetadata(msg.key.remoteJid);
+            let i = 0;
+            let text = "";
+            let mentions = [];
+            dict.forEach((k) => {
+                i += 1;
+                if (i <= 10) {
+                    const p = participants.participants.find(p => p.id.split("@")[0] === k.id);
+                    if (p) {
+                        console.log(p);
+                        text += `${i}-. @${p.phoneNumber.split("@")[0]} ~ Nivel: ${k.level} ~ Experiencia: ${k.xp} \n`;
+                        mentions.push(p.phoneNumber);
+                    }
+                }
+            });
             await sock.sendMessage(
                 msg.key.remoteJid,
                 {
@@ -47,6 +63,6 @@ module.exports.config = {
     alias: [`r`],
     type: `misc`,
     description: `Muestra el top 10 de los miembros con mas niveles y experioencia.`,
-	expects: ['none'],
-	returns: ['text']
+    expects: ['none'],
+    returns: ['text']
 };
