@@ -19,19 +19,32 @@ module.exports.run = async (sock, msg, args) => {
 			{ quoted: msg },
 		);
 	try {
-		const res = await tiktok(arg);
-		if (res.data.error) return await sock.sendMessage(msg.key.remoteJid, { text: res.data.error }, { quoted: msg });
-		if (res.data.video) {
+		let retries = 0;
+		let data = { error, video, image } = { error: null, video: null, image: [] };
+		while (retries < 2) {
+			if (retries < 2) {
+				const res = await tiktok(arg);
+				if (res.data.error) {
+					retries++;
+					continue;
+				} else {
+					data = res.data;
+					retries = 3;
+				}
+			}
+		}
+		if (data.error) return await sock.sendMessage(msg.key.remoteJid, { text: res.data.error }, { quoted: msg });
+		if (data.video) {
 			await sock.sendMessage(
 				msg.key.remoteJid,
 				{
-					video: { url: res.data.video },
+					video: { url: data.video },
 					caption: `w`,
 				},
 				{ quoted: msg },
 			);
 		} else {
-			res.data.image.forEach(async (image) => {
+			data.image.forEach(async (image) => {
 				await sock.sendMessage(
 					msg.key.remoteJid,
 					{
