@@ -42,8 +42,6 @@ module.exports.run = async (sock, msg, args) => {
 					retries = 3;
 				}
 			}
-			if (retries === 2) {
-			}
 		}
 		if (videoUrl === "") {
 			return await sock.sendMessage(

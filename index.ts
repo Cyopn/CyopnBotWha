@@ -271,7 +271,7 @@ const startSock = async () => {
 			if (upsert.type === "append" || upsert.type === "notify") {
 				for (const msg of upsert.messages) {
 					await processGroup(msg);
-					if (true) {
+					if (!msg.key.fromMe) {
 						await msgStorage(msg);
 						const message = msg.message?.viewOnceMessage?.message
 							?.imageMessage?.caption

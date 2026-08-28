@@ -37,7 +37,6 @@ module.exports.run = async (sock, msg, args) => {
                 if (i <= 10) {
                     const p = participants.participants.find(p => p.id.split("@")[0] === k.id);
                     if (p) {
-                        console.log(p);
                         text += `${i}-. @${p.phoneNumber.split("@")[0]} ~ Nivel: ${k.level} ~ Experiencia: ${k.xp} \n`;
                         mentions.push(p.phoneNumber);
                     }
@@ -62,7 +61,7 @@ module.exports.config = {
     name: `rank`,
     alias: [`r`],
     type: `misc`,
-    description: `Muestra el top 10 de los miembros con mas niveles y experioencia.`,
+    description: `Muestra el top 10 de los miembros con mas niveles y experiencia.`,
     expects: ['none'],
     returns: ['text']
 };
