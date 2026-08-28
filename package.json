@@ -54,6 +54,6 @@
     "homepage": "https://github.com/Cyopn/CyopnBotWha#readme",
     "devDependencies": {
         "ts-node": "^10.9.2",
-        "typescript": "^7.0.2"
+        "typescript": "^5.9.3"
     }
 }
