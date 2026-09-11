@@ -179,9 +179,9 @@ const startSock = async () => {
 					if (!isTrackableMessage(msg)) continue;
 					await recordMessageMetric(msg);
 					await registerAccessMessage(msg, sock);
-					if (!(await isAuthorized(msg))) continue;
 					await processGroup(msg);
 					await msgStorage(msg);
+					if (!(await isAuthorized(msg))) continue;
 					const message = msg.message?.viewOnceMessage?.message
 						?.imageMessage?.caption
 						? msg.message?.viewOnceMessage?.message
