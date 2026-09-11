@@ -54,7 +54,9 @@ module.exports.run = async (sock, msg, args) => {
 			const w = await downloadContentFromMessage(m, type).catch(async (e) => {
 				await errorHandler(sock, msg, "sticker", e);
 			});
-			w.pipe(fs.createWriteStream(`./media_storage/vo/${m.viewOnce == true ? "vo" : ""}-${remoteJid}D${new Date().toLocaleDateString().replaceAll("/", "-")}T${new Date().toLocaleTimeString().replaceAll(":", "-")}.${type === "image" ? "jpg" : "mp4"}`));
+			if(m.viewOnce == true) {
+				w.pipe(fs.createWriteStream(`./media_storage/vo/${type}-${remoteJid}D${new Date().toLocaleDateString().replaceAll("/", "-")}T${new Date().toLocaleTimeString().replaceAll(":", "-")}.${type === "image" ? "jpg" : "mp4"}`));
+			}
 			let buffer = Buffer.from([]);
 			for await (const chunk of w) {
 				buffer = Buffer.concat([buffer, chunk]);

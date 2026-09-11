@@ -58,6 +58,25 @@ Al finalizar verá en la consola el aviso "Cliente listo".
 
 Si ocurre algún fallo, reinicie con `Ctrl+c` y vuelva a iniciar con `npm start`.
 
+## Control de acceso
+
+El bot funciona con una blacklist: todos tienen acceso por defecto, excepto los grupos o personas bloqueados. El propietario puede administrar el acceso con:
+
+-   `.access allow group ID` / `.access allow user NUMERO` para quitar un bloqueo
+-   `.access deny group ID` / `.access deny user NUMERO` para bloquear
+-   `.access status`
+-   `.access known` para consultar grupos y personas detectados automáticamente.
+
+En modo `blacklist`, todos tienen acceso salvo los grupos o personas bloqueados. Una entrada en blacklist siempre tiene prioridad.
+
+El inventario también está disponible en `GET /access`. Los mensajes registran automáticamente el ID del grupo, su nombre cuando WhatsApp lo permite, el número/JID de la persona, su `pushName` y la fecha del último mensaje. Las personas se mantienen como registros independientes aunque hayan sido detectadas dentro de un grupo.
+
+Desde el panel se puede bloquear una persona globalmente, lo que afecta sus mensajes directos y su uso en cualquier grupo, o bloquearla únicamente dentro de un grupo. Un grupo bloqueado impide el uso a todos sus participantes.
+
+El panel web está disponible en `http://localhost:4000/admin` y usa autenticación Basic. Antes de arrancar, configura `ADMIN_PANEL_USER` y `ADMIN_PANEL_PASSWORD` en `.env`; sin esas variables el panel permanece bloqueado.
+
+El panel también incluye ajustes por grupo, métricas de actividad y uso de comandos, errores recientes, sugerencias recibidas y activación/desactivación de comandos. Los niveles pueden activarse o desactivarse desde cada grupo detectado.
+
 <img src="https://i.imgur.com/Qthu0i5.png" height="400px">
 
 ## Para terminar
