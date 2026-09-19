@@ -50,6 +50,4 @@ module.exports.config = {
     alias: [`tv`],
     type: `misc`,
     description:`Convierte a vídeo un sticker animado ya enviado, respondiendo a él.`,
-	expects: ['sticker'],
-	returns: ['video']
 };

@@ -37,6 +37,4 @@ module.exports.config = {
 	alias: [`ap`],
 	type: `misc`,
 	description: `Crea un sticker según el texto proporcionado. Algunos emojis no son compatibles.`,
-	expects: ['text'],
-	returns: ['sticker']
 };

@@ -36,6 +36,4 @@ module.exports.config = {
 	alias: [`ly`],
 	type: `misc`,
 	description: `Envía la letra de una canción.`,
-	expects: ['text'],
-	returns: ['text']
 };

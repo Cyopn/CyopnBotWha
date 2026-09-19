@@ -64,6 +64,4 @@ module.exports.config = {
     alias: [`l`, `nivel`, `lvl`, `xp`],
     type: `misc`,
     description: `Muestra tu nivel y experiencia conforme tus mensajes enviados.`,
-    expects: ['none', 'mention'],
-    returns: ['text']
 };

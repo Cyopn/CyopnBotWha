@@ -65,6 +65,4 @@ module.exports.config = {
 	alias: [`tk`],
 	type: `misc`,
 	description: `Envía vídeo o imagen(es) de TikTok sin marca de agua.`,
-	expects: ['link'],
-	returns: ['video', 'image']
 };

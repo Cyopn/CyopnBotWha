@@ -50,6 +50,4 @@ module.exports.config = {
     alias: [`ti`],
     type: `misc`,
     description: `Convierte a imagen un sticker ya enviado, respondiendo a él.`,
-	expects: ['sticker'],
-	returns: ['image']
 };

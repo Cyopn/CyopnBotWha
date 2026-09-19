@@ -37,6 +37,4 @@ module.exports.config = {
 	alias: [`h`, `ayuda`, `comandos`, `auxilio`, `socorro`],
 	type: "help",
 	description: `Muestra este mensaje.`,
-	expects: ['none'],
-	returns: ['text']
 };

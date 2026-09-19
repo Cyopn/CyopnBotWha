@@ -58,7 +58,5 @@ module.exports.config = {
     name: "access",
     alias: ["acceso", "acl"],
     type: "admin",
-    description: "Administra la blacklist del bot.",
-    expects: ["text"],
-    returns: ["text"],
+    description: "Administra la lista negra del bot.",
 };

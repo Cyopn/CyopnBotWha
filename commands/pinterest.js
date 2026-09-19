@@ -61,6 +61,4 @@ module.exports.config = {
     alias: [`pin`],
     type: `ign`,
     description: `Envía contenido de Pinterest.`,
-	expects: ['link'],
-	returns: ['image', 'video']
 };

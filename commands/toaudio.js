@@ -84,6 +84,4 @@ module.exports.config = {
     alias: [`ta`],
     type: `misc`,
     description: `Convierte un vídeo a audio MP3.`,
-	expects: ['video'],
-	returns: ['audio']
 };

@@ -62,6 +62,4 @@ module.exports.config = {
     alias: [`r`],
     type: `misc`,
     description: `Muestra el top 10 de los miembros con mas niveles y experiencia.`,
-    expects: ['none'],
-    returns: ['text']
 };

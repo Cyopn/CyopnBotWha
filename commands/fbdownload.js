@@ -70,6 +70,4 @@ module.exports.config = {
 	alias: [`fbdl`, `fb`, `facebook`],
 	type: `misc`,
 	description: `Envía el vídeo de una publicación de Facebook.`,
-	expects: ['link'],
-	returns: ['video']
 };
