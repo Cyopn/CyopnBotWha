@@ -9,6 +9,7 @@ import fs from "fs/promises";
 import NodeCache from '@cacheable/node-cache'
 import P from 'pino'
 import sleep from 'ko-sleep'
+import { createApp } from "./app";
 
 require("dotenv").config();
 const { msgStorage } = require("./lib/functions.js");
@@ -17,95 +18,13 @@ const { getMetrics, getRecentErrors, getSuggestions, recordCommandMetric, record
 const { getAccessRegistry, isAuthorized, isCommandEnabled, isTrackableMessage, registerAccessMessage, setCommandEnabled, setGroupEnabled, setGroupUserBlocked, updateList } = require("./lib/access.js");
 const { renderAdminPage } = require("./lib/admin_view.js");
 const { prefix, owner, channel, port, bot } = process.env;
-const express = require("express");
-const bodyParser = require("body-parser");
+
 const msgRetryCounterCache = new NodeCache<any>()
 const logger = P({ timestamp: () => `,"time":"${new Date().toJSON()}"` }, P.destination('./logs.txt'))
 logger.level = 'silent'
 
 let commands: Map<string, { name: string, alias: string[], description: string }> = new Map()
-const URL_WORDS_REGEX = /(https?:\/\/|www\.|t\.me\/|wa\.me\/)/i;
 
-const app = express();
-app.use(bodyParser.json());
-app.use(
-	bodyParser.urlencoded({
-		extended: true,
-	}),
-);
-const adminAuth = (request, response, next) => {
-	const expectedUser = process.env.ADMIN_PANEL_USER;
-	const expectedPassword = process.env.ADMIN_PANEL_PASSWORD;
-	if (!expectedUser || !expectedPassword) {
-		return response.status(503).send("Panel no configurado: establece ADMIN_PANEL_USER y ADMIN_PANEL_PASSWORD.");
-	}
-	const header = request.headers.authorization || "";
-	if (!header.startsWith("Basic ")) {
-		response.set("WWW-Authenticate", 'Basic realm="CyopnBot Admin"');
-		return response.status(401).send("Autenticacion requerida.");
-	}
-	const decoded = Buffer.from(header.slice(6), "base64").toString("utf8");
-	const separator = decoded.indexOf(":");
-	const user = separator >= 0 ? decoded.slice(0, separator) : "";
-	const password = separator >= 0 ? decoded.slice(separator + 1) : "";
-	if (user !== expectedUser || password !== expectedPassword) {
-		response.set("WWW-Authenticate", 'Basic realm="CyopnBot Admin"');
-		return response.status(401).send("Credenciales invalidas.");
-	}
-	next();
-};
-app.get("/", (request, response) => {
-	response.json({ info: "En linea" });
-});
-app.get("/access", adminAuth, async (request, response) => {
-	try {
-		response.json(await getAccessRegistry());
-	} catch (error) {
-		response.status(500).json({ error: String(error) });
-	}
-});
-app.get("/admin", adminAuth, async (request, response) => {
-	try {
-		const registry = await getAccessRegistry();
-		registry.groupSettings = await getAllGroupSettings();
-		registry.groups = Object.fromEntries(Object.entries(registry.groups).map(([id, group]) => [id, { ...(group as Record<string, any>), settings: registry.groupSettings[id] || {} }]));
-		registry.metrics = await getMetrics();
-		registry.errors = await getRecentErrors();
-		registry.suggestions = await getSuggestions();
-		const commandList = Array.from(commands.values()).sort((a, b) => a.name.localeCompare(b.name));
-		response.send(renderAdminPage({ ...registry, commands: commandList }));
-	} catch (error) {
-		response.status(500).send(String(error));
-	}
-});
-app.post("/admin/access", adminAuth, async (request, response) => {
-	try {
-		const { action, list, value } = request.body || {};
-		if (action === "group") await setGroupEnabled(request.body.groupId, request.body.enabled === "true");
-		if (action === "participant") await setGroupUserBlocked(request.body.groupId, request.body.userId, request.body.blocked === "true");
-		if (action === "group-setting") await setGroupSetting(request.body.groupId, request.body.setting, request.body.value === "true");
-		if (action === "user") {
-			await updateList("blacklistUsers", request.body.userId, request.body.allowed === "true" ? "remove" : "add");
-		}
-		if (action === "add" && ["blacklistGroups", "blacklistUsers"].includes(list)) await updateList(list, value, "add");
-		if (action === "remove" && ["blacklistGroups", "blacklistUsers"].includes(list)) await updateList(list, value, "remove");
-		response.redirect("/admin");
-	} catch (error) {
-		response.status(500).send(String(error));
-	}
-});
-app.post("/admin/commands", adminAuth, async (request, response) => {
-	try {
-		const { command, enabled } = request.body || {};
-		if (Array.from(commands.values()).some((item) => item.name === command)) await setCommandEnabled(command, enabled === "true");
-		response.redirect("/admin");
-	} catch (error) {
-		response.status(500).send(String(error));
-	}
-});
-app.listen(port, () => {
-	console.log(`Aplicacion corriendo en el puerto ${port}.`);
-});
 fs.readdir(`./commands/`).then((files) => {
 	let jsfile = files.filter((f) => f.split(".").pop() === "js");
 	if (jsfile.length <= 0) return console.log("No se encontró ningún comando");
@@ -114,6 +33,10 @@ fs.readdir(`./commands/`).then((files) => {
 		commands.set((f.split(".")[0]), { "name": pull.config.name, "alias": pull.config.alias, "description": pull.config.description || "" })
 	});
 })
+
+createApp(commands).listen(process.env.port || 3000, () => {
+	console.log(`Servidor Express corriendo en el puerto ${process.env.port || 3000}`);
+});
 
 const startSock = async () => {
 	const { state, saveCreds } = await useMultiFileAuthState('auth_info')
@@ -238,8 +161,8 @@ const startSock = async () => {
 											? quotedM?.conversation.trim().split(" ")
 											: quotedM?.imageMessage?.caption
 												? quotedM?.imageMessage?.caption.trim().split(" ")
-												: quotedM?.videoMessage?.caption
-													? quotedM?.videoMessage?.caption.trim().split(" ")
+												: msg.message?.videoMessage?.caption
+													? msg.message?.videoMessage?.caption.trim().split(" ")
 													: undefined;
 					const normalizedMessage = message.trim();
 					const isCommandMessage = (normalizedMessage.startsWith(prefix) || normalizedMessage.startsWith("chip")) && normalizedMessage.length > 1;

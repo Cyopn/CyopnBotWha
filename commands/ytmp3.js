@@ -1,7 +1,7 @@
 require("dotenv").config();
 const { prefix, owner } = process.env;
 const { errorHandler } = require("../lib/functions");
-const { ytmp4, cleanTemp } = require("../lib/scrapper");
+const { ytmp3, cleanTemp } = require("../lib/scrapper");
 const fs = require("fs");
 const path = require("path");
 
@@ -17,7 +17,7 @@ module.exports.run = async (sock, msg, args) => {
             return sock.sendMessage(
                 msg.key.remoteJid,
                 {
-                    text: `Debes proporcionar un enlace. Escribe ${prefix}ytmp4 (enlace). No es necesario escribir los paréntesis.`,
+                    text: `Debes proporcionar un enlace. Escribe ${prefix}ytmp3 (enlace). No es necesario escribir los paréntesis.`,
                 },
                 { quoted: msg },
             );
@@ -32,10 +32,10 @@ module.exports.run = async (sock, msg, args) => {
             );
         await sock.sendMessage(
             msg.key.remoteJid,
-            { text: `Descargando vídeo, por favor espera...` },
+            { text: `Descargando audio, por favor espera...` },
             { quoted: msg },
         );
-        const res = await ytmp4(arg);
+        const res = await ytmp3(arg);
         const fileName = path.basename(res.filePath);
         const port = process.env.port || 3000;
         const baseUrl = process.env.APP_URL || `http://localhost:${port}`;
@@ -43,20 +43,19 @@ module.exports.run = async (sock, msg, args) => {
         await sock.sendMessage(
             msg.key.remoteJid,
             {
-                text: `*${res.title}*\nDescarga completada. Tu video está disponible por 1 hora:\n${downloadLink}`
+                text: `*${res.title}*\nDescarga completada. Tu audio está disponible por 1 hora:\n${downloadLink}`
             },
             { quoted: msg }
         );
         await cleanTemp(res.filePath, 3600000);
-        await cleanTemp(res.filePath.replace(".mp4", ".mkv"), 3600000);
     } catch (e) {
         await errorHandler(sock, msg, this.config.name, e);
     }
 };
 
 module.exports.config = {
-    name: `ytmp4`,
-    alias: [`mp4`],
+    name: `ytmp3`,
+    alias: [`ytmp3`],
     type: `misc`,
-    description: `Envía un vídeo de YouTube en formato MP4. El comando puede tardar un poco dependiendo de la duración del vídeo.`,
+    description: `Envía el audio de un video de YouTube en formato MP3. El comando puede tardar un poco dependiendo de la duración del video.`,
 };
