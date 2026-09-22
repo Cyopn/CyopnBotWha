@@ -16,3 +16,5 @@ py_cmd_vid=
 # Credenciales de acceso
 ADMIN_PANEL_USER=
 ADMIN_PANEL_PASSWORD=
+# URL de la aplicación
+APP_URL=
