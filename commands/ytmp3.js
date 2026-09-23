@@ -55,7 +55,7 @@ module.exports.run = async (sock, msg, args) => {
 
 module.exports.config = {
     name: `ytmp3`,
-    alias: [`ytmp3`],
+    alias: [`mp3`],
     type: `misc`,
     description: `Envía el audio de un video de YouTube en formato MP3. El comando puede tardar un poco dependiendo de la duración del video.`,
 };

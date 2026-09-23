@@ -23,7 +23,7 @@ module.exports.run = async (sock, msg, args) => {
 			return await sock.sendMessage(
 				msg.key.remoteJid,
 				{
-					text: `El enlace proporcionado no es válido; recuerda que debe ser el enlace directo del paquete de stickers.`,
+					text: `El enlace proporcionado no es válido; recuerda que debe ser el enlace directo del paquete de stickers de telegram.`,
 				},
 				{ quoted: msg },
 			);

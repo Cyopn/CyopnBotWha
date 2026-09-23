@@ -76,7 +76,7 @@ module.exports.run = async (sock, msg, args) => {
 
         setTimeout(() => {
             fs.unlink(formatFilePath, e => {
-                if (e) console.error("Error cleaning up format file:", e);
+                
             });
         }, 3600000);
 

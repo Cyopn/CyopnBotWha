@@ -6,7 +6,6 @@ const { facebook } = require("../lib/scrapper");
 
 module.exports.run = async (sock, msg, args) => {
 	const arg = args[0].concat(args[1]);
-	console.log(arg);
 	if (arg[0].length === 0 && arg[1] === undefined && arg.length === 2)
 		return sock.sendMessage(
 			msg.key.remoteJid,
@@ -49,7 +48,7 @@ module.exports.run = async (sock, msg, args) => {
 				return await sock.sendMessage(
 					msg.key.remoteJid,
 					{
-						text: "No se pudo obtener el contenido., enlace: " + e,
+						text: "No se pudo obtener el contenido.",
 					},
 					{ quoted: msg },
 				);

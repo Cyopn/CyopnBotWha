@@ -28,7 +28,7 @@ function createApp(commandsMap: Map<string, { name: string, alias: string[], des
     const expectedUser = process.env.ADMIN_PANEL_USER;
     const expectedPassword = process.env.ADMIN_PANEL_PASSWORD;
     if (!expectedUser || !expectedPassword) {
-      return response.status(503).send("Panel no configurado: establece ADMIN_PANEL_USER y ADMIN_PANEL_PASSWORD.");
+      return response.status(503).send("Panel no configurado.");
     }
     const header = request.headers.authorization || "";
     if (!header.startsWith("Basic ")) {
@@ -108,19 +108,19 @@ function createApp(commandsMap: Map<string, { name: string, alias: string[], des
 
     fs.access(filePath, fs.constants.F_OK, (err: NodeJS.ErrnoException | null) => {
       if (err) {
-        return res.status(404).send('Format file not found or expired');
+        return res.status(404).send('Formato de archivo no encontrado o el archivo ha expirado');
       }
 
       fs.readFile(filePath, 'utf8', (err: NodeJS.ErrnoException | null, data: string) => {
         if (err) {
-          return res.status(500).send('Error reading format file');
+          return res.status(500).send('Error al leer el formato de archivo');
         }
 
         let formatData;
         try {
           formatData = JSON.parse(data);
         } catch (e) {
-          return res.status(500).send('Invalid format file');
+          return res.status(500).send('Formato de archivo inválido');
         }
 
         let formats: any[] = [];
@@ -129,7 +129,7 @@ function createApp(commandsMap: Map<string, { name: string, alias: string[], des
         } else if (Array.isArray(formatData)) {
           formats = formatData;
         } else {
-          return res.status(500).send('Invalid format file structure');
+          return res.status(500).send('Estructura de formato de archivo no reconocida');
         }
 
         const metadata = formatData && formatData._metadata ? formatData._metadata : {};
@@ -141,11 +141,15 @@ function createApp(commandsMap: Map<string, { name: string, alias: string[], des
           .replace(/'/g, '&#039;');
         const hasAudio = (format: any) => format.acodec && format.acodec !== 'none';
         const hasVideo = (format: any) => format.vcodec && format.vcodec !== 'none';
+        const hasKnownSize = (format: any) => Number(format.filesize || format.filesize_approx) > 0;
         const videoFormats = formats
           .filter((format: any) => hasVideo(format))
+          .filter((format: any) => hasKnownSize(format))
+          .filter((format: any, index: number, availableFormats: any[]) => availableFormats.findIndex((candidate: any) => hasKnownSize(candidate) && `${candidate.height || 0}:${candidate.fps || 0}` === `${format.height || 0}:${format.fps || 0}`) === index)
           .sort((a: any, b: any) => (Number(b.height) || 0) - (Number(a.height) || 0) || (Number(b.fps) || 0) - (Number(a.fps) || 0) || (Number(b.tbr) || 0) - (Number(a.tbr) || 0));
         const audioFormats = formats
           .filter((format: any) => hasAudio(format) && !hasVideo(format))
+          .filter((format: any) => hasKnownSize(format))
           .sort((a: any, b: any) => (Number(b.abr) || Number(b.tbr) || Number(b.bitrate) || 0) - (Number(a.abr) || Number(a.tbr) || Number(a.bitrate) || 0));
         const formatRow = (format: any, type: 'video' | 'audio') => {
           const quality = type === 'video'
@@ -153,11 +157,11 @@ function createApp(commandsMap: Map<string, { name: string, alias: string[], des
             : `${Math.round(Number(format.abr || format.tbr || format.bitrate / 1000) || 0)} kbps`;
           const details = type === 'video'
             ? `${format.ext || 'N/A'} · ${format.vcodec && format.vcodec !== 'none' ? format.vcodec : 'video'}${hasAudio(format) ? ` + ${format.acodec}` : ''}`
-            : `${format.ext || 'N/A'} · ${format.acodec || 'audio'}`;
+            : `MP3 · fuente ${format.ext || 'audio'} · ${format.acodec || 'audio'}`;
           return `
           <article class="format-row">
             <div class="quality"><strong>${escapeHtml(quality)}</strong><span>${escapeHtml(details)}</span></div>
-            <span class="format-size">${format.filesize ? `${(format.filesize / (1024 * 1024)).toFixed(1)} MB` : 'Tamaño variable'}</span>
+            <span class="format-size">${(format.filesize || format.filesize_approx) ? `${((format.filesize || format.filesize_approx) / (1024 * 1024)).toFixed(1)} MB` : 'Tamaño variable'}</span>
             <a class="download-btn" href="/yt/download/${encodeURIComponent(filename)}?format_id=${encodeURIComponent(format.format_id)}" aria-label="Descargar ${escapeHtml(quality)}">Descargar</a>
           </article>`;
         };
@@ -224,7 +228,7 @@ function createApp(commandsMap: Map<string, { name: string, alias: string[], des
       const formatId = req.query.format_id as string;
 
       if (!formatId) {
-        return res.status(400).send('Format ID is required');
+        return res.status(400).send('Id de formato no proporcionado');
       }
 
       const filePath = path.join(__dirname, 'temp', filename);
@@ -232,21 +236,21 @@ function createApp(commandsMap: Map<string, { name: string, alias: string[], des
       try {
         await fsPromises.access(filePath);
       } catch (err) {
-        return res.status(404).send('Format file not found or expired');
+        return res.status(404).send('Formato de archivo no encontrado o el archivo ha expirado');
       }
 
       let data: string;
       try {
         data = await fsPromises.readFile(filePath, 'utf8');
       } catch (err) {
-        return res.status(500).send('Error reading format file');
+        return res.status(500).send('Error al leer el formato de archivo');
       }
 
       let formatData: any;
       try {
         formatData = JSON.parse(data);
       } catch (e) {
-        return res.status(500).send('Invalid format file');
+        return res.status(500).send('Formato de archivo inválido');
       }
 
       let youtubeUrl = '';
@@ -280,8 +284,10 @@ function createApp(commandsMap: Map<string, { name: string, alias: string[], des
 
       const selectedFormat = formats.find((f: any) => f.format_id === formatId);
       if (!selectedFormat) {
-        return res.status(400).send(`Format ID ${formatId} not found in available formats`);
+        return res.status(400).send(`Id ${formatId} no encontrado en el archivo.`);
       }
+      const isAudioOnly = selectedFormat.acodec && selectedFormat.acodec !== 'none'
+        && (!selectedFormat.vcodec || selectedFormat.vcodec === 'none');
 
       const tempname = `yt_download_${Date.now()}`;
       const tempDir = path.join(__dirname, 'temp');
@@ -293,25 +299,14 @@ function createApp(commandsMap: Map<string, { name: string, alias: string[], des
 
       let result: any;
       try {
-        const selectedFormat = formats.find((f: any) => f.format_id === formatId);
 
-        if (!selectedFormat) {
-          throw new Error(`Format ID ${formatId} not found`);
-        }
-
-        console.log(`Selected format:`, {
-          format_id: selectedFormat.format_id,
-          ext: selectedFormat.ext,
-          url: selectedFormat.url ? '[URL PRESENT]' : 'No URL',
-          protocol: selectedFormat.protocol,
-          vcodec: selectedFormat.vcodec,
-          acodec: selectedFormat.acodec
-        });
-
-        if (selectedFormat.url &&
+        if (isAudioOnly) {
+          result = await ytdlp.downloadAudio(youtubeUrl, 'mp3', {
+            output: path.join(tempDir, `${tempname}.%(ext)s`),
+            audioQuality: '0'
+          });
+        } else if (selectedFormat.url &&
           (selectedFormat.protocol === 'http:' || selectedFormat.protocol === 'https:')) {
-
-          console.log(`Attempting direct download from URL: ${selectedFormat.url.substring(0, 100)}...`);
 
           const https = require('https');
           const http = require('http');
@@ -340,7 +335,6 @@ function createApp(commandsMap: Map<string, { name: string, alias: string[], des
 
           result = { filePaths: [filePath] };
         } else {
-          console.log(`Direct download not possible, using ytdlp...`);
 
           const downloadAttempts = [
             () => ytdlp.downloadVideo(youtubeUrl, formatId, { output: path.join(tempDir, `${tempname}.%(ext)s`) }),
@@ -351,11 +345,9 @@ function createApp(commandsMap: Map<string, { name: string, alias: string[], des
           let lastError: any;
           for (let i = 0; i < downloadAttempts.length; i++) {
             try {
-              console.log(`Trying ytdlp approach ${i + 1}...`);
               result = await downloadAttempts[i]();
               break;
             } catch (err: any) {
-              console.log(`Approach ${i + 1} failed:`, err.message);
               lastError = err;
               if (i === downloadAttempts.length - 1) {
                 throw lastError;
@@ -364,66 +356,67 @@ function createApp(commandsMap: Map<string, { name: string, alias: string[], des
           }
         }
       } catch (error: any) {
-        console.error('Error downloading video:', error);
-        return res.status(500).send(`Error downloading video: ${error.message}`);
+        return res.status(500).send(`Error de descarga`);
       }
 
       let originalPath = result.filePaths[0];
-      let mp4Path = originalPath.replace(/\.[^/.]+$/, ".mp4");
+      let outputPath = originalPath.replace(/\.[^/.]+$/, isAudioOnly ? ".mp3" : ".mp4");
 
       const { execSync } = require("child_process");
-      try {
-        execSync(`ffmpeg -y -i "${originalPath}" -c:v copy -c:a aac -strict experimental "${mp4Path}"`);
-      } catch (error: any) {
-        console.error('Error converting video:', error);
-        mp4Path = originalPath;
+      if (originalPath !== outputPath) {
+        try {
+          const conversionOptions = isAudioOnly
+            ? '-vn -c:a libmp3lame -q:a 0'
+            : '-c:v copy -c:a aac -strict experimental';
+          execSync(`ffmpeg -y -i "${originalPath}" ${conversionOptions} "${outputPath}"`);
+        } catch (error: any) {
+          outputPath = originalPath;
+        }
       }
 
-      const fileName = path.basename(mp4Path);
+      const fileName = path.basename(outputPath);
       res.setHeader('Content-disposition', `attachment; filename=${fileName}`);
 
-      if (mp4Path.endsWith('.mp4')) {
+      if (isAudioOnly && outputPath.endsWith('.mp3')) {
+        res.setHeader('Content-type', 'audio/mpeg');
+      } else if (outputPath.endsWith('.mp4')) {
         res.setHeader('Content-type', 'video/mp4');
-      } else if (mp4Path.endsWith('.webm')) {
+      } else if (outputPath.endsWith('.webm')) {
         res.setHeader('Content-type', 'video/webm');
-      } else if (mp4Path.endsWith('.mkv')) {
+      } else if (outputPath.endsWith('.mkv')) {
         res.setHeader('Content-type', 'video/x-matroska');
       } else {
         res.setHeader('Content-type', 'application/octet-stream');
       }
 
-      const fileStream = fs.createReadStream(mp4Path);
+      const fileStream = fs.createReadStream(outputPath);
       fileStream.pipe(res);
 
       fileStream.on('close', () => {
         try {
           fs.unlinkSync(originalPath);
-          if (mp4Path !== originalPath) {
-            fs.unlinkSync(mp4Path);
+          if (outputPath !== originalPath) {
+            fs.unlinkSync(outputPath);
           }
         } catch (e) {
-          console.error('Error cleaning up files:', e);
         }
       });
 
       fileStream.on('error', (err: any) => {
-        console.error('Error streaming file:', err);
         try {
           fs.unlinkSync(originalPath);
-          if (mp4Path !== originalPath) {
-            fs.unlinkSync(mp4Path);
+          if (outputPath !== originalPath) {
+            fs.unlinkSync(outputPath);
           }
         } catch (e) {
-          console.error('Error cleaning up files after stream error:', e);
         }
         if (!res.headersSent) {
-          res.status(500).send('Error streaming file');
+          res.status(500).send('Error transfiriendo el archivo');
         }
       });
     } catch (error: any) {
-      console.error('Unexpected error in download route:', error);
       if (!res.headersSent) {
-        res.status(500).send(`Internal server error: ${error.message}`);
+        res.status(500).send(`Error interno del servidor`);
       }
     }
   });
