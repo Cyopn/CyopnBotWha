@@ -1,5 +1,5 @@
 require("dotenv").config();
-const { prefix, owner } = process.env;
+const { prefix } = process.env;
 const { errorHandler } = require("../lib/functions");
 const { YtDlp } = require("ytdlp-nodejs");
 const fs = require("fs");

@@ -13,11 +13,10 @@ import { createApp } from "./app";
 
 require("dotenv").config();
 const { msgStorage } = require("./lib/functions.js");
-const { processGroup, evalLevel, getAllGroupSettings, setGroupSetting } = require("./lib/db.js");
-const { getMetrics, getRecentErrors, getSuggestions, recordCommandMetric, recordMessageMetric } = require("./lib/admin_data.js");
-const { getAccessRegistry, isAuthorized, isCommandEnabled, isTrackableMessage, registerAccessMessage, setCommandEnabled, setGroupEnabled, setGroupUserBlocked, updateList } = require("./lib/access.js");
-const { renderAdminPage } = require("./lib/admin_view.js");
-const { prefix, owner, channel, port, bot } = process.env;
+const { processGroup, evalLevel } = require("./lib/db.js");
+const { recordCommandMetric, recordMessageMetric } = require("./lib/admin_data.js");
+const { isAuthorized, isCommandEnabled, isTrackableMessage, registerAccessMessage } = require("./lib/access.js");
+const { prefix, owner, channel, bot } = process.env;
 
 const msgRetryCounterCache = new NodeCache<any>()
 const logger = P({ timestamp: () => `,"time":"${new Date().toJSON()}"` }, P.destination('./logs.txt'))

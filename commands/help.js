@@ -3,7 +3,7 @@ const { prefix, channel } = process.env;
 const { getCommands } = require("../lib/functions");
 
 module.exports.run = async (sock, msg, args) => {
-	const { command, alias, type, desc, fulldesc } = await getCommands();
+	const { command, alias, type, desc } = await getCommands();
 	let txt = `*CyopnBot* 
 	*Prefijo*: [  ${prefix}  ] 
 	_yo_ : https://instagram.com/Cyopn_

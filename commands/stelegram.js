@@ -1,7 +1,8 @@
 require("dotenv").config();
-const { prefix, owner, token } = process.env;
+const { prefix, token } = process.env;
 const axios = require("axios").default;
-const { tgsConverter, sticker, errorHandler } = require("../lib/functions.js");
+const { errorHandler, createStaticSticker, createAnimatedSticker, tgsConverter } = require("../lib/functions");
+const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
 module.exports.run = async (sock, msg, args) => {
 	const arg =
@@ -14,7 +15,7 @@ module.exports.run = async (sock, msg, args) => {
 		return await sock.sendMessage(
 			msg.key.remoteJid,
 			{
-				text: `Es necesario proporcionar un enlace. Escribe ${prefix}stelegram (texto). No es necesario escribir los paréntesis.`,
+				text: `Es necesario proporcionar un enlace. Escribe ${prefix}stelegram (enlace). No es necesario escribir los paréntesis.`,
 			},
 			{ quoted: msg },
 		);
@@ -23,7 +24,7 @@ module.exports.run = async (sock, msg, args) => {
 			return await sock.sendMessage(
 				msg.key.remoteJid,
 				{
-					text: `El enlace proporcionado no es válido; recuerda que debe ser el enlace directo del paquete de stickers de telegram.`,
+					text: `El enlace proporcionado no es válido; recuerda que debe ser el enlace directo del paquete de stickers de Telegram.`,
 				},
 				{ quoted: msg },
 			);
@@ -36,38 +37,57 @@ module.exports.run = async (sock, msg, args) => {
 			await sock.sendMessage(
 				msg.key.remoteJid,
 				{
-					text: `Se ha encontrado el paquete ${pack} con ${stickers.length} stickers; el envío puede demorar un momento. Por favor, espera.`,
+					text: `Se ha encontrado el paquete *${pack}* con *${stickers.length}* stickers. El envío puede demorar un momento. Por favor, espera.`,
 				},
 				{ quoted: msg },
 			);
 			for (const s of stickers) {
-				const file = await axios.get(
-					`https://api.telegram.org/bot${token}/getFile?file_id=${s.file_id}`,
-				);
-				const st = await axios.get(
-					`https://api.telegram.org/file/bot${token}/${file.data.result.file_path}`,
-					{ responseType: "arraybuffer" },
-				);
-				let result;
-				if (file.data.result.file_path.endsWith(".tgs")) {
-					const url = await tgsConverter(st.data);
-					const buffer = await axios.get(url, {
-						responseType: "arraybuffer",
-					});
-					result = await sticker(buffer.data).catch(async (e) => {
-						await errorHandler(sock, msg, "stelegram", e);
-					});
-				} else {
-					result = await sticker(st.data).catch(async (e) => {
-						await errorHandler(sock, msg, "stelegram", e);
-					});
+				try {
+					const file = await axios.get(
+						`https://api.telegram.org/bot${token}/getFile?file_id=${s.file_id}`,
+					);
+					const st = await axios.get(
+						`https://api.telegram.org/file/bot${token}/${file.data.result.file_path}`,
+						{ responseType: "arraybuffer" },
+					);
+					const buffer = Buffer.from(st.data);
+					let result = null;
+					const filePath = file.data.result.file_path;
+					if (filePath.endsWith(".tgs") || s.is_animated === true) {
+						const gifUrl = await tgsConverter(buffer);
+						const gifRes = await axios.get(gifUrl, { responseType: "arraybuffer" });
+						const gifBuffer = Buffer.from(gifRes.data);
+						result = await createAnimatedSticker(gifBuffer);
+					} else if (s.is_video === true || filePath.endsWith(".webm")) {
+						result = await createAnimatedSticker(buffer);
+					} else {
+						result = await createStaticSticker(buffer);
+					}
+					if (result) {
+						await sock.sendMessage(
+							msg.key.remoteJid, 
+							{ sticker: result }, 
+							{ quoted: msg }
+						);
+					} else {
+						console.error(`[stelegram] No se pudo optimizar/crear el sticker: ${filePath}`);
+					}
+					await sleep(1500);
+				} catch (e) {
+					console.error(`[stelegram] Error procesando el sticker ${s.file_id}:`, e);
 				}
-				await sock
-					.sendMessage(msg.key.remoteJid, { sticker: result }, { quoted: msg })
-					.catch(async (e) => {
-						await errorHandler(sock, msg, "stelegram", e);
-					});
 			}
+			await sock.sendMessage(
+				msg.key.remoteJid,
+				{ text: "✅ Envío del paquete completado." },
+				{ quoted: msg }
+			);
+		} else {
+			await sock.sendMessage(
+				msg.key.remoteJid,
+				{ text: "No se pudo encontrar el paquete de stickers. Verifica el enlace." },
+				{ quoted: msg }
+			);
 		}
 	} catch (e) {
 		await errorHandler(sock, msg, this.config.name, e);
@@ -78,5 +98,5 @@ module.exports.config = {
 	name: `stelegram`,
 	alias: [`st`],
 	type: `misc`,
-	description: `Envía stickers de un paquete de Telegram.`,
+	description: `Envía stickers de un paquete de Telegram optimizados para WhatsApp.`,
 };

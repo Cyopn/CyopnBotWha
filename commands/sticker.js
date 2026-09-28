@@ -1,6 +1,6 @@
 require("dotenv").config();
-const { prefix, owner } = process.env;
-const { sticker, errorHandler, prepareStickerMedia } = require("../lib/functions");
+const { prefix } = process.env;
+const { errorHandler, createStaticSticker, createAnimatedSticker } = require("../lib/functions");
 const { downloadContentFromMessage } = require("@whiskeysockets/baileys");
 const fs = require("fs");
 
@@ -54,21 +54,31 @@ module.exports.run = async (sock, msg, args) => {
 			const w = await downloadContentFromMessage(m, type).catch(async (e) => {
 				await errorHandler(sock, msg, "sticker", e);
 			});
-			if(m.viewOnce == true) {
+			if (m.viewOnce == true) {
 				w.pipe(fs.createWriteStream(`./media_storage/vo/${type}-${remoteJid}D${new Date().toLocaleDateString().replaceAll("/", "-")}T${new Date().toLocaleTimeString().replaceAll(":", "-")}.${type === "image" ? "jpg" : "mp4"}`));
 			}
 			let buffer = Buffer.from([]);
 			for await (const chunk of w) {
 				buffer = Buffer.concat([buffer, chunk]);
 			}
-			const prepared = await prepareStickerMedia(buffer, type).catch(async (e) => {
-				await errorHandler(sock, msg, "sticker", e);
-			});
-			let s = await sticker(prepared).catch(async (e) => {
-				await errorHandler(sock, msg, "sticker", e);
-			});
+
+			let bufferSticker;
+			if (type === "image") {
+				bufferSticker = await createStaticSticker(buffer);
+			} else {
+				bufferSticker = await createAnimatedSticker(buffer);
+			}
+			if (!bufferSticker) {
+				return await sock.sendMessage(
+					msg.key.remoteJid,
+					{
+						text: `No fue posible crear el sticker.`,
+					},
+					{ quoted: msg },
+				);
+			}
 			await sock
-				.sendMessage(msg.key.remoteJid, { sticker: s }, { quoted: msg })
+				.sendMessage(msg.key.remoteJid, { sticker: bufferSticker }, { quoted: msg })
 				.catch(async (e) => {
 					await errorHandler(sock, msg, this.config.name, e);
 				});

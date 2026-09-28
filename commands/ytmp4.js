@@ -1,5 +1,5 @@
 require("dotenv").config();
-const { prefix, owner } = process.env;
+const { prefix } = process.env;
 const { errorHandler } = require("../lib/functions");
 const { ytmp4, cleanTemp } = require("../lib/scrapper");
 const fs = require("fs");
@@ -56,7 +56,7 @@ module.exports.run = async (sock, msg, args) => {
 
 module.exports.config = {
     name: `ytmp4`,
-    alias: [`mp4`],
+    alias: [`mp4`, `youtubemp4`],
     type: `misc`,
     description: `Envía un vídeo de YouTube en formato MP4. El comando puede tardar un poco dependiendo de la duración del vídeo.`,
 };

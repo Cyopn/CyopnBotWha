@@ -1,8 +1,8 @@
 require("dotenv").config();
 const { prefix } = process.env;
-const axios = require("axios");
+const axios = require("axios"); // Necesario para descargar el buffer antes de procesarlo
 const { twitter } = require("../lib/scrapper");
-const { errorHandler, recodeVideo } = require("../lib/functions");
+const { errorHandler, fixTwitterVideo } = require("../lib/functions");
 
 module.exports.run = async (sock, msg, args) => {
 	let arg =
@@ -11,7 +11,6 @@ module.exports.run = async (sock, msg, args) => {
 			: args[1] === undefined
 				? ""
 				: args[1].join("");
-
 	if (!arg)
 		return sock.sendMessage(
 			msg.key.remoteJid,
@@ -20,10 +19,8 @@ module.exports.run = async (sock, msg, args) => {
 			},
 			{ quoted: msg },
 		);
-
 	try {
 		const res = await twitter(arg);
-		
 		if (res.length > 0) {
 			for (const media of res) {
 				if (media.type === "video") {
@@ -36,7 +33,7 @@ module.exports.run = async (sock, msg, args) => {
 								headers: { "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)" }
 							});
 							const originalBuffer = Buffer.from(response.data);
-							const fixedBuffer = await recodeVideo(originalBuffer);
+							const fixedBuffer = await fixTwitterVideo(originalBuffer);
 							if (fixedBuffer) {
 								videoPayload = { 
 									video: fixedBuffer, 
@@ -48,7 +45,7 @@ module.exports.run = async (sock, msg, args) => {
 							}
 						} catch (err) {
 							videoPayload = { video: { url: media.url } };
-							caption += `\nError al procesar. Enlace directo: ${media.url}`;
+							caption += `\nSi no reproduce, usa el enlace directo: ${media.url}`;
 						}
 					} else {
 						videoPayload = { video: { url: media.url } };

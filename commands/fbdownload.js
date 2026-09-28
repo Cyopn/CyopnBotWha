@@ -1,7 +1,6 @@
 require("dotenv").config();
 const { prefix } = process.env;
 const { errorHandler } = require("../lib/functions");
-const { fbdl } = require("ruhend-scraper");
 const { facebook } = require("../lib/scrapper");
 
 module.exports.run = async (sock, msg, args) => {
