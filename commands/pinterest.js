@@ -46,6 +46,14 @@ module.exports.run = async (sock, msg, args) => {
                     },
                     { quoted: msg },
                 );
+            }else{
+                await sock.sendMessage(
+                    msg.key.remoteJid,
+                    {
+                        text: `No se pudo obtener el contenido, intenta de nuevo.`
+                    },
+                    { quoted: msg },
+                );
             }
         }).catch(async (e) => {
             await errorHandler(sock, msg, "pinterest", e);

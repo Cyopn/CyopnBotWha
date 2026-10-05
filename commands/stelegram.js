@@ -79,7 +79,7 @@ module.exports.run = async (sock, msg, args) => {
 			}
 			await sock.sendMessage(
 				msg.key.remoteJid,
-				{ text: "✅ Envío del paquete completado." },
+				{ text: "Envío del paquete completado." },
 				{ quoted: msg }
 			);
 		} else {

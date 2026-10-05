@@ -36,7 +36,7 @@ module.exports.run = async (sock, msg, args) => {
             { quoted: msg },
         );
         const ytdlp = new YtDlp();
-        const info = await ytdlp.getInfoAsync(arg);
+        const info = await ytdlp.getInfoAsync(arg, { cookies: fs.readFileSync('../youtube_cookies.txt', 'utf-8') });
         if (!info || !info.formats || info.formats.length === 0) {
             return await sock.sendMessage(
                 msg.key.remoteJid,
@@ -76,7 +76,7 @@ module.exports.run = async (sock, msg, args) => {
 
         setTimeout(() => {
             fs.unlink(formatFilePath, e => {
-                
+
             });
         }, 3600000);
 
