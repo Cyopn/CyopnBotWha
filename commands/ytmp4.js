@@ -48,7 +48,7 @@ module.exports.run = async (sock, msg, args) => {
             { quoted: msg }
         );
         await cleanTemp(res.filePath, 3600000);
-        await cleanTemp(res.filePath.replace(".mp4", ".mkv"), 3600000);
+        await cleanTemp(res.filePath.replace(".mp4", ".webm"), 3600000);
     } catch (e) {
         await errorHandler(sock, msg, this.config.name, e);
     }

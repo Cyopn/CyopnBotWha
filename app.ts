@@ -303,7 +303,8 @@ function createApp(commandsMap: Map<string, { name: string, alias: string[], des
         if (isAudioOnly) {
           result = await ytdlp.downloadAudio(youtubeUrl, 'mp3', {
             output: path.join(tempDir, `${tempname}.%(ext)s`),
-            audioQuality: '0'
+            audioQuality: '0', 
+            cookies: fs.readFileSync('./youtube_cookies.txt', 'utf-8')
           });
         } else if (selectedFormat.url &&
           (selectedFormat.protocol === 'http:' || selectedFormat.protocol === 'https:')) {
@@ -335,11 +336,10 @@ function createApp(commandsMap: Map<string, { name: string, alias: string[], des
 
           result = { filePaths: [filePath] };
         } else {
-
-          const downloadAttempts = [
-            () => ytdlp.downloadVideo(youtubeUrl, formatId, { output: path.join(tempDir, `${tempname}.%(ext)s`) }),
-            () => ytdlp.downloadVideo(youtubeUrl, `best[format_id=${formatId}]`, { output: path.join(tempDir, `${tempname}.%(ext)s`) }),
-            () => ytdlp.downloadVideo(youtubeUrl, "best", { output: path.join(tempDir, `${tempname}.%(ext)s`) })
+            const downloadAttempts = [
+            () => ytdlp.downloadVideo(youtubeUrl, formatId, { output: path.join(tempDir, `${tempname}.%(ext)s`), cookies: fs.readFileSync('./youtube_cookies.txt', 'utf-8') }),
+            () => ytdlp.downloadVideo(youtubeUrl, `best[format_id=${formatId}]`, { output: path.join(tempDir, `${tempname}.%(ext)s`), cookies: fs.readFileSync('./youtube_cookies.txt', 'utf-8') }),
+            () => ytdlp.downloadVideo(youtubeUrl, "best", { output: path.join(tempDir, `${tempname}.%(ext)s`), cookies: fs.readFileSync('./youtube_cookies.txt', 'utf-8') })
           ];
 
           let lastError: any;
