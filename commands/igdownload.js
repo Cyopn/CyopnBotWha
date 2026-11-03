@@ -3,6 +3,7 @@ const { prefix } = process.env;
 const { instagram } = require("../lib/scrapper");
 const { igdl } = require("ruhend-scraper")
 const { errorHandler } = require("../lib/functions");
+const { url } = require("inspector");
 
 module.exports.run = async (sock, msg, args) => {
 	const mode = args[0][0] === "img" || args[0][0] === "video" ? args[0].shift() : "";
@@ -34,7 +35,7 @@ module.exports.run = async (sock, msg, args) => {
 		);
 	try {
 		let result = { url: "", msg: "" };
-		result.url = await instagram(arg);
+		result.url = (await instagram(arg)).url;
 		if (!result.url || result.url.length === 0) {
 			result = await igdl(arg);
 		}
