@@ -37,7 +37,7 @@ module.exports.run = async (sock, msg, args) => {
 		let result = { url: "", msg: "" };
 		result.url = (await instagram(arg)).url;
 		if (!result.url || result.url.length === 0) {
-			result = await igdl(arg);
+			result.url = (await instagram(arg)).url;
 		}
 		let idx = 0;
 		result.url.forEach(async e => {

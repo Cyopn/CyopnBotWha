@@ -1,91 +1,63 @@
 require("dotenv").config();
-const { prefix } = process.env;
-const axios = require("axios");
-const { twitter } = require("../lib/scrapper");
-const { errorHandler, recodeVideo } = require("../lib/functions");
+const { errorHandler } = require("../lib/functions");
 
-module.exports.run = async (sock, msg, args) => {
-	let arg =
-		args[1] === undefined && args[0].join("").length >= 1
-			? args[0].join("")
-			: args[1] === undefined
-				? ""
-				: args[1].join("");
-
-	if (!arg)
+module.exports.run = async (sock, msg) => {
+	if (!msg.key.remoteJid.includes("g.us"))
 		return sock.sendMessage(
 			msg.key.remoteJid,
 			{
-				text: `Es necesario proporcionar un enlace. Escribe ${prefix}twitter (enlace). No es necesario escribir los paréntesis. Si tienes dudas sobre este comando, escribe ${prefix}help.`,
+				text: `Comando solo disponible en grupos.`,
 			},
 			{ quoted: msg },
 		);
-
+	const imAdmin = (
+		await sock.groupMetadata(msg.key.remoteJid)).participants.some(e => {
+			return e.jid === (sock.user.id).replace((sock.user.id).substring(sock.user.id.indexOf(":"), sock.user.id.indexOf("@")), "") && e.admin != null;
+		});
+	const isAdmin = (
+		await sock.groupMetadata(msg.key.remoteJid)
+	).participants.some(
+		(e) => e.id === msg.key.participant && e.admin !== null,
+	);
+	const isClose = (await sock.groupMetadata(msg.key.remoteJid)).announce;
+	if (!isAdmin)
+		return sock.sendMessage(
+			msg.key.remoteJid,
+			{
+				text: `Debes ser administrador para usar este comando.`,
+			},
+			{ quoted: msg },
+		);
+	if (!imAdmin)
+		return sock.sendMessage(
+			msg.key.remoteJid,
+			{
+				text: `Debo ser administrador para usar este comando.`,
+			},
+			{ quoted: msg },
+		);
 	try {
-		const res = await twitter(arg);
-		
-		if (res.length > 0) {
-			for (const media of res) {
-				if (media.type === "video") {
-					let videoPayload = {};
-					let caption = "w";
-					if (media.url.includes("tweet_video")) {
-						try {
-							const response = await axios.get(media.url, { 
-								responseType: "arraybuffer",
-								headers: { "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)" }
-							});
-							const originalBuffer = Buffer.from(response.data);
-							const fixedBuffer = await recodeVideo(originalBuffer);
-							if (fixedBuffer) {
-								videoPayload = { 
-									video: fixedBuffer, 
-									mimetype: "video/mp4" 
-								};
-							} else {
-								videoPayload = { video: { url: media.url } };
-								caption += `\nSi no reproduce, usa el enlace directo: ${media.url}`;
-							}
-						} catch (err) {
-							videoPayload = { video: { url: media.url } };
-							caption += `\nError al procesar. Enlace directo: ${media.url}`;
-						}
-					} else {
-						videoPayload = { video: { url: media.url } };
-					}
-					await sock.sendMessage(
-						msg.key.remoteJid,
-						{ ...videoPayload, caption },
-						{ quoted: msg }
-					);
-				} else if (media.type === "image") {
-					await sock.sendMessage(
-						msg.key.remoteJid,
-						{
-							caption: "w",
-							image: { url: media.url },
-						},
-						{ quoted: msg },
-					);
-				}
-			}
-		} else {
-			await sock.sendMessage(
-				msg.key.remoteJid,
-				{
-					text: "No se encontraron vídeos o imágenes en el enlace proporcionado.",
-				},
-				{ quoted: msg },
-			);
-		}
+		await sock.groupSettingUpdate(
+			msg.key.remoteJid,
+			isClose ? "not_announcement" : "announcement",
+		);
+		await sock.sendMessage(
+			msg.key.remoteJid,
+			{
+				text: isClose
+					? `A partir de ahora, el grupo esta disponible para todos los miembros del grupo.`
+					: `A partir de ahora, el grupo esta disponible solo para los administradores del grupo.`,
+			},
+			{ quoted: msg },
+		);
 	} catch (e) {
 		await errorHandler(sock, msg, this.config.name, e);
 	}
 };
 
 module.exports.config = {
-	name: `twitter`,
-	alias: [`tuiter`, `tw`, `x`],
+	name: `edchat`,
+	alias: [`edc`],
 	type: `misc`,
-	description: `Envía multimedia (vídeo, imagen o gif) de Twitter optimizado para WhatsApp.`,
+	description: `Cambia el estado del chat a solo administradores o a todos los miembros del grupo.`,
 };

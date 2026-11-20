@@ -1,4 +1,4 @@
-//Importaciones de .
+//Importaciones
 require("dotenv").config();
 const { prefix, owner } = process.env;
 const { errorHandler } = require("../lib/functions");
@@ -23,7 +23,5 @@ module.exports.config = {
     name: ``,
     alias: [``],
     type: ``,
-    description: ``,
-    expects: [''],
-	returns: ['']
+    description: ``
 };

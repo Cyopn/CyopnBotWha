@@ -3,8 +3,6 @@ import bodyParser from "body-parser";
 import * as fs from "fs";
 import * as fsPromises from "fs/promises";
 import path from "path";
-import { Boom } from "@hapi/boom";
-import NodeCache from '@cacheable/node-cache';
 import P from 'pino';
 
 const { getAllGroupSettings, setGroupSetting } = require("./lib/db.js");

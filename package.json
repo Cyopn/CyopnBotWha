@@ -58,5 +58,14 @@
     "devDependencies": {
         "ts-node": "^10.9.2",
         "typescript": "^5.9.3"
+    },
+    "allowScripts": {
+        "canvas@3.2.3": true,
+        "protobufjs@7.6.6": true,
+        "sharp@0.35.5": true,
+        "sharp@0.30.7": true,
+        "ytdlp-nodejs@3.4.5": true,
+        "puppeteer@25.18.1": true,
+        "@whiskeysockets/baileys@7.0.0-rc14": true
     }
 }
