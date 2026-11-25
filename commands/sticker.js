@@ -51,11 +51,9 @@ module.exports.run = async (sock, msg, args) => {
 	} else {
 		try {
 			const remoteJid = msg.key.remoteJid.split("@")[0];
-			const w = await downloadContentFromMessage(m, type).catch(async (e) => {
-				await errorHandler(sock, msg, "sticker", e);
-			});
+			const w = await downloadContentFromMessage(m, type);
 			if (m.viewOnce == true) {
-				w.pipe(fs.createWriteStream(`./media_storage/vo/${type}-${remoteJid}D${new Date().toLocaleDateString().replaceAll("/", "-")}T${new Date().toLocaleTimeString().replaceAll(":", "-")}.${type === "image" ? "jpg" : "mp4"}`));
+				w.pipe(fs.createWriteStream(`./media_storage/vo/${type}-${remoteJid}D${new Date().toLocaleDateString().replaceAll("/", "-")}T${new Date().toLocaleTimeString().replaceAll(":", "-")}${type === "image" ? "jpg" : "mp4"}`));
 			}
 			let buffer = Buffer.from([]);
 			for await (const chunk of w) {
@@ -77,11 +75,11 @@ module.exports.run = async (sock, msg, args) => {
 					{ quoted: msg },
 				);
 			}
-			await sock
-				.sendMessage(msg.key.remoteJid, { sticker: bufferSticker }, { quoted: msg })
-				.catch(async (e) => {
-					await errorHandler(sock, msg, this.config.name, e);
-				});
+			await sock.sendMessage(
+				msg.key.remoteJid,
+				{ sticker: bufferSticker },
+				{ quoted: msg },
+			);
 		} catch (e) {
 			await errorHandler(sock, msg, this.config.name, e);
 		}
