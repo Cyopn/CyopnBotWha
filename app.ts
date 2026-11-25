@@ -3,7 +3,6 @@ import bodyParser from "body-parser";
 import * as fs from "fs";
 import * as fsPromises from "fs/promises";
 import path from "path";
-import P from 'pino';
 
 const { getAllGroupSettings, setGroupSetting } = require("./lib/db.js");
 const { getMetrics, getRecentErrors, getSuggestions } = require("./lib/admin_data.js");
@@ -18,9 +17,6 @@ function createApp(commandsMap: Map<string, { name: string, alias: string[], des
       extended: true,
     }),
   );
-
-  const logger = P({ timestamp: () => `,"time":"${new Date().toJSON()}"` }, P.destination('./logs.txt'))
-  logger.level = 'silent'
 
   const adminAuth = (request: express.Request, response: express.Response, next: express.NextFunction) => {
     const expectedUser = process.env.ADMIN_PANEL_USER;

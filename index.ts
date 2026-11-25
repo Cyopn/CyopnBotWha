@@ -19,8 +19,8 @@ const { isAuthorized, isCommandEnabled, isTrackableMessage, registerAccessMessag
 const { prefix, owner, channel, bot } = process.env;
 
 const msgRetryCounterCache = new NodeCache<any>()
-const logger = P({ timestamp: () => `,"time":"${new Date().toJSON()}"` }, P.destination('./logs.txt'))
-logger.level = 'silent'
+const logger = P({ timestamp: () => `,"time":"${new Date().toJSON()}"` }, P.destination({ dest: './logs.txt', sync: true }))
+logger.level = 'trace'
 
 let commands: Map<string, { name: string, alias: string[], description: string }> = new Map()
 
@@ -64,7 +64,7 @@ const startSock = async () => {
 			const { connection, lastDisconnect } = update
 			if (connection === 'close') {
 				if ((lastDisconnect?.error as Boom)?.output?.statusCode !== DisconnectReason.loggedOut) {
-					startSock()
+					startSockSafely()
 				} else {
 					console.log('Conexion cerrada, sin sesion.')
 				}
@@ -212,4 +212,11 @@ const startSock = async () => {
 	return sock;
 };
 
-startSock();
+const startSockSafely = () => {
+	startSock().catch((error: unknown) => {
+		console.error("Error al iniciar el cliente:", error);
+		process.exit(1);
+	});
+};
+
+startSockSafely();
