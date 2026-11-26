@@ -15,7 +15,8 @@ require("dotenv").config();
 const { msgStorage } = require("./lib/functions.js");
 const { processGroup, evalLevel } = require("./lib/db.js");
 const { recordCommandMetric, recordMessageMetric } = require("./lib/admin_data.js");
-const { isAuthorized, isCommandEnabled, isTrackableMessage, registerAccessMessage } = require("./lib/access.js");
+const { recordGroupEvent, updateConnectionStatus, updateGroupSyncStatus } = require("./lib/admin_status.js");
+const { isAuthorized, isCommandEnabled, isTrackableMessage, registerAccessMessage, syncGroupMetadata, syncGroupParticipants } = require("./lib/access.js");
 const { prefix, owner, channel, bot } = process.env;
 
 const msgRetryCounterCache = new NodeCache<any>()
@@ -62,6 +63,24 @@ const startSock = async () => {
 		if (events['connection.update']) {
 			const update = events['connection.update']
 			const { connection, lastDisconnect } = update
+			if (connection) {
+				const disconnectCode = connection === 'close'
+					? (lastDisconnect?.error as Boom)?.output?.statusCode
+					: null;
+				updateConnectionStatus(connection, disconnectCode);
+			}
+			if (connection === 'open') {
+				try {
+					const groups = await sock.groupFetchAllParticipating();
+					for (const metadata of Object.values(groups)) {
+						await syncGroupMetadata(metadata);
+					}
+					updateGroupSyncStatus({ groupCount: Object.keys(groups).length });
+				} catch (error) {
+					updateGroupSyncStatus({ error: String(error) });
+					logger.error({ err: error }, 'No se pudieron sincronizar los grupos al conectar');
+				}
+			}
 			if (connection === 'close') {
 				if ((lastDisconnect?.error as Boom)?.output?.statusCode !== DisconnectReason.loggedOut) {
 					startSockSafely()
@@ -87,10 +106,30 @@ const startSock = async () => {
 		}
 
 		if (events["groups.upsert"]) {
-			const [metadata] = events["groups.upsert"];
-			await sock.sendMessage(metadata.id, {
-				text: `Hola, soy un bot multipropósito.\nUsa !help para ver los comandos disponibles.\nCualquier duda o sugerencia será respondida en:\nWhatsApp: wa.me/+${owner}\nInstagram: https://www.instagram.com/cyopn_/\n*Nota importante*: El administrador del bot/número tendrá acceso a este chat.\nSigue el canal de información para estar al día de novedades y actualizaciones: ${channel}`,
-			});
+			const groups = events["groups.upsert"];
+			recordGroupEvent();
+			for (const metadata of groups) {
+				await syncGroupMetadata(metadata);
+			}
+			const [metadata] = groups;
+			if (metadata) {
+				await sock.sendMessage(metadata.id, {
+					text: `Hola, soy un bot multipropósito.\nUsa !help para ver los comandos disponibles.\nCualquier duda o sugerencia será respondida en:\nWhatsApp: wa.me/+${owner}\nInstagram: https://www.instagram.com/cyopn_/\n*Nota importante*: El administrador del bot/número tendrá acceso a este chat.\nSigue el canal de información para estar al día de novedades y actualizaciones: ${channel}`,
+				});
+			}
+		}
+
+		if (events["groups.update"]) {
+			recordGroupEvent();
+			for (const metadata of events["groups.update"]) {
+				await syncGroupMetadata(metadata, false);
+			}
+		}
+
+		if (events["group-participants.update"]) {
+			recordGroupEvent();
+			const { id, participants, action } = events["group-participants.update"];
+			await syncGroupParticipants(id, participants, action);
 		}
 
 		if (events["messages.upsert"]) {
@@ -103,7 +142,7 @@ const startSock = async () => {
 					await registerAccessMessage(msg, sock);
 					await processGroup(msg);
 					await msgStorage(msg);
-					if (!(await isAuthorized(msg))) continue;
+					if (!(await isAuthorized(msg, sock))) continue;
 					const message = msg.message?.viewOnceMessage?.message
 						?.imageMessage?.caption
 						? msg.message?.viewOnceMessage?.message

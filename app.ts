@@ -1,17 +1,71 @@
 import express from "express";
 import bodyParser from "body-parser";
+import { randomBytes, timingSafeEqual } from "crypto";
 import * as fs from "fs";
 import * as fsPromises from "fs/promises";
 import path from "path";
 
 const { getAllGroupSettings, setGroupSetting } = require("./lib/db.js");
 const { getMetrics, getRecentErrors, getSuggestions } = require("./lib/admin_data.js");
-const { getAccessRegistry, setCommandEnabled, setGroupEnabled, setGroupUserBlocked, updateList } = require("./lib/access.js");
+const { getRecentAdminActions, recordAdminAction } = require("./lib/admin_audit.js");
+const { getOperationalStatus } = require("./lib/admin_status.js");
+const {
+  approvePendingUser,
+  createAccessBackup,
+  getAccessRegistry,
+  normalizeId,
+  restoreAccessBackup,
+  setAuthorizationMode,
+  setCommandEnabled,
+  setGroupEnabled,
+  setGroupUserBlocked,
+  updateList,
+} = require("./lib/access.js");
 const { renderAdminPage } = require("./lib/admin_view.js");
+
+const getCookie = (request: express.Request, name: string) => {
+  const cookies = String(request.headers.cookie || "").split(";");
+  const entry = cookies.map((cookie) => cookie.trim()).find((cookie) => cookie.startsWith(`${name}=`));
+  return entry ? entry.slice(name.length + 1) : "";
+};
+
+const parseMetricFilters = (query: express.Request["query"]) => {
+  const today = new Date().toISOString().slice(0, 10);
+  const defaultFrom = new Date(Date.now() - 6 * 24 * 60 * 60 * 1000).toISOString().slice(0, 10);
+  const from = typeof query.from === "string" && query.from ? query.from : defaultFrom;
+  const to = typeof query.to === "string" && query.to ? query.to : today;
+  const validDate = (value: string) => {
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(value)) return false;
+    const date = new Date(`${value}T00:00:00.000Z`);
+    return Number.isFinite(date.getTime()) && date.toISOString().slice(0, 10) === value;
+  };
+  if (!validDate(from) || !validDate(to) || from > to) {
+    return { error: "Rango de fechas inválido." as const };
+  }
+  const rawGroupId = typeof query.groupId === "string" ? query.groupId.trim() : "";
+  const groupId = rawGroupId.toLowerCase() === "direct" ? "direct" : normalizeId(rawGroupId);
+  const command = typeof query.command === "string" ? query.command.trim().slice(0, 100) : "";
+  return { filters: { from, to, groupId, command } };
+};
 
 function createApp(commandsMap: Map<string, { name: string, alias: string[], description: string }>) {
   const app = express();
-  app.use(bodyParser.json());
+  app.disable("x-powered-by");
+  app.set("trust proxy", true);
+  app.use((request: express.Request, response: express.Response, next: express.NextFunction) => {
+    response.set("X-Content-Type-Options", "nosniff");
+    response.set("X-Frame-Options", "DENY");
+    response.set("Referrer-Policy", "same-origin");
+    response.set("Permissions-Policy", "camera=(), microphone=(), geolocation=()");
+    response.set("Content-Security-Policy", "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' https: data:; object-src 'none'; base-uri 'self'; frame-ancestors 'none'; form-action 'self'");
+    next();
+  });
+  const standardJsonParser = bodyParser.json();
+  const restoreJsonParser = bodyParser.json({ limit: "15mb" });
+  app.use((request: express.Request, response: express.Response, next: express.NextFunction) => {
+    const parser = request.path === "/admin/restore" ? restoreJsonParser : standardJsonParser;
+    parser(request, response, next);
+  });
   app.use(
     bodyParser.urlencoded({
       extended: true,
@@ -37,9 +91,34 @@ function createApp(commandsMap: Map<string, { name: string, alias: string[], des
       response.set("WWW-Authenticate", 'Basic realm="CyopnBot Admin"');
       return response.status(401).send("Credenciales invalidas.");
     }
+    response.locals.adminUser = user;
     next();
   };
 
+  const csrfProtection = (request: express.Request, response: express.Response, next: express.NextFunction) => {
+    const cookieToken = getCookie(request, "cyopn_admin_csrf");
+    const bodyToken = typeof request.body?._csrf === "string"
+      ? request.body._csrf
+      : typeof request.body?.csrfToken === "string"
+        ? request.body.csrfToken
+        : "";
+    if (!/^[a-f0-9]{64}$/.test(cookieToken) || !/^[a-f0-9]{64}$/.test(bodyToken)) {
+      return response.status(403).send("Token CSRF inválido.");
+    }
+    const sameToken = timingSafeEqual(Buffer.from(cookieToken), Buffer.from(bodyToken));
+    if (!sameToken) return response.status(403).send("Token CSRF inválido.");
+    const origin = request.get("origin");
+    if (origin) {
+      try {
+        if (new URL(origin).host !== request.get("host")) {
+          return response.status(403).send("Origen de solicitud inválido.");
+        }
+      } catch (_error) {
+        return response.status(403).send("Origen de solicitud inválido.");
+      }
+    }
+    next();
+  };
   app.get("/", (request: express.Request, response: express.Response) => {
     response.json({ info: "En linea" });
   });
@@ -52,42 +131,163 @@ function createApp(commandsMap: Map<string, { name: string, alias: string[], des
     }
   });
 
-  app.get("/admin", adminAuth, async (request: express.Request, response: express.Response) => {
+  app.get("/admin/backup", adminAuth, async (request: express.Request, response: express.Response) => {
     try {
-      const registry = await getAccessRegistry();
-      registry.groupSettings = await getAllGroupSettings();
-      registry.groups = Object.fromEntries(Object.entries(registry.groups).map(([id, group]) => [id, { ...(group as Record<string, any>), settings: registry.groupSettings[id] || {} }]));
-      registry.metrics = await getMetrics();
-      registry.errors = await getRecentErrors();
-      registry.suggestions = await getSuggestions();
-      const commandList = Array.from(commandsMap.values()).sort((a, b) => a.name.localeCompare(b.name));
-      response.send(renderAdminPage({ ...registry, commands: commandList }));
+      const backup = await createAccessBackup();
+      response.set("Cache-Control", "no-store");
+      response.set("Content-Disposition", `attachment; filename="cyopn-access-${new Date().toISOString().slice(0, 10)}.json"`);
+      response.type("application/json").send(backup);
     } catch (error) {
       response.status(500).send(String(error));
     }
   });
 
-  app.post("/admin/access", adminAuth, async (request: express.Request, response: express.Response) => {
+  app.post("/admin/restore", adminAuth, csrfProtection, async (request: express.Request, response: express.Response) => {
+    let restored: { groups: number; users: number };
+    try {
+      restored = await restoreAccessBackup(request.body?.backup);
+    } catch (error) {
+      return response.status(400).json({ error: String(error) });
+    }
+    try {
+      await recordAdminAction({
+        actor: response.locals.adminUser,
+        action: "access-backup-restored",
+        target: `${restored.groups} grupos, ${restored.users} usuarios`,
+      });
+      response.json({ success: true, restored });
+    } catch (error) {
+      response.status(500).json({
+        error: `El respaldo fue restaurado, pero no se pudo registrar la acción administrativa: ${String(error)}`,
+        restored,
+      });
+    }
+  });
+
+  app.get("/admin/metrics.csv", adminAuth, async (request: express.Request, response: express.Response) => {
+    try {
+      const parsed = parseMetricFilters(request.query);
+      if ("error" in parsed) return response.status(400).send(parsed.error);
+      const metrics = await getMetrics(parsed.filters) as {
+        messages: Record<string, { total?: number; groups?: number; direct?: number }>;
+        commands: Record<string, Record<string, { total?: number }>>;
+      };
+      const rows: Array<Array<string | number>> = [["fecha", "tipo", "grupo", "comando", "total", "grupos", "directos"]];
+      for (const [day, value] of Object.entries(metrics.messages)) {
+        rows.push([day, "mensajes", parsed.filters.groupId || "todos", "", value.total || 0, value.groups || 0, value.direct || 0]);
+      }
+      for (const [day, dailyCommands] of Object.entries(metrics.commands)) {
+        for (const [command, value] of Object.entries(dailyCommands)) {
+          rows.push([day, "comando", parsed.filters.groupId || "todos", command, Number(value?.total) || 0, "", ""]);
+        }
+      }
+      const csv = rows.map((row) => row.map((value) => {
+        const cell = String(value ?? "");
+        const safeCell = /^[=+\-@]/.test(cell) ? `'${cell}` : cell;
+        return `"${safeCell.replace(/"/g, '""')}"`;
+      }).join(",")).join("\r\n");
+      response.set("Cache-Control", "no-store");
+      response.set("Content-Disposition", `attachment; filename="cyopn-metricas-${parsed.filters.from}-${parsed.filters.to}.csv"`);
+      response.type("text/csv; charset=utf-8").send(`\uFEFF${csv}`);
+    } catch (error) {
+      response.status(500).send(String(error));
+    }
+  });
+
+  app.get("/admin", adminAuth, async (request: express.Request, response: express.Response) => {
+    try {
+      const parsed = parseMetricFilters(request.query);
+      if ("error" in parsed) return response.status(400).send(parsed.error);
+      let csrfToken = getCookie(request, "cyopn_admin_csrf");
+      if (!/^[a-f0-9]{64}$/.test(csrfToken)) csrfToken = randomBytes(32).toString("hex");
+      const secureCookie = request.secure ? "; Secure" : "";
+      response.set("Set-Cookie", `cyopn_admin_csrf=${csrfToken}; Path=/admin; SameSite=Strict; HttpOnly${secureCookie}`);
+      response.set("Cache-Control", "no-store");
+      const registry = await getAccessRegistry();
+      registry.groupSettings = await getAllGroupSettings();
+      registry.groups = Object.fromEntries(Object.entries(registry.groups).map(([id, group]) => [id, { ...(group as Record<string, any>), settings: registry.groupSettings[id] || {} }]));
+      registry.metrics = await getMetrics(parsed.filters);
+      registry.metricsFilter = parsed.filters;
+      registry.errors = await getRecentErrors();
+      registry.suggestions = await getSuggestions();
+      registry.audit = await getRecentAdminActions();
+      registry.operationalStatus = getOperationalStatus();
+      const commandList = Array.from(commandsMap.values()).sort((a, b) => a.name.localeCompare(b.name));
+      response.send(renderAdminPage({ ...registry, commands: commandList, csrfToken }));
+    } catch (error) {
+      response.status(500).send(String(error));
+    }
+  });
+
+  app.post("/admin/access", adminAuth, csrfProtection, async (request: express.Request, response: express.Response) => {
     try {
       const { action, list, value } = request.body || {};
-      if (action === "group") await setGroupEnabled(request.body.groupId, request.body.enabled === "true");
-      if (action === "participant") await setGroupUserBlocked(request.body.groupId, request.body.userId, request.body.blocked === "true");
-      if (action === "group-setting") await setGroupSetting(request.body.groupId, request.body.setting, request.body.value === "true");
+      let auditAction = "";
+      let target = "";
+      if (action === "authorization-mode" && !await setAuthorizationMode(request.body.mode)) {
+        return response.status(400).send("Modo de autorización inválido.");
+      }
+      if (action === "approve-user" && !await approvePendingUser(request.body.userId)) {
+        return response.status(409).send("El usuario ya no está pendiente de autorización.");
+      }
+      if (action === "authorization-mode") {
+        auditAction = "authorization-mode";
+        target = request.body.mode;
+      }
+      if (action === "approve-user") {
+        auditAction = "user-approved";
+        target = request.body.userId;
+      }
+      if (action === "group") {
+        await setGroupEnabled(request.body.groupId, request.body.enabled === "true");
+        auditAction = request.body.enabled === "true" ? "group-allowed" : "group-blocked";
+        target = request.body.groupId;
+      }
+      if (action === "participant") {
+        await setGroupUserBlocked(request.body.groupId, request.body.userId, request.body.blocked === "true");
+        auditAction = request.body.blocked === "true" ? "participant-blocked" : "participant-allowed";
+        target = `${request.body.userId} @ ${request.body.groupId}`;
+      }
+      if (action === "group-setting") {
+        await setGroupSetting(request.body.groupId, request.body.setting, request.body.value === "true");
+        auditAction = "group-setting";
+        target = `${request.body.groupId}: ${request.body.setting}=${request.body.value}`;
+      }
       if (action === "user") {
         await updateList("blacklistUsers", request.body.userId, request.body.allowed === "true" ? "remove" : "add");
+        auditAction = request.body.allowed === "true" ? "user-allowed" : "user-blocked";
+        target = request.body.userId;
       }
-      if (action === "add" && ["blacklistGroups", "blacklistUsers"].includes(list)) await updateList(list, value, "add");
-      if (action === "remove" && ["blacklistGroups", "blacklistUsers"].includes(list)) await updateList(list, value, "remove");
+      if (action === "add" && ["blacklistGroups", "blacklistUsers"].includes(list)) {
+        await updateList(list, value, "add");
+        auditAction = "blacklist-added";
+        target = `${list}: ${value}`;
+      }
+      if (action === "remove" && ["blacklistGroups", "blacklistUsers"].includes(list)) {
+        await updateList(list, value, "remove");
+        auditAction = "blacklist-removed";
+        target = `${list}: ${value}`;
+      }
+      if (auditAction) {
+        await recordAdminAction({ actor: response.locals.adminUser, action: auditAction, target });
+      }
       response.redirect("/admin");
     } catch (error) {
       response.status(500).send(String(error));
     }
   });
 
-  app.post("/admin/commands", adminAuth, async (request: express.Request, response: express.Response) => {
+  app.post("/admin/commands", adminAuth, csrfProtection, async (request: express.Request, response: express.Response) => {
     try {
       const { command, enabled } = request.body || {};
-      if (Array.from(commandsMap.values()).some((item) => item.name === command)) await setCommandEnabled(command, enabled === "true");
+      if (Array.from(commandsMap.values()).some((item) => item.name === command)) {
+        await setCommandEnabled(command, enabled === "true");
+        await recordAdminAction({
+          actor: response.locals.adminUser,
+          action: enabled === "true" ? "command-enabled" : "command-disabled",
+          target: command,
+        });
+      }
       response.redirect("/admin");
     } catch (error) {
       response.status(500).send(String(error));
