@@ -45,6 +45,7 @@ También puede ajustar `port` (el puerto del servidor; la plantilla usa `4000`) 
 
 -   `ADMIN_PANEL_USER` y `ADMIN_PANEL_PASSWORD`: credenciales del panel administrativo.
 -   `APP_URL`: dirección pública del servidor, necesaria para que otras personas puedan abrir los enlaces temporales de descarga y de selección de formatos de YouTube. Sin esta variable se usa `localhost`.
+-   `youtube_cookies.txt` (opcional): archivo de cookies de YouTube en formato Netscape, ubicado en la raíz del proyecto. Se pasa a yt-dlp por ruta; si no está disponible o falla, el bot vuelve a intentar sin cookies. No compartas este archivo: contiene credenciales de sesión.
 -   `token`: token de un bot de Telegram, requerido por el comando `stelegram`.
 -   `py_cmd_img` y `py_cmd_vid`: comandos de Python usados por las conversiones de stickers a imagen o vídeo.
 
@@ -96,7 +97,7 @@ El comando `!help` muestra los comandos generales disponibles y sus alias. Algun
 -   **Grupos:** `!edchat` permite cambiar entre el modo de solo administradores y el modo abierto; quien lo use y el bot deben ser administradores. `!tagall texto` menciona a los miembros con un mensaje personalizado y requiere que quien lo use sea administrador. `!edrank` activa o desactiva los niveles del grupo y requiere permisos de administrador.
 -   **Niveles:** `!level` muestra el nivel y la experiencia; `!rank` muestra el top de miembros. El progreso se basa en los mensajes y el sistema debe estar activado en el grupo.
 -   **Stickers y conversiones:** `!sticker` crea un sticker a partir de una imagen, vídeo o GIF; `!attp texto` crea un sticker de texto; `!stickeraudio` crea stickers con audio. También están disponibles `!toaudio`, `!toimg` y `!tovideo` para conversiones. `toimg` y `tovideo` requieren configurar sus comandos de Python en `.env`.
--   **Descargas:** hay comandos para obtener contenido de Instagram, Facebook, TikTok y X/Twitter. Para YouTube, `!youtube enlace` ofrece una página para elegir formato, mientras que `!ytmp3 enlace` y `!ytmp4 enlace` crean enlaces temporales de descarga. Los enlaces deben usar un `APP_URL` accesible por quienes los recibirán y caducan después de una hora.
+-   **Descargas:** hay comandos para obtener contenido de Instagram, Facebook, TikTok y X/Twitter. `!youtube enlace` ofrece una página para elegir formato para sitios compatibles con yt-dlp; `!ytmp3 enlace` y `!ytmp4 enlace` crean enlaces temporales para YouTube. Los enlaces deben usar un `APP_URL` accesible por quienes los recibirán y caducan después de una hora.
 -   **Texto y audio:** `!tts texto` genera audio; `!lang` muestra los idiomas disponibles. También se incluyen comandos para consultar letras de canciones, enviar memes y enviar sugerencias al desarrollador.
 -   **Stickers de Telegram:** `!stelegram enlace_del_paquete` permite enviar stickers de un paquete de Telegram. Usa el enlace directo `https://t.me/addstickers/...` y configura `token` en `.env`.
 

@@ -1,6 +1,7 @@
 require("dotenv").config();
 const { prefix } = process.env;
 const { errorHandler } = require("../lib/functions");
+const { withYoutubeCookieFallback } = require("../lib/youtube");
 const { YtDlp } = require("ytdlp-nodejs");
 const fs = require("fs");
 const path = require("path");
@@ -21,12 +22,18 @@ module.exports.run = async (sock, msg, args) => {
                 },
                 { quoted: msg },
             );
-        const isurl = arg.match(/(www.youtube.com|youtu.be)/g);
-        if (!isurl)
+        let isHttpUrl = false;
+        try {
+            const url = new URL(arg);
+            isHttpUrl = (url.protocol === "http:" || url.protocol === "https:") && Boolean(url.hostname);
+        } catch (e) {
+            isHttpUrl = false;
+        }
+        if (!isHttpUrl)
             return await sock.sendMessage(
                 msg.key.remoteJid,
                 {
-                    text: `El enlace proporcionado no es válido.`,
+                    text: `El enlace no es válido.`,
                 },
                 { quoted: msg },
             );
@@ -36,7 +43,9 @@ module.exports.run = async (sock, msg, args) => {
             { quoted: msg },
         );
         const ytdlp = new YtDlp();
-        const info = await ytdlp.getInfoAsync(arg);
+        const info = await withYoutubeCookieFallback((cookieOptions) =>
+            ytdlp.getInfoAsync(arg, cookieOptions)
+        );
         if (!info || !info.formats || info.formats.length === 0) {
             return await sock.sendMessage(
                 msg.key.remoteJid,
@@ -55,7 +64,7 @@ module.exports.run = async (sock, msg, args) => {
         const formatData = {
             _metadata: {
                 url: arg,
-                title: info.title || 'Video de YouTube',
+                title: info.title || 'Video',
                 thumbnail: info.thumbnail || ''
             },
             formats: info.formats
@@ -69,7 +78,7 @@ module.exports.run = async (sock, msg, args) => {
         await sock.sendMessage(
             msg.key.remoteJid,
             {
-                text: `*${info.title || 'Video de YouTube'}*\n\nSelecciona un formato para descargar:\n${formatLink}\n\nNota: El enlace estará disponible por 1 hora.`
+                text: `*${info.title || 'Video'}*\n\nSelecciona un formato para descargar:\n${formatLink}\n\nNota: El enlace estará disponible por 1 hora.`
             },
             { quoted: msg }
         );
@@ -89,5 +98,5 @@ module.exports.config = {
     name: `youtube`,
     alias: [`yt`],
     type: `misc`,
-    description: `Obtiene los formatos disponibles para un video de YouTube y proporciona un enlace para seleccionar y descargar.`,
+    description: `Obtiene los formatos disponibles para enlaces compatibles con yt-dlp y proporciona un enlace para seleccionar y descargar.`,
 };

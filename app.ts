@@ -22,6 +22,7 @@ const {
   updateList,
 } = require("./lib/access.js");
 const { renderAdminPage } = require("./lib/admin_view.js");
+const { withYoutubeCookieFallback } = require("./lib/youtube.js");
 
 const getCookie = (request: express.Request, name: string) => {
   const cookies = String(request.headers.cookie || "").split(";");
@@ -486,70 +487,37 @@ function createApp(commandsMap: Map<string, { name: string, alias: string[], des
       const tempname = `yt_download_${Date.now()}`;
       const tempDir = path.join(__dirname, 'temp');
 
-      try {
-        await fsPromises.mkdir(tempDir, { recursive: true });
-      } catch (err) {
-      }
+      await fsPromises.mkdir(tempDir, { recursive: true });
 
       let result: any;
       try {
-
-        if (isAudioOnly) {
-          result = await ytdlp.downloadAudio(youtubeUrl, 'mp3', {
-            output: path.join(tempDir, `${tempname}.%(ext)s`),
-            audioQuality: '0', 
-            cookies: fs.readFileSync('./youtube_cookies.txt', 'utf-8')
-          });
-        } else if (selectedFormat.url &&
-          (selectedFormat.protocol === 'http:' || selectedFormat.protocol === 'https:')) {
-
-          const https = require('https');
-          const http = require('http');
-
-          const client = selectedFormat.url.startsWith('https://') ? https : http;
-          const filePath = path.join(tempDir, `${tempname}.${selectedFormat.ext}`);
-
-          await new Promise((resolve, reject) => {
-            const file = fs.createWriteStream(filePath);
-            client.get(selectedFormat.url, (response) => {
-              if (response.statusCode !== 200) {
-                file.close();
-                fs.unlink(filePath, () => { });
-                reject(new Error(`HTTP ${response.statusCode}: ${response.statusMessage}`));
-                return;
-              }
-
-              response.pipe(file);
-              file.on('finish', () => {
-                file.close(() => resolve({ filePaths: [filePath] }));
-              });
-            }).on('error', (err) => {
-              fs.unlink(filePath, () => reject(err));
+        result = await withYoutubeCookieFallback(async (cookieOptions: Record<string, string>) => {
+          if (isAudioOnly) {
+            return ytdlp.downloadAudio(youtubeUrl, 'mp3', {
+              output: path.join(tempDir, `${tempname}.%(ext)s`),
+              audioQuality: '0',
+              ...cookieOptions,
             });
-          });
+          }
 
-          result = { filePaths: [filePath] };
-        } else {
-            const downloadAttempts = [
-            () => ytdlp.downloadVideo(youtubeUrl, formatId, { output: path.join(tempDir, `${tempname}.%(ext)s`), cookies: fs.readFileSync('./youtube_cookies.txt', 'utf-8') }),
-            () => ytdlp.downloadVideo(youtubeUrl, `best[format_id=${formatId}]`, { output: path.join(tempDir, `${tempname}.%(ext)s`), cookies: fs.readFileSync('./youtube_cookies.txt', 'utf-8') }),
-            () => ytdlp.downloadVideo(youtubeUrl, "best", { output: path.join(tempDir, `${tempname}.%(ext)s`), cookies: fs.readFileSync('./youtube_cookies.txt', 'utf-8') })
+          const downloadAttempts = [
+            () => ytdlp.downloadVideo(youtubeUrl, formatId, { output: path.join(tempDir, `${tempname}.%(ext)s`), ...cookieOptions }),
+            () => ytdlp.downloadVideo(youtubeUrl, `best[format_id=${formatId}]`, { output: path.join(tempDir, `${tempname}.%(ext)s`), ...cookieOptions }),
+            () => ytdlp.downloadVideo(youtubeUrl, "best", { output: path.join(tempDir, `${tempname}.%(ext)s`), ...cookieOptions }),
           ];
 
           let lastError: any;
-          for (let i = 0; i < downloadAttempts.length; i++) {
+          for (const attempt of downloadAttempts) {
             try {
-              result = await downloadAttempts[i]();
-              break;
+              return await attempt();
             } catch (err: any) {
               lastError = err;
-              if (i === downloadAttempts.length - 1) {
-                throw lastError;
-              }
             }
           }
-        }
+          throw lastError;
+        });
       } catch (error: any) {
+        console.error('YouTube download failed:', error);
         return res.status(500).send(`Error de descarga`);
       }
 
