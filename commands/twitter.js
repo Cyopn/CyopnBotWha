@@ -28,16 +28,16 @@ module.exports.run = async (sock, msg, args) => {
 					let caption = "w";
 					if (media.url.includes("tweet_video")) {
 						try {
-							const response = await axios.get(media.url, { 
+							const response = await axios.get(media.url, {
 								responseType: "arraybuffer",
 								headers: { "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)" }
 							});
 							const originalBuffer = Buffer.from(response.data);
 							const fixedBuffer = await fixTwitterVideo(originalBuffer);
 							if (fixedBuffer) {
-								videoPayload = { 
-									video: fixedBuffer, 
-									mimetype: "video/mp4" 
+								videoPayload = {
+									video: fixedBuffer,
+									mimetype: "video/mp4"
 								};
 							} else {
 								videoPayload = { video: { url: media.url } };
@@ -76,7 +76,7 @@ module.exports.run = async (sock, msg, args) => {
 			);
 		}
 	} catch (e) {
-		await errorHandler(sock, msg, this.config.name, e);
+		await errorHandler(sock, msg, module.exports.config.name, e);
 	}
 };
 

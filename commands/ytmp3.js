@@ -49,7 +49,7 @@ module.exports.run = async (sock, msg, args) => {
         );
         await cleanTemp(res.filePath, 3600000);
     } catch (e) {
-        await errorHandler(sock, msg, this.config.name, e);
+        await errorHandler(sock, msg, module.exports.config.name, e);
     }
 };
 

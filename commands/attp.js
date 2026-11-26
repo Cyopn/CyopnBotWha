@@ -28,7 +28,7 @@ module.exports.run = async (sock, msg, args) => {
 		let s = await sticker(buffer);
 		sock.sendMessage(msg.key.remoteJid, { sticker: s }, { quoted: msg });
 	} catch (e) {
-		await errorHandler(sock, msg, this.config.name, e);
+		await errorHandler(sock, msg, module.exports.config.name, e);
 	}
 };
 

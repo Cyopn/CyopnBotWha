@@ -26,7 +26,7 @@ module.exports.run = async (sock, msg, args) => {
         await writeFile("./temp/w.webp", buffer);
         exec(`${py_cmd_vid}`, async (error, stdout, stderr) => {
             if (error) {
-                await errorHandler(sock, msg, this.config.name, error);
+                await errorHandler(sock, msg, module.exports.config.name, error);
                 return;
             }
             await sock.sendMessage(
@@ -41,7 +41,7 @@ module.exports.run = async (sock, msg, args) => {
             await unlink("./temp/w.webp");
         });
     } catch (e) {
-        await errorHandler(sock, msg, this.config.name, e);
+        await errorHandler(sock, msg, module.exports.config.name, e);
     }
 };
 
@@ -49,5 +49,5 @@ module.exports.config = {
     name: "tovideo",
     alias: [`tv`],
     type: `misc`,
-    description:`Convierte a vídeo un sticker animado ya enviado, respondiendo a él.`,
+    description: `Convierte a vídeo un sticker animado ya enviado, respondiendo a él.`,
 };

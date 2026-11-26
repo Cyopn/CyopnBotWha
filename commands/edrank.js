@@ -1,6 +1,6 @@
 require("dotenv").config();
 const { errorHandler } = require("../lib/functions");
-const{ setConfig } = require("../lib/db");
+const { setConfig } = require("../lib/db");
 
 module.exports.run = async (sock, msg, args) => {
     const { remoteJid } = msg.key;
@@ -38,7 +38,7 @@ module.exports.run = async (sock, msg, args) => {
             { quoted: msg },
         );
     } catch (e) {
-        await errorHandler(sock, msg, this.config.name, e);
+        await errorHandler(sock, msg, module.exports.config.name, e);
     }
 };
 

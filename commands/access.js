@@ -50,7 +50,7 @@ module.exports.run = async (sock, msg, args) => {
         await updateList(listNames[type], value, operation);
         return sock.sendMessage(msg.key.remoteJid, { text: `${operation === "remove" ? "Bloqueo eliminado" : "Entrada bloqueada"}: ${value || "ID invalido"}.` }, { quoted: msg });
     } catch (error) {
-        return errorHandler(sock, msg, this.config.name, error);
+        return errorHandler(sock, msg, module.exports.config.name, error);
     }
 };
 

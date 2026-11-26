@@ -57,7 +57,7 @@ module.exports.run = async (sock, msg, args) => {
 			);
 		}
 	} catch (e) {
-		await errorHandler(sock, msg, this.config.name, e);
+		await errorHandler(sock, msg, module.exports.config.name, e);
 	}
 	while (fs.existsSync(`./temp/tts.mp3`)) {
 		fs.unlinkSync(`./temp/tts.mp3`);

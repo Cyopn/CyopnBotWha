@@ -46,7 +46,7 @@ module.exports.run = async (sock, msg, args) => {
                     },
                     { quoted: msg },
                 );
-            }else{
+            } else {
                 await sock.sendMessage(
                     msg.key.remoteJid,
                     {
@@ -60,7 +60,7 @@ module.exports.run = async (sock, msg, args) => {
         });
 
     } catch (e) {
-        await errorHandler(sock, msg, this.config.name, e);
+        await errorHandler(sock, msg, module.exports.config.name, e);
     }
 };
 

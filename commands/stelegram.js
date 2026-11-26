@@ -65,8 +65,8 @@ module.exports.run = async (sock, msg, args) => {
 					}
 					if (result) {
 						await sock.sendMessage(
-							msg.key.remoteJid, 
-							{ sticker: result }, 
+							msg.key.remoteJid,
+							{ sticker: result },
 							{ quoted: msg }
 						);
 					} else {
@@ -90,7 +90,7 @@ module.exports.run = async (sock, msg, args) => {
 			);
 		}
 	} catch (e) {
-		await errorHandler(sock, msg, this.config.name, e);
+		await errorHandler(sock, msg, module.exports.config.name, e);
 	}
 };
 
